@@ -200,10 +200,19 @@ async function lStartStudent(sess){
 }
 
 /* ---------- sign in / out ---------- */
+// Browsers sometimes shut down the storage Firebase keeps the login in ("Database is closing"),
+// usually after a tab sat open for hours or the device slept. Retry once without that storage.
+const lIdbErr=e=>/database|indexeddb|idb|closing|storage/i.test(String((e&&(e.message||e.code))||''));
+async function lAuthRetry(fn){
+  try{return await fn()}
+  catch(e){if(!lIdbErr(e))throw e;console.warn('Browser storage error during sign-in; retrying without it',e);
+    try{await LIVE.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)}catch(_){}
+    return await fn()}
+}
 function lAllowed(email){return LIVE_CFG.teachers.includes(String(email||'').toLowerCase())}
 async function lTeacherSignIn(){
   const p=new firebase.auth.GoogleAuthProvider();p.setCustomParameters({prompt:'select_account'});
-  try{if(LIVE.auth.currentUser)await LIVE.auth.signOut();await LIVE.auth.signInWithPopup(p)}
+  try{if(LIVE.auth.currentUser)await LIVE.auth.signOut().catch(()=>{});await lAuthRetry(()=>LIVE.auth.signInWithPopup(p))}
   catch(e){if(e&&/popup-blocked|operation-not-supported/.test(e.code||''))return LIVE.auth.signInWithRedirect(p);throw e}
 }
 async function lStudentSignIn(code,user,pin){
@@ -211,7 +220,7 @@ async function lStudentSignIn(code,user,pin){
   if(!code||!user||!pin)throw new Error('missing');
   let u=LIVE.auth.currentUser;
   if(u&&!u.isAnonymous){await LIVE.auth.signOut();u=null}
-  if(!u)u=(await LIVE.auth.signInAnonymously()).user;
+  if(!u)u=(await lAuthRetry(()=>LIVE.auth.signInAnonymously())).user;
   const cd=await LIVE.db.doc('codes/'+code).get();if(!cd.exists)throw new Error('code');
   const cid=cd.data().cid,lg=await LIVE.db.doc('logins/'+cid+'~'+user).get();if(!lg.exists)throw new Error('match');
   const sid=lg.data().sid,h=await lSha(sid+':'+pin);
