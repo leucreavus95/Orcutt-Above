@@ -1,0 +1,123 @@
+rules_version = '2';
+// Orcutt Above security rules.
+// Paste this whole file into Firebase console > Firestore Database > Rules, then click Publish.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- who is asking ----
+    function signedIn() { return request.auth != null; }
+    // Teachers allowed to run classes. Add more addresses here later.
+    function isTeacher() {
+      return signedIn()
+        && request.auth.token.get('email_verified', false) == true
+        && request.auth.token.get('email', '').lower() in ['aarguijo2@orcutt-schools.net'];
+    }
+    // The teacher owns the stored record / the record being written.
+    function owns() { return isTeacher() && resource.data.owner == request.auth.uid; }
+    function ownsNew() { return isTeacher() && request.resource.data.owner == request.auth.uid; }
+    // Student sessions: sessions/{auth uid} = { sid, cid } after a correct PIN.
+    function sessPath() { return /databases/$(database)/documents/sessions/$(request.auth.uid); }
+    function hasSess() { return signedIn() && exists(sessPath()); }
+    function sess() { return get(sessPath()).data; }
+    function inClass(cid) { return hasSess() && sess().cid == cid; }
+    function isMe(sid) { return hasSess() && sess().sid == sid; }
+    function classOwner(cid) { return get(/databases/$(database)/documents/classes/$(cid)).data.owner; }
+    function changed() { return request.resource.data.diff(resource.data).affectedKeys(); }
+
+    // Teacher-wide settings, shop prices and behaviors. Not secret, so any signed-in user can read.
+    match /configs/{tid} {
+      allow read: if signedIn();
+      allow write: if isTeacher() && request.auth.uid == tid;
+    }
+
+    match /classes/{cid} {
+      allow read: if owns() || inClass(cid);
+      allow create: if ownsNew();
+      allow update: if owns() && ownsNew();
+      allow delete: if owns();
+    }
+
+    // Class code -> class id, so students can find their class.
+    match /codes/{code} {
+      allow get: if signedIn();
+      allow list: if owns();
+      allow create: if ownsNew();
+      allow update: if owns() && ownsNew();
+      allow delete: if owns();
+    }
+
+    // "{classId}~{username}" -> student id, for signing in.
+    match /logins/{id} {
+      allow get: if signedIn();
+      allow list: if owns();
+      allow create: if ownsNew();
+      allow update: if owns() && ownsNew();
+      allow delete: if owns();
+    }
+
+    // PINs (and their hashes). Only the teacher can ever read these.
+    match /pins/{sid} {
+      allow read, delete: if owns();
+      allow create: if ownsNew();
+      allow update: if owns() && ownsNew();
+    }
+
+    // A student session is only created when the PIN hash matches.
+    match /sessions/{uid} {
+      allow read, delete: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['sid', 'cid', 'h', 't'])
+        && get(/databases/$(database)/documents/pins/$(request.resource.data.sid)).data.h == request.resource.data.h
+        && get(/databases/$(database)/documents/pins/$(request.resource.data.sid)).data.cid == request.resource.data.cid;
+    }
+
+    // Students: classmates can see each other (leaderboards). A student can change only their own
+    // record, and never their name, username, class or behavior points.
+    match /students/{sid} {
+      allow read: if owns() || inClass(resource.data.classId);
+      allow create: if ownsNew();
+      allow update: if (owns() && ownsNew())
+        || (isMe(sid) && inClass(resource.data.classId)
+            && !changed().hasAny(['id', 'name', 'user', 'classId', 'points', 'owner', 'ord']));
+      allow delete: if owns();
+    }
+
+    // Class bosses: students can only land hits and claim rewards.
+    match /bosses/{bid} {
+      allow read: if owns() || inClass(resource.data.classId);
+      allow create: if ownsNew();
+      allow update: if (owns() && ownsNew())
+        || (inClass(resource.data.classId) && changed().hasOnly(['hp', 'dmg', 'active', 'doneAt', 'claimed']));
+      allow delete: if owns();
+    }
+
+    // Realm arena records. Classmates can change ratings and logs after a match; only you set your team.
+    match /arena/{sid} {
+      allow read: if owns() || inClass(resource.data.classId);
+      allow create: if ownsNew()
+        || (isMe(sid) && inClass(request.resource.data.classId)
+            && request.resource.data.owner == classOwner(request.resource.data.classId));
+      allow update: if (owns() && ownsNew())
+        || (isMe(sid) && inClass(resource.data.classId) && !changed().hasAny(['owner', 'classId']))
+        || (inClass(resource.data.classId) && changed().hasOnly(['r', 'w', 'l', 'log']));
+      allow delete: if owns();
+    }
+
+    // Realm progress: only that student (and the teacher).
+    match /realm/{sid} {
+      allow read: if owns() || isMe(sid);
+      allow create, update: if ownsNew()
+        || (isMe(sid) && inClass(request.resource.data.classId)
+            && request.resource.data.owner == classOwner(request.resource.data.classId));
+      allow delete: if owns();
+    }
+
+    // Points history: the teacher writes it; a student can read their own entries.
+    match /log/{id} {
+      allow read: if owns() || isMe(resource.data.sid);
+      allow create: if ownsNew();
+      allow update: if owns() && ownsNew();
+      allow delete: if owns();
+    }
+  }
+}
