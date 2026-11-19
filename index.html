@@ -3062,14 +3062,14 @@ async function liveLogin(){
   const btn=document.getElementById('ll-go'),err=document.getElementById('ll-err');if(!btn||btn.disabled)return;
   btn.disabled=true;btn.textContent='Signing in…';err.textContent='';
   try{const sess=await lStudentSignIn(val('ll-code'),val('ll-user'),val('ll-pin'));await liveEnterStudent(sess)}
-  catch(e){console.warn(e);err.textContent=({missing:'Fill in all three boxes.',code:"That class code wasn't found. Check it with your teacher.",match:"That didn't match. Check your username and PIN with your teacher."})[e.message]||'Could not sign in. Check your internet connection and try again.';btn.disabled=false;btn.textContent='Sign in';try{await LIVE.auth.signOut()}catch(_){}}
+  catch(e){console.warn(e);err.textContent=({missing:'Fill in all three boxes.',code:"That class code wasn't found. Check it with your teacher.",match:"That didn't match. Check your username and PIN with your teacher."})[e.message]||(lIdbErr(e)?'Your browser needs a refresh. Reload this page and try again.':'Could not sign in. Check your internet connection and try again.');btn.disabled=false;btn.textContent='Sign in';try{await LIVE.auth.signOut()}catch(_){}}
 }
 async function liveTeacher(){
   const msg=document.getElementById('lt-err');if(msg)msg.textContent='';
   try{await lTeacherSignIn();const u=LIVE.auth.currentUser;if(!u)return;
     if(!lAllowed(u.email)){const em=u.email;await LIVE.auth.signOut();ui.live={phase:'landing',terr:esc(em||'That account')+" isn't set up as a teacher here."};return render()}
     await liveEnterTeacher(u)}
-  catch(e){if(e&&/popup-closed|cancelled-popup/.test(e.code||''))return;console.warn(e);ui.live={phase:'landing',terr:'Google sign-in did not finish ('+esc(e.code||e.message||'error')+').'};render()}
+  catch(e){if(e&&/popup-closed|cancelled-popup/.test(e.code||''))return;console.warn(e);ui.live={phase:'landing',terr:lIdbErr(e)?"Your browser's storage needs a refresh. Reload this page and sign in again. If it keeps happening, close the browser completely and reopen it.":'Google sign-in did not finish ('+esc(e.code||e.message||'error')+').'};render()}
 }
 async function liveOut(){
   leaveGame();clearTimeout(store.timer);try{await flush()}catch(e){}
