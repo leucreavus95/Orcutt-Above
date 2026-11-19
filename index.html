@@ -160,6 +160,19 @@ button.item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .item .own-tag.on{background:#38d39f;color:#0b241a}
 .item .lock-tag{background:rgba(255,255,255,.06);color:var(--muted)}
 .item.owned .thumb{opacity:.8}
+.modal.duelm{width:min(520px,100%)}
+.duelbtn{width:100%;justify-content:center;border-color:rgba(255,95,162,.5);background:linear-gradient(180deg,rgba(255,95,162,.16),rgba(255,95,162,.05))}
+.dot-on{font-size:12px;color:#38d39f;margin-left:6px;font-weight:700}
+.miniav{display:inline-block;width:48px;height:48px;border-radius:12px;overflow:hidden;background:#2a2633;flex:none}.miniav svg{width:100%;height:100%;display:block}
+.duellist{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto}
+.duelrow{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.duelrow>div{display:flex;flex-direction:column;gap:2px}.duelrow span{font-size:13px}
+.duelwait{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:8px 0}.duelwait .miniav{width:84px;height:84px;border-radius:18px}
+.duelwait h3{margin:0}.duelwait .got{margin:0;font-family:Anton,Impact,sans-serif;font-size:18px;letter-spacing:.06em;text-transform:uppercase;color:#ff5fa2}
+.duelwait.invite .miniav{animation:buyPop .5s cubic-bezier(.2,1.5,.4,1) both;box-shadow:0 0 0 3px #ff5fa2,0 10px 30px -10px #ff5fa2}
+.duelbar{width:100%;max-width:320px;height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}.duelbar i{display:block;height:100%;background:#ff5fa2;animation:drain 20s linear forwards}
+@keyframes drain{from{width:100%}to{width:0}}
+.duelover .miniav{width:84px;height:84px;border-radius:18px;margin:0 auto}
 .modal.shopm{width:min(720px,100%);overflow:hidden;position:relative}
 .shopv{display:grid;grid-template-columns:minmax(0,250px) 1fr;gap:24px;align-items:center;--rc:var(--common)}
 .shopv.rare{--rc:var(--rare)}.shopv.epic{--rc:var(--epic)}.shopv.legendary{--rc:var(--legendary)}
@@ -485,6 +498,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;background-im
 <script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-database-compat.js"></script>
 <script src="live.js"></script>
 <script>
 "use strict";
@@ -1768,6 +1782,7 @@ function arcLeft(s){const a=state.settings.arcade;if(s.aDay!==today()){s.aDay=to
 const arcBest=(s,id)=>(s.arc&&s.arc[id]&&s.arc[id].best)||0;
 function arcStop(){if(AR.stop){AR.stop();AR.stop=null;save()}AR.flap=null;if(ui.arc&&ui.arc.phase==='play')ui.arc=null}
 function arcMount(){
+  if(ui.duel)return duelMount();
   const host=document.getElementById('arcstage'),s=S(ui.sId),a=ui.arc;if(!host||!s||!a||a.phase!=='play')return;
   if(AR.stop){host.appendChild(AR.cv);return}
   const gm=ARCADE.find(x=>x.id===a.id);AR.cv=document.createElement('canvas');host.appendChild(AR.cv);
@@ -1779,14 +1794,91 @@ function arcButtons(s,g,again){
   const why=can?'':`<p class="muted">${left<=0?'You have used today\'s plays. Come back tomorrow.':`You need ${a.cost-s.coins} more coins.`}</p>`;
   return`<div class="row" style="${again?'justify-content:center':''}"><button class="btn pri" data-a="arcPlay" data-v="${g.id}" ${dis}>${again?'Play again':'Play'} · ${cost}</button></div>${why}`;
 }
+/* ---------- live duels ---------- */
+const nameOf=sid=>{const x=S(sid);return x?x.name:'A classmate'};
+const first=sid=>nameOf(sid).split(' ')[0];
+function duelCardBits(s){
+  if(typeof duelReady!=='function'||!duelReady())return'';
+  const n=duelOnline().filter(x=>!x.busy).length,r=s.duel||{w:0,l:0};
+  return`<button class="btn duelbtn" data-a="duelOpen">⚔ Challenge a classmate${n?` <span class="dot-on">${n} online</span>`:''}</button><p class="muted small" style="margin:0">Live 1-on-1, first to 5. Free to play. Your record: <b class="num">${r.w||0}</b> W · <b class="num">${r.l||0}</b> L</p>`;
+}
+function miniAv(sid){const x=S(sid);return x?`<span class="miniav">${avatarSVG({...x.equip,head:x.equip.head},true).replace('viewBox="0 0 200 220"','viewBox="46 30 108 108"')}</span>`:'<span class="miniav"></span>'}
+function duelListSheet(){
+  const m=ui.modal,o=DUEL.out;
+  if(o){const nm=first(o.toSid),msg={no:`${nm} said not right now.`,busy:`${nm} is in the middle of something.`,gone:`${nm} isn't available anymore.`,late:`${nm} didn't answer.`}[o.st];
+    if(msg)return`<div class="duelwait">${miniAv(o.toSid)}<h3>${esc(msg)}</h3><div class="row" style="justify-content:center"><button class="btn pri" data-a="duelCancel">Pick someone else</button><button class="btn" data-a="close">Close</button></div></div>`;
+    return`<div class="duelwait">${miniAv(o.toSid)}<h3>Waiting for ${esc(nm)}…</h3><p class="muted">They have 20 seconds to accept.</p><div class="duelbar"><i></i></div><button class="btn" data-a="duelCancel">Cancel challenge</button></div>`}
+  const me=S(ui.sId),list=duelOnline().filter(x=>S(x.sid)&&S(x.sid).classId===me.classId).sort((a,b)=>a.busy-b.busy||nameOf(a.sid).localeCompare(nameOf(b.sid)));
+  return`<div class="row" style="justify-content:space-between"><h3>⚔ Challenge a classmate</h3><button class="btn sm" data-a="close">Close</button></div>
+   <p class="muted">Desk Rally, live and 1-on-1. First to 5 wins. ${m.msg?`<b class="bad">${esc(m.msg)}</b>`:''}</p>
+   <div class="duellist">${list.map(x=>`<div class="duelrow">${miniAv(x.sid)}<div><b>${esc(nameOf(x.sid))}</b><span class="${x.busy?'muted':'good'}">${x.busy?'In a game':'● Available'}</span></div><button class="btn sm ${x.busy?'':'pri'}" data-a="duelAsk" data-v="${x.uid}" data-sid="${x.sid}" ${x.busy?'disabled':''}>Challenge</button></div>`).join('')||'<p class="muted">No classmates are online right now. They show up here while they have Orcutt Above open.</p>'}</div>`;
+}
+function inviteSheet(){const v=ui.invite;if(!v)return'';
+  return`<div class="duelwait invite">${miniAv(v.sid)}<p class="got">Challenge!</p><h3>${esc(nameOf(v.sid))} challenged you to Desk Rally</h3><p class="muted">Live 1-on-1, first to 5.</p><div class="duelbar"><i></i></div><div class="row" style="justify-content:center"><button class="btn pri" data-a="inviteYes">Accept</button><button class="btn" data-a="inviteNo">Not now</button></div></div>`}
+async function duelAsk(uid,sid){
+  if(!duelReady())return;ui.modal={type:'duel'};
+  try{await duelChallenge(uid,sid)}catch(e){console.warn(e);ui.modal={type:'duel',msg:'That challenge could not be sent.'};return renderModal()}
+  renderModal();const o=DUEL.out;setTimeout(()=>{if(DUEL.out===o&&o.st==='wait'){o.st='late';duelCancelKeep(o)}},20000);
+}
+function duelCancelKeep(o){// stop waiting but keep the message on screen
+  if(o.off)o.off();LIVE.rt.ref('invites/'+DUEL.cid+'/'+o.toUid+'/'+DUEL.uid).remove().catch(()=>{});LIVE.rt.ref('matches/'+o.mid).remove().catch(()=>{});if(ui.modal&&ui.modal.type==='duel')renderModal()}
+function duelOnChange(kind){
+  if(kind==='invite')return duelInvites();
+  if(kind==='out'){const o=DUEL.out;if(!o)return;
+    if(o.st==='go'){if(o.off)o.off();DUEL.out=null;LIVE.rt.ref('invites/'+DUEL.cid+'/'+o.toUid+'/'+DUEL.uid).remove().catch(()=>{});return duelBegin({mid:o.mid,role:'a',oppUid:o.toUid,oppSid:o.toSid})}
+    if(o.st!=='wait')duelCancelKeep(o);}
+  if(ui.modal&&ui.modal.type==='duel')renderModal();
+  if(kind==='online'&&ui.mode==='student'&&ui.sTab==='arcade'&&!ui.duel&&!(ui.arc&&ui.arc.phase==='play')&&!ui.modal)render();
+}
+function duelInvites(){
+  const inc=DUEL.incoming||{};
+  if(ui.invite&&!inc[ui.invite.fromUid]){const nm=first(ui.invite.sid);ui.invite=null;clearTimeout(ui.inviteT);if(ui.modal&&ui.modal.type==='invite'){ui.modal=null;renderModal()}toast(nm+' cancelled the challenge');}
+  for(const from in inc){const v=inc[from];if(ui.invite&&ui.invite.fromUid===from)continue;
+    if(!v||!v.mid||(v.t&&duelNow()-v.t>30000)){LIVE.rt.ref('invites/'+DUEL.cid+'/'+DUEL.uid+'/'+from).remove().catch(()=>{});continue}
+    if(ui.invite||duelIsBusy()){duelAnswer(from,v,'busy');continue}
+    ui.invite={fromUid:from,sid:v.sid,mid:v.mid};ui.modal={type:'invite'};renderModal();
+    clearTimeout(ui.inviteT);ui.inviteT=setTimeout(()=>{if(ui.invite&&ui.invite.fromUid===from)inviteAnswer(false)},20000);
+  }
+}
+async function inviteAnswer(yes){
+  const v=ui.invite;if(!v)return;ui.invite=null;clearTimeout(ui.inviteT);ui.modal=null;renderModal();
+  const ok=await duelAnswer(v.fromUid,{mid:v.mid},yes?'go':'no');
+  if(yes){if(ok)duelBegin({mid:v.mid,role:'b',oppUid:v.fromUid,oppSid:v.sid});else toast('That challenge expired.')}
+}
+function duelIsBusy(){return!!((ui.duel&&ui.duel.phase==='play')||(ui.arc&&ui.arc.phase==='play')||(ui.game&&!ui.game.over)||(typeof rlUI==='function'&&rlUI().b))}
+function duelBegin(d){
+  leaveGame();if(DUEL.out)duelCancel();ui.modal=null;ui.invite=null;ui.mode='student';ui.sTab='arcade';
+  ui.duel={...d,phase:'play'};DUEL.ch=duelChannel(d.mid);duelSetBusy(true);render();
+}
+function duelMount(){
+  const host=document.getElementById('arcstage'),s=S(ui.sId),d=ui.duel;if(!host||!s||!d||d.phase!=='play')return;
+  if(AR.stop){host.appendChild(AR.cv);return}
+  AR.cv=document.createElement('canvas');host.appendChild(AR.cv);
+  AR.stop=pongGame(AR.cv,s,res=>{AR.stop=null;duelFinish(res||{win:false,my:0,opp:0})},false,{ch:DUEL.ch,role:d.role,oppUid:d.oppUid,oppName:nameOf(d.oppSid)});
+}
+function duelFinish(res){
+  const d=ui.duel;if(!d||d.phase!=='play')return;
+  if(AR.stop){AR.stop();AR.stop=null}
+  const s=S(ui.sId);if(s){s.duel=s.duel||{w:0,l:0};if(res.win)s.duel.w=(s.duel.w||0)+1;else s.duel.l=(s.duel.l||0)+1;save()}
+  if(DUEL.ch){DUEL.ch.close(d.role==='a');DUEL.ch=null}
+  ui.duel={...d,phase:'over',res};duelSetBusy(false);render();
+}
+function duelScreen(s){
+  const d=ui.duel,nm=nameOf(d.oppSid);
+  if(d.phase==='play')return`<div class="arena"><div class="row" style="justify-content:space-between"><h3>Desk Rally · You vs ${esc(first(d.oppSid))}</h3><button class="btn sm" data-a="duelLeave">Leave match</button></div><div id="arcstage" class="stage arc tall"></div><p class="muted" style="text-align:center">You're the pink eraser on your side. First to 5 wins.</p></div>`;
+  const r=d.res||{},rec=s.duel||{w:0,l:0};
+  const head=r.left==='me'?'You left the match':r.left?`${esc(first(d.oppSid))} left. You win!`:r.win?'You win!':`${esc(first(d.oppSid))} wins`;
+  return`<div class="arena duelover ${r.win?'won':''}" style="text-align:center">${miniAv(d.oppSid)}<h3 class="muted">Desk Rally vs ${esc(nm)}</h3><h2 class="${r.win?'good':''}" style="font-size:48px;margin:0">${head}</h2>${r.left?'':`<p class="big num">${r.my||0} – ${r.opp||0}</p>`}<p class="muted">Your duel record: <b class="num">${rec.w||0}</b> wins · <b class="num">${rec.l||0}</b> losses</p><div class="row" style="justify-content:center"><button class="btn pri" data-a="duelRematch">Rematch</button><button class="btn" data-a="duelBack">Back to the arcade</button></div></div>`;
+}
 function sArcade(s){
   const a=state.settings.arcade,left=arcLeft(s),games=ARCADE.filter(g=>!a.off[g.id]),lim=a.daily>0?`${left} of ${a.daily} plays left today.`:'';
+  if(ui.duel)return duelScreen(s);
   if(ui.arc&&ui.arc.phase==='play'){const gm=ARCADE.find(g=>g.id===ui.arc.id);return`<div class="arena"><div class="row" style="justify-content:space-between"><h3>${esc(gm.name)}</h3><button class="btn sm" data-a="arcQuit">${gm.saves?'Save and quit':'Give up'}</button></div><div id="arcstage" class="stage arc ${gm.tall?'tall':''}"></div><p class="muted" style="text-align:center">${esc(gm.hint)}</p></div>`}
   if(ui.arc&&ui.arc.phase==='over'){const gm=ARCADE.find(g=>g.id===ui.arc.id);return`<div class="arena" style="text-align:center"><h3 class="muted">${esc(gm.name)}</h3><p class="big num reveal">${ui.arc.score}</p><p class="muted">${esc(gm.unit)}${ui.arc.info?' · '+esc(ui.arc.info):''}</p><p class="${ui.arc.nb?'good':'muted'}">${ui.arc.nb?'New personal best':'Your best: '+arcBest(s,gm.id)}</p>${arcButtons(s,gm,true)}<div class="row" style="justify-content:center"><button class="btn" data-a="arcQuit">Back to the arcade</button></div>${lim?`<p class="muted">${lim}</p>`:''}</div>`}
   return`<div class="spread"><div><h2>Arcade</h2><p class="muted">Spend coins for one play. One play is one life. ${lim}</p></div><span class="pill"><span class="coin num">${s.coins}</span></span></div>
   <div class="bgrid three">${games.map(g=>{const top=arcTop(g.id,s.classId,5);return`<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>${esc(g.name)}</h3><span class="muted">Your best: <b class="num">${arcBest(s,g.id)}</b></span></div><p class="muted">${esc(g.d)}</p>
      <div class="feed">${top.map((x,i)=>`<div><span><b class="num">${i+1}</b> &nbsp;${esc(x.name)}</span><b class="num">${arcBest(x,g.id)}</b></div>`).join('')||'<p class="muted">No scores in your class yet. Set the first one.</p>'}</div>
-     ${arcButtons(s,g)}</div>`}).join('')}
+     ${arcButtons(s,g)}${g.id==='pong'?duelCardBits(s):''}</div>`}).join('')}
    <div class="panel stack" style="border-style:dashed"><h3 class="muted">More games coming</h3><p class="muted">New cabinets get added here over time.</p></div></div>`;
 }
 function tArcade(){
@@ -2528,7 +2620,7 @@ function motoGame(cv,s,done){
   return()=>{if(stopped)return;stopped=true;cleanup()};
 }
 /* ---------- Ping Pong vs CPU ---------- */
-function pongGame(cv,s,done){
+function pongGame(cv,s,done,resume,P){
   const c=cv.getContext('2d'),TAU=Math.PI*2,L=1.6,BR=.02,PH=.12,PX=.06;
   let W=0,H=0,raf=0,last=performance.now(),stopped=false,horiz=true,scale=1,ox=0,oy=0;
   let me=.5,meV=0,meT=.5,cpu=.5,score=0,lives=3,rally=0,best=0,over=-1,serveT=1.1,hits=0;
@@ -2537,6 +2629,40 @@ function pongGame(cv,s,done){
   const WAD=Array.from({length:13},(_,k)=>{const a=k/13*TAU;return[a,.82+((k*7919)%13)/13*.36]});
   const fleck=(u,v,dir)=>{for(let k=0;k<7;k++){const a=(Math.random()-.5)*2.2+(dir>0?0:Math.PI);flecks.push({u,v,vu:Math.cos(a)*(.3+Math.random()*.5),vv:Math.sin(a)*(.3+Math.random()*.5),r:Math.random()*TAU,life:.5})}};
   const say=(t,col)=>pops.push({t,c:col||'#ffd60a',life:1.1});
+  /* ---- two-player duel (P = {ch, role:'a'|'b', oppUid, oppName}) ---- */
+  const TO=5,clamp=(x,a,b2)=>Math.max(a,Math.min(b2,x));
+  let myS=0,opS=0,handled=-1,lastN=-1,held=0,sentFirst=false,countdown=0,pres=null,oppV=.5;
+  const mine=E=>P.role==='b'?{...E,u:L-E.u,vu:-E.vu}:{...E};
+  function traj(e,now){const dt=Math.max(0,(now-e.t)/1000),lo=BR,len=1-2*BR;const y=(e.v-lo)+e.vv*dt,m=((y%(2*len))+2*len)%(2*len);
+    const fwd=m<=len;return{u:e.u+e.vu*dt,v:fwd?lo+m:lo+2*len-m,vv:fwd?e.vv:-e.vv}}
+  function emit(x){const ev={...x};if(P.role==='b'){ev.u=L-ev.u;ev.vu=-ev.vu}ev.sa=P.role==='a'?myS:opS;ev.sb=P.role==='a'?opS:myS;P.ch.emit(ev)}
+  function serveMe(now,delay){const a=(Math.random()*.6-.3),sp=Math.min(1.3,1+.03*(myS+opS));emit({k:'serve',u:L/2,v:.5+(Math.random()*.2-.1),vu:-Math.cos(a)*sp,vv:Math.sin(a)*sp,t:now+delay})}
+  function pvpUpdate(dt){
+    P.ch.pad(me);oppV+=(P.ch.opp-oppV)*Math.min(1,dt*14);cpu=oppV;
+    const now=P.ch.now(),E=P.ch.ev;
+    if(P.ch.gone&&over<0){pres={win:true,left:true,my:myS,opp:opS};over=0;say((P.oppName||'Your rival')+' left','#ffd60a');return}
+    if(!E){if(P.role==='a'&&!sentFirst){sentFirst=true;serveMe(now,3200)}return}
+    const e=mine(E),pm=myS;
+    myS=P.role==='a'?E.sa:E.sb;opS=P.role==='a'?E.sb:E.sa;
+    if(E.n!==lastN){lastN=E.n;
+      if(E.k==='hit'&&e.vu<0){cflash=.14;fleck(L-PX-BR,e.v,-1);rally++;if(rally>best)best=rally}
+      if(E.k==='serve'){rally=0;trail=[];if(myS>pm)say('POINT!','#38d39f')}}
+    if(E.k==='end'){if(over<0){const win=E.w===P.ch.me;pres={win,my:myS,opp:opS};over=0;say(win?'YOU WIN!':'GOOD GAME',win?'#38d39f':'#ffd60a')}return}
+    countdown=e.t>now?Math.ceil((e.t-now)/1000):0;
+    let pos=traj(e,now);
+    if(e.vu<0){const X=PX+BR,tc=e.t+(X-e.u)/e.vu*1000;
+      if(handled!==E.n&&now>=tc){const at=traj(e,tc);
+        if(Math.abs(at.v-me)<PH/2+BR){
+          const sp=Math.hypot(e.vu,e.vv),off=(at.v-me)/(PH/2),ns=Math.min(2.8,sp*1.045+.015),ang=clamp(off*.85+clamp(meV*.1,-.3,.3),-.95,.95);
+          handled=E.n;rally++;hits++;flash=.14;fleck(X,at.v,1);if(rally>best)best=rally;
+          emit({k:'hit',u:X,v:at.v,vu:Math.cos(ang)*ns,vv:Math.sin(ang)*ns,t:now});pos={u:X,v:at.v,vv:0};
+        }else if(pos.u<-.08){handled=E.n;opS++;say('MISSED','#ff4d6d');
+          if(opS>=TO)emit({k:'end',w:P.oppUid,u:pos.u,v:pos.v,vu:0,vv:0,t:now});else serveMe(now,1100)}
+      }
+    }else{const X2=L-PX-BR;if(pos.u>X2){pos.u=X2;held+=dt;if(held>7&&over<0)P.ch.gone=true}else held=0}
+    b.u=pos.u;b.v=pos.v;b.vu=e.vu;b.vv=pos.vv||0;
+    if(countdown<=0){trail.push([b.u,b.v]);if(trail.length>8)trail.shift();rot+=Math.hypot(e.vu,e.vv)*dt*9*(e.vu>0?1:-1)}
+  }
   function serve(){const a=(Math.random()*.6-.3);b={u:L*.62,v:.5+(Math.random()*.3-.15),vu:-Math.cos(a)*(1.15+score*.04),vv:Math.sin(a)*.8};rally=0;trail=[]}
   const toScr=(u,v)=>horiz?[ox+u*scale,oy+v*scale]:[ox+v*scale,oy+(L-u)*scale];
   function setFromPtr(e){const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;meT=horiz?(y-oy)/scale:(x-ox)/scale}
@@ -2546,9 +2672,11 @@ function pongGame(cv,s,done){
   cv.addEventListener('pointerdown',pd);cv.addEventListener('pointermove',pm);window.addEventListener('keydown',kd);window.addEventListener('keyup',ku);
   function cleanup(){cancelAnimationFrame(raf);cv.removeEventListener('pointerdown',pd);cv.removeEventListener('pointermove',pm);window.removeEventListener('keydown',kd);window.removeEventListener('keyup',ku)}
   function update(dt){
+    if(window.__autoPaddle&&P&&b.vu<0)meT=b.v+(window.__autoErr||0)*Math.sin(performance.now()/300);
     let kv=0;for(const k in keys)kv+=KM[k];if(kv)meT=me+Math.sign(kv)*.5;
     meT=Math.max(PH*.6,Math.min(1-PH*.6,meT));
     const prev=me,mx=3.4*dt;me+=Math.max(-mx,Math.min(mx,meT-me));meV=(me-prev)/dt;
+    if(P){pvpUpdate(dt);return}
     // CPU: tracks the ball with limited speed and a wobbling aim error; gets better as you score
     const sk=Math.min(1,score/12),cs=1.05+sk*1.05;cpuErrT-=dt;if(cpuErrT<=0){cpuErrT=.5;cpuErr=(Math.random()*2-1)*PH*(.78-sk*.42)}
     let tgt=.5;if(b.vu>0){const t=(L-PX-b.u)/b.vu;let pv=b.v+b.vv*t;pv=((pv%2)+2)%2;if(pv>1)pv=2-pv;tgt=b.vu>0&&b.u>L*.35?pv+cpuErr:.5+(b.v-.5)*.4}
@@ -2577,7 +2705,7 @@ function pongGame(cv,s,done){
     horiz=W>=H*1.05;const pad=14,top=46;
     if(horiz){scale=Math.min((W-pad*2)/L,(H-top-pad)/1);ox=(W-L*scale)/2;oy=top+(H-top-pad-scale)/2}
     else{scale=Math.min((W-pad*2)/1,(H-top-pad)/L);ox=(W-scale)/2;oy=top+(H-top-pad-L*scale)/2}
-    if(over<0)update(dt);else{over+=dt;if(over>1.4){stopped=true;cleanup();done(score,`Longest rally ${best} · ${hits} returns`);return}}
+    if(over<0)update(dt);else{over+=dt;if(over>1.6){stopped=true;cleanup();if(P)done(pres);else done(score,`Longest rally ${best} · ${hits} returns`);return}}
     c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#16131c';c.fillRect(0,0,W,H);
     // classroom floor tiles
     c.fillStyle='rgba(255,255,255,.025)';const tile=44;for(let y=0;y<H;y+=tile)for(let x=((y/tile)%2)*tile;x<W;x+=tile*2)c.fillRect(x,y,tile,tile);
@@ -2619,13 +2747,16 @@ function pongGame(cv,s,done){
       const g=c.createRadialGradient(-r*.35,-r*.35,r*.1,0,0,r*1.1);g.addColorStop(0,'#ffffff');g.addColorStop(.6,'#ece8de');g.addColorStop(1,'#c9c3b4');c.fillStyle=g;c.fill();c.strokeStyle='#8f8878';c.lineWidth=1;c.stroke();
       c.strokeStyle='rgba(120,112,96,.7)';c.lineWidth=.9;c.beginPath();c.moveTo(-r*.6,-r*.1);c.lineTo(-r*.1,r*.15);c.lineTo(r*.2,-r*.35);c.moveTo(-r*.2,r*.55);c.lineTo(r*.05,r*.1);c.lineTo(r*.55,r*.3);c.moveTo(-r*.45,-r*.5);c.lineTo(-r*.15,-r*.25);c.stroke();
       c.strokeStyle='rgba(74,168,255,.5)';c.beginPath();c.moveTo(-r*.7,r*.25);c.lineTo(-r*.2,r*.35);c.stroke();c.restore()};
-    if(serveT<=0||over>=0){trail.forEach((p,i)=>{const [x,y]=toScr(p[0],p[1]);c.globalAlpha=i/trail.length*.25;c.fillStyle='#f4f1e8';c.beginPath();c.arc(x,y,BR*scale*.7*(i/trail.length),0,TAU);c.fill()});c.globalAlpha=1;
+    if(P?!!P.ch.ev:(serveT<=0||over>=0)){trail.forEach((p,i)=>{const [x,y]=toScr(p[0],p[1]);c.globalAlpha=i/trail.length*.25;c.fillStyle='#f4f1e8';c.beginPath();c.arc(x,y,BR*scale*.7*(i/trail.length),0,TAU);c.fill()});c.globalAlpha=1;
       const [bx,by]=toScr(b.u,b.v);c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(bx+4,by+6,BR*scale*1.1,BR*scale*.8,0,0,TAU);c.fill();wad(bx,by,BR*scale*1.6,rot)}
     // hud
-    c.textBaseline='middle';c.textAlign='left';c.font='22px Anton,Impact,sans-serif';c.fillStyle='#f4efe7';c.fillText('POINTS '+score,14,24);
+    c.textBaseline='middle';c.textAlign='left';c.font='22px Anton,Impact,sans-serif';c.fillStyle='#f4efe7';
+    if(P){c.fillStyle='#ff8fb3';c.fillText('YOU '+myS,14,24);c.textAlign='right';c.fillStyle='#f4f4fa';c.fillText(myS>=0?opS+' '+String(P.oppName||'RIVAL').split(' ')[0].toUpperCase():'',W-14,24);c.textAlign='center';c.fillStyle='#a69fb0';c.font='16px Anton,Impact,sans-serif';c.fillText(rally>1?'RALLY '+rally:'FIRST TO '+TO,W/2,24);
+      if(!P.ch.ev||countdown>0){c.font=`${countdown?Math.round(Math.min(W,H)*.22):Math.round(Math.min(W,H)*.06)}px Anton,Impact,sans-serif`;c.lineWidth=8;c.strokeStyle='#141218';const t=countdown?String(countdown):'GET READY…';c.strokeText(t,W/2,H/2);c.fillStyle='#ffd60a';c.fillText(t,W/2,H/2)}}
+    else{c.fillText('POINTS '+score,14,24);
     c.textAlign='center';c.fillStyle='#a69fb0';c.font='16px Anton,Impact,sans-serif';c.fillText(rally>1?'RALLY '+rally:'RIVAL LEVEL '+(1+Math.min(14,score)),W/2,24);
-    c.textAlign='right';for(let i=0;i<3;i++){c.globalAlpha=i<lives?1:.2;wad(W-20-i*24,24,8,i*1.3)}c.globalAlpha=1;
-    if(serveT>0&&over<0&&score===0&&lives===3){c.textAlign='center';c.font=`${W<500?15:19}px Anton,Impact,sans-serif`;c.lineWidth=4;c.strokeStyle='#141218';const t2=horiz?'MOVE YOUR MOUSE (OR W / S) TO MOVE YOUR PINK ERASER':'DRAG LEFT AND RIGHT TO MOVE YOUR PINK ERASER';const[cx,cy]=toScr(L*.3,.5);c.strokeText(t2,W/2,horiz?cy:cy);c.fillStyle='#ffd60a';c.fillText(t2,W/2,cy)}
+    c.textAlign='right';for(let i=0;i<3;i++){c.globalAlpha=i<lives?1:.2;wad(W-20-i*24,24,8,i*1.3)}c.globalAlpha=1}
+    if(!P&&serveT>0&&over<0&&score===0&&lives===3){c.textAlign='center';c.font=`${W<500?15:19}px Anton,Impact,sans-serif`;c.lineWidth=4;c.strokeStyle='#141218';const t2=horiz?'MOVE YOUR MOUSE (OR W / S) TO MOVE YOUR PINK ERASER':'DRAG LEFT AND RIGHT TO MOVE YOUR PINK ERASER';const[cx,cy]=toScr(L*.3,.5);c.strokeText(t2,W/2,horiz?cy:cy);c.fillStyle='#ffd60a';c.fillText(t2,W/2,cy)}
     pops.forEach((p,i)=>{p.life-=dt;c.globalAlpha=Math.min(1,p.life*3);c.textAlign='center';c.font=`${W<500?28:38}px Anton,Impact,sans-serif`;c.lineWidth=6;c.strokeStyle='#141218';const y=H*.45-(1.1-p.life)*30-i*44;c.strokeText(p.t,W/2,y);c.fillStyle=p.c;c.fillText(p.t,W/2,y)});c.globalAlpha=1;pops=pops.filter(p=>p.life>0);
     if(over>=0){c.fillStyle=`rgba(15,13,20,${Math.min(.7,over)})`;c.fillRect(0,0,W,H)}
     raf=requestAnimationFrame(frame)}
@@ -2744,12 +2875,13 @@ function answer(i){
     else if(g.lives<=0){g.over='lose';save();render()}
     else nextQ()},raid&&ok&&g.hp<=0&&!STILL?2600:raid&&ok?900:ok?650:1500);
 }
-function leaveGame(){arcStop();if(ui.game){stopTick();ui.game=null;save()}}
+function leaveGame(){if(ui.duel&&ui.duel.phase==='play'){if(DUEL.ch)DUEL.ch.leave();duelFinish({win:false,left:'me',my:0,opp:0})}arcStop();if(ui.game){stopTick();ui.game=null;save()}}
 
 /* ---------- modal + toast ---------- */
 function renderModal(){
   const m=ui.modal,el=document.getElementById('modal');if(!m){el.innerHTML='';return}
   let h='';
+  if(m.type==='duel'||m.type==='invite'){el.innerHTML=`<div class="scrim" data-a="scrim"><div class="modal duelm" role="dialog" aria-modal="true">${m.type==='duel'?duelListSheet():inviteSheet()}</div></div>`;return}
   if(m.type==='shop'){el.innerHTML=`<div class="scrim" data-a="scrim"><div class="modal shopm" role="dialog" aria-modal="true" aria-label="Shop item">${shopSheet(m)}</div></div>`;return}
   if(m.type==='award'){
     const names=m.ids.length===1?esc(S(m.ids[0]).name):m.label||`${m.ids.length} students`;
@@ -2798,8 +2930,8 @@ const A={
   give(d){const b=state.behaviors.find(x=>x.id===d.v);if(b)doGive(b.name,b.pts)},
   giveCustom(d){const n=Math.abs(parseInt(val('aw-n'),10));if(!n)return;doGive(val('aw-why')||(d.v>0?'Bonus':'Deduction'),n*(+d.v))},
   undo(d){undoGroup(d.v);document.getElementById('toast').innerHTML='';render();toast('Undone')},
-  close(){ui.modal=null;renderModal()},
-  scrim(d,el,ev){if(ev.target===el){ui.modal=null;renderModal()}},
+  close(){if(ui.modal&&ui.modal.type==='invite')return inviteAnswer(false);if(ui.modal&&ui.modal.type==='duel'&&DUEL.out)duelCancel();ui.modal=null;renderModal()},
+  scrim(d,el,ev){if(ev.target===el){if(ui.modal&&(ui.modal.type==='invite'||ui.modal.type==='duel'))return A.close();ui.modal=null;renderModal()}},
   confirmYes(){const f=ui.modal&&ui.modal.fn;ui.modal=null;if(f)f();render()},
   addBehavior(d){state.behaviors.push({id:uid(),name:+d.v>0?'New positive':'New negative',pts:+d.v});save();render()},
   delBehavior(d){state.behaviors=state.behaviors.filter(b=>b.id!==d.v);save();render()},
@@ -2845,6 +2977,13 @@ const A={
   shopView(d){ui.modal={type:'shop',id:d.v,phase:'view'};renderModal()},
   shopWear(d){const s=S(ui.sId),i=ITEM[d.v];if(!i||!owns(s,i.id))return;s.equip[i.slot]=i.id;save();ui.modal=null;render();toast(['banner','frame','title'].includes(i.slot)?'Now using '+i.name:'Now wearing '+i.name)},
   shopHide(){ui.shopHide=!ui.shopHide;render()},
+  duelOpen(){if(!duelReady())return;ui.modal={type:'duel'};renderModal()},
+  duelAsk(d){duelAsk(d.v,d.sid)},duelCancel(){duelCancel().then(()=>{ui.modal={type:'duel'};renderModal()})},
+  duelBackList(){ui.modal={type:'duel'};renderModal()},
+  inviteYes(){inviteAnswer(true)},inviteNo(){inviteAnswer(false)},
+  duelLeave(){confirmBox('Leave this match?','Leaving counts as a loss.','Leave match',()=>{if(DUEL.ch)DUEL.ch.leave();duelFinish({win:false,left:'me',my:0,opp:0})})},
+  duelBack(){ui.duel=null;render()},
+  duelRematch(){const d=ui.duel;ui.duel=null;render();const o=duelOnline().find(x=>x.sid===d.oppSid);if(o&&!o.busy)duelAsk(o.uid,o.sid);else{ui.modal={type:'duel',msg:(nameOf(d.oppSid))+" isn't available right now."};renderModal()}},
   drop(){const s=S(ui.sId),d=state.settings.drops;if(s.coins<d.cost||(ui.drop&&ui.drop.phase==='open'))return;
     const r=rollDrop(s);if(!r){toast('No items are in drops right now');return}save();
     const still=matchMedia('(prefers-reduced-motion:reduce)').matches;ui.drop={phase:still?'done':'open',...r};render();
@@ -2888,7 +3027,7 @@ function wire(){
   });
 }
 /* ============================================================ LIVE SITE (Firebase) */
-function liveBusy(){const a=document.activeElement;return(ui.arc&&ui.arc.phase==='play')||(ui.game&&!ui.game.over)||(typeof rlUI==='function'&&rlUI().b)||ui.modal||(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))}
+function liveBusy(){const a=document.activeElement;return(ui.duel&&ui.duel.phase==='play')||(ui.arc&&ui.arc.phase==='play')||(ui.game&&!ui.game.over)||(typeof rlUI==='function'&&rlUI().b)||ui.modal||(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))}
 function liveSoon(){clearTimeout(store.rt);if(liveBusy()){store.rt=setTimeout(liveSoon,1500);return}render()}
 async function liveBoot(){
   store.kind='live';store.status='saved';ui.live={phase:'loading'};wire();render();
@@ -2907,7 +3046,7 @@ async function liveEnterTeacher(user){
 async function liveEnterStudent(sess){
   ui.live={phase:'loading',msg:'Signing in…'};render();
   try{const r=await lStartStudent(sess);state=r.st;store.db=L_REALM_DB;ui.mode='student';ui.sId=sess.sid;ui.sTab='card';ui.live={phase:'in'};
-    if(!S(sess.sid))throw new Error('gone');render()}
+    if(!S(sess.sid))throw new Error('gone');render();try{DUEL.onChange=duelOnChange;duelStart()}catch(e){console.warn('Duels unavailable',e)}}
   catch(e){console.error(e);try{await lSignOut()}catch(_){}ui.live={phase:'landing',serr:'Your sign-in ended. Sign in again, and ask your teacher if it keeps happening.'};render()}
 }
 async function liveLogin(){
@@ -2946,6 +3085,7 @@ function liveRender(){
   if(teacher&&!stu&&L.first&&!state.classes.length)h+=`<div class="proto">Welcome! Go to Students to add your first class and your students. Each student gets a username and PIN to sign in with your class code.</div>`;
   h+=stu?renderStudent():renderTeacher();
   $app().innerHTML=h;renderModal();stageMount();arcMount();if(typeof rlMount==='function')rlMount();
+  if(!teacher)duelSetBusy(duelIsBusy());
 }
 async function start(snap){
   if(typeof LIVE!=='undefined'&&LIVE.on&&!window.claude)return liveBoot();

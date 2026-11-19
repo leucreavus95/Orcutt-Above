@@ -5,7 +5,9 @@
    what changed, and merges changes from other devices in real time.
    ============================================================ */
 const LIVE_CFG={
-  firebase:{apiKey:"AIzaSyBTPZNzzfPRexKHJ5P0F9v39CFcAfXqcRg",authDomain:"orcuttabove-88244.firebaseapp.com",projectId:"orcuttabove-88244",storageBucket:"orcuttabove-88244.firebasestorage.app",messagingSenderId:"222290249849",appId:"1:222290249849:web:3a168b65332bf3b37f2ca8"},
+  firebase:{apiKey:"AIzaSyBTPZNzzfPRexKHJ5P0F9v39CFcAfXqcRg",authDomain:"orcuttabove-88244.firebaseapp.com",projectId:"orcuttabove-88244",storageBucket:"orcuttabove-88244.firebasestorage.app",messagingSenderId:"222290249849",appId:"1:222290249849:web:3a168b65332bf3b37f2ca8",
+    // Realtime Database (used only for who-is-online, challenges and live matches)
+    databaseURL:"https://orcuttabove-88244-default-rtdb.firebaseio.com"},
   // Google accounts allowed into the teacher panel (must match the list in firestore.rules)
   teachers:['aarguijo2@orcutt-schools.net'],
 };
@@ -17,7 +19,8 @@ const LIVE={
   if(typeof window==='undefined')return;
   // Never in the Claude preview (it has its own storage); only when the Firebase SDK loaded.
   if(window.claude||!window.firebase||!firebase.initializeApp)return;
-  try{firebase.initializeApp(LIVE_CFG.firebase);LIVE.auth=firebase.auth();LIVE.db=firebase.firestore();LIVE.on=true}
+  try{firebase.initializeApp(LIVE_CFG.firebase);LIVE.auth=firebase.auth();LIVE.db=firebase.firestore();LIVE.on=true;
+    try{if(firebase.database)LIVE.rt=firebase.database()}catch(e){console.warn('Realtime Database unavailable',e)}}
   catch(e){console.error('Firebase init failed',e)}
 })();
 const L_COLL=['classes','students','pins','bosses','arena','log','codes','logins'];
@@ -216,7 +219,7 @@ async function lStudentSignIn(code,user,pin){
   return {sid,cid};
 }
 async function lSignOut(){
-  lStop();const u=LIVE.auth.currentUser;
+  lStop();try{duelStop()}catch(e){}const u=LIVE.auth.currentUser;
   try{if(u&&u.isAnonymous)await LIVE.db.doc('sessions/'+u.uid).delete()}catch(e){}
   LIVE.role=null;LIVE.sess=null;LIVE.owner=null;LIVE.email='';
   await LIVE.auth.signOut();
@@ -238,3 +241,79 @@ const L_REALM_DB={doc(path){
     async set(body){const s=state.students.find(x=>x.id===sid);await ref.set({json:JSON.stringify(body),sid,classId:s?s.classId:(LIVE.sess&&LIVE.sess.cid)||'',owner:LIVE.owner,t:Date.now()})}
   };
 }};
+
+/* ============================================================
+   DUELS: live two-player Desk Rally over the Realtime Database.
+   presence/{classId}/{uid}        who is online, and whether they're busy
+   invites/{classId}/{toUid}/{fromUid}  a pending challenge
+   matches/{matchId}               players, status, ball events, paddle positions
+   ============================================================ */
+const DUEL={on:false,uid:null,cid:null,sid:null,busy:false,toff:0,online:{},incoming:{},out:null,offs:[],me:null,onChange:null};
+const dSV=()=>firebase.database.ServerValue.TIMESTAMP;
+function duelReady(){return!!(LIVE.on&&LIVE.rt&&LIVE.role==='student'&&DUEL.on)}
+function duelNow(){return Date.now()+(DUEL.toff||0)}
+function duelPing(kind){if(DUEL.onChange)try{DUEL.onChange(kind)}catch(e){console.warn(e)}}
+function duelStart(){
+  if(DUEL.on||!LIVE.rt||LIVE.role!=='student'||!LIVE.sess)return;
+  const u=LIVE.auth.currentUser;if(!u)return;
+  const db=LIVE.rt;DUEL.on=true;DUEL.uid=u.uid;DUEL.cid=LIVE.sess.cid;DUEL.sid=LIVE.sess.sid;DUEL.busy=false;
+  const on=(ref,fn)=>{ref.on('value',fn,err=>console.warn('Realtime listen failed',err&&err.message));DUEL.offs.push(()=>ref.off('value',fn))};
+  on(db.ref('.info/serverTimeOffset'),s=>{DUEL.toff=s.val()||0});
+  DUEL.me=db.ref('presence/'+DUEL.cid+'/'+DUEL.uid);
+  on(db.ref('.info/connected'),s=>{if(s.val()===true){DUEL.me.onDisconnect().remove();DUEL.me.set({sid:DUEL.sid,busy:!!DUEL.busy,t:dSV()}).catch(()=>{})}});
+  on(db.ref('presence/'+DUEL.cid),s=>{DUEL.online=s.val()||{};duelPing('online')});
+  on(db.ref('invites/'+DUEL.cid+'/'+DUEL.uid),s=>{DUEL.incoming=s.val()||{};duelPing('invite')});
+}
+function duelStop(){
+  DUEL.offs.forEach(f=>{try{f()}catch(e){}});DUEL.offs=[];
+  if(DUEL.out){try{duelCancel()}catch(e){}}
+  if(DUEL.me){try{DUEL.me.onDisconnect().cancel();DUEL.me.remove()}catch(e){}}
+  Object.assign(DUEL,{on:false,me:null,online:{},incoming:{},out:null,busy:false});
+}
+function duelSetBusy(b){b=!!b;if(!DUEL.on||DUEL.busy===b)return;DUEL.busy=b;if(DUEL.me)DUEL.me.update({busy:b}).catch(()=>{})}
+// Classmates online right now, one entry per student (a student may have two tabs open).
+function duelOnline(){
+  const out={};
+  for(const uid in DUEL.online){const p=DUEL.online[uid];if(!p||uid===DUEL.uid||p.sid===DUEL.sid)continue;
+    const prev=out[p.sid];if(!prev||(prev.busy&&!p.busy))out[p.sid]={uid,sid:p.sid,busy:!!p.busy}}
+  return Object.values(out);
+}
+async function duelChallenge(toUid,toSid){
+  if(!duelReady()||DUEL.out)return;
+  const db=LIVE.rt,mid=db.ref('matches').push().key;
+  await db.ref('matches/'+mid).set({cid:DUEL.cid,a:{uid:DUEL.uid,sid:DUEL.sid},b:{uid:toUid,sid:toSid},st:'wait',t:dSV()});
+  await db.ref('invites/'+DUEL.cid+'/'+toUid+'/'+DUEL.uid).set({sid:DUEL.sid,mid,t:dSV()});
+  const o=DUEL.out={mid,toUid,toSid,st:'wait',at:Date.now()};
+  const r=db.ref('matches/'+mid+'/st'),fn=s=>{if(DUEL.out!==o)return;o.st=s.val()||'gone';duelPing('out')};
+  r.on('value',fn);o.off=()=>r.off('value',fn);
+}
+async function duelCancel(){
+  const o=DUEL.out;if(!o)return;DUEL.out=null;if(o.off)o.off();
+  const db=LIVE.rt;
+  await db.ref('invites/'+DUEL.cid+'/'+o.toUid+'/'+DUEL.uid).remove().catch(()=>{});
+  if(o.st!=='go')await db.ref('matches/'+o.mid).remove().catch(()=>{});
+}
+// Answer a challenge: 'go' (accept), 'no' (decline) or 'busy'. Accept only wins if it's still waiting.
+async function duelAnswer(fromUid,inv,ans){
+  const db=LIVE.rt;let ok=false;
+  try{const r=await db.ref('matches/'+inv.mid+'/st').transaction(cur=>cur==='wait'?ans:undefined);ok=r.committed&&ans==='go'}catch(e){}
+  await db.ref('invites/'+DUEL.cid+'/'+DUEL.uid+'/'+fromUid).remove().catch(()=>{});
+  return ok;
+}
+// The live match connection used by the game.
+function duelChannel(mid){
+  const db=LIVE.rt,m=db.ref('matches/'+mid),me=DUEL.uid,ch={ev:null,opp:.5,gone:false,offs:[]};
+  const on=(ref,fn)=>{ref.on('value',fn,()=>{});ch.offs.push(()=>ref.off('value',fn))};
+  on(m.child('ev'),s=>{const v=s.val();if(v&&(!ch.ev||v.n>ch.ev.n))ch.ev=v});
+  on(m.child('p'),s=>{const v=s.val()||{};for(const k in v)if(k!==me)ch.opp=v[k]});
+  on(m.child('gone'),s=>{const v=s.val()||{};for(const k in v)if(k!==me&&v[k])ch.gone=true});
+  on(m,s=>{if(!s.exists()&&ch.ev&&ch.ev.k!=='end')ch.gone=true});
+  m.child('gone/'+me).onDisconnect().set(true);
+  let lastT=0,lastV=-1;
+  ch.pad=v=>{const t=performance.now();if(t-lastT<60||Math.abs(v-lastV)<.003)return;lastT=t;lastV=v;m.child('p/'+me).set(Math.round(v*1000)/1000).catch(()=>{})};
+  ch.emit=e=>{e.n=(ch.ev?ch.ev.n:0)+1;ch.ev=e;m.child('ev').set(e).catch(()=>{})};
+  ch.leave=()=>m.child('gone/'+me).set(true).catch(()=>{});
+  ch.close=(removeLater)=>{ch.offs.forEach(f=>f());ch.offs=[];try{m.child('gone/'+me).onDisconnect().cancel()}catch(e){}if(removeLater)setTimeout(()=>m.remove().catch(()=>{}),4000)};
+  ch.now=duelNow;ch.me=me;
+  return ch;
+}

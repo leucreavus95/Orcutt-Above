@@ -1,0 +1,30 @@
+{
+  "rules": {
+    "presence": {
+      "$cid": {
+        ".read": "auth != null",
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.hasChildren(['sid'])"
+        }
+      }
+    },
+    "invites": {
+      "$cid": {
+        "$to": {
+          ".read": "auth != null && auth.uid === $to",
+          "$from": {
+            ".read": "auth != null && auth.uid === $from",
+            ".write": "auth != null && (auth.uid === $from || auth.uid === $to)"
+          }
+        }
+      }
+    },
+    "matches": {
+      "$mid": {
+        ".read": "auth != null && (data.child('a/uid').val() === auth.uid || data.child('b/uid').val() === auth.uid)",
+        ".write": "auth != null && ((!data.exists() && newData.child('a/uid').val() === auth.uid) || data.child('a/uid').val() === auth.uid || data.child('b/uid').val() === auth.uid)"
+      }
+    }
+  }
+}
