@@ -1759,7 +1759,7 @@ const ARCADE=[
  {id:'flap',name:'Paper Route',run:flapGame,unit:'gaps',hint:'Tap, click or press Space to flap. One play is one life.',d:'Keep your flyer in the air and thread the gaps between the pencils. Each gap is one point. Equip a sidekick and it does the flying.'},
  {id:'horde',name:'Homework Horde',run:hordeGame,tall:true,unit:'erased',hint:'Move with WASD. Aim with the mouse and click (or hold) to toss, or toss with the arrow keys. On a touchscreen, drag on the left to move and touch where you want to throw.',d:'Overdue homework has come to life. Dodge the swarm, aim, and toss pencils and paper airplanes to clear it out. Collect gold stars to level up and build your loadout from 18 upgrades. It gets harder every minute: swarms, sprinters, spitters, heavy textbooks and a bigger boss every minute. How long can you last?'},
  {id:'dash',name:'Graph Dash',run:dashGame,unit:'blocks',hint:'Click, tap, or press Space or Up to jump. Hold to keep jumping. Tap mid-air on a glowing ring to jump again.',d:'Your cube races across graph paper on its own. Jump over pencil spikes, land on blocks, hit the yellow pads and rings. The course is the same every time, so you can learn it. The score is how many blocks you get.'},
- {id:'pong',name:'Ping Pong',run:pongGame,tall:true,unit:'points',hint:'Move your mouse (or W/S, arrow keys) to move the yellow paddle. On a phone, drag. Hit the ball near the edge of your paddle for sharper angles, and move while you hit to add spin.',d:'You against the CPU at the ping pong table. Every point you win makes the CPU faster and smarter, and every return speeds the ball up. Miss three balls and the match is over.'},
+ {id:'pong',name:'Desk Rally',run:pongGame,tall:true,unit:'points',hint:'Move your mouse (or W/S, arrow keys) to slide your pink eraser. On a phone, drag. Hit the paper wad near the end of your eraser for sharper angles, and move while you hit to add spin.',d:'Flick a crumpled paper wad across two pushed-together desks with your eraser, over the ruler and past your rival across the aisle. Every point you win makes your rival quicker and sharper, and every return speeds the wad up. Miss three and the match is over.'},
  {id:'moto',name:'Recess Rider',run:motoGame,tall:true,unit:'points',hint:'Hold ↑ or W to ride and ↓ or S to brake. Use ← → (or A D) to lean: lean back for wheelies and backflips, forward for frontflips. On a phone, use the on-screen buttons.',d:'A stunt bike course across the school grounds: ruler ramps, book stairs, pits and school-bus jumps. Land flips for bonus points and +2 seconds, and reach checkpoints for +10 seconds. Land on your head three times and you are out.'},
  {id:'td',name:'Desk Defense',run:tdGame,tall:true,unit:'waves',hint:'Pick a tool from the bar (or press 1 to 5), then click a square next to the path. Click a placed tool to upgrade (U) or sell (S). Space starts the next wave, F toggles 2× speed.',d:'Homework is marching toward the classroom door. Place pencil cups, eraser lobbers, glue, highlighters and chalk along the path, earn coins from each one you stop, and upgrade your setup between waves. Every 5th wave brings a boss. How many waves can you hold?'},
  {id:'snake',name:'Doodle Snake',run:snakeGame,tall:true,unit:'apples',hint:'Steer with the arrow keys or WASD, or swipe on a touchscreen.',d:'Steer your snake around the graph paper and eat apples to grow longer. Don\'t hit the edge or your own tail. Grab a golden apple before it disappears for 3 at once. It gets faster as you grow.'}];
@@ -2532,7 +2532,10 @@ function pongGame(cv,s,done){
   const c=cv.getContext('2d'),TAU=Math.PI*2,L=1.6,BR=.02,PH=.12,PX=.06;
   let W=0,H=0,raf=0,last=performance.now(),stopped=false,horiz=true,scale=1,ox=0,oy=0;
   let me=.5,meV=0,meT=.5,cpu=.5,score=0,lives=3,rally=0,best=0,over=-1,serveT=1.1,hits=0;
-  let b={u:L/2,v:.5,vu:0,vv:0},trail=[],pops=[],keys={},flash=0,cpuErr=0,cpuErrT=0;
+  let b={u:L/2,v:.5,vu:0,vv:0},trail=[],pops=[],keys={},flash=0,cpuErr=0,cpuErrT=0,rot=0,flecks=[],cflash=0;
+  // crumpled paper wad outline (fixed, so it keeps its shape while it spins)
+  const WAD=Array.from({length:13},(_,k)=>{const a=k/13*TAU;return[a,.82+((k*7919)%13)/13*.36]});
+  const fleck=(u,v,dir)=>{for(let k=0;k<7;k++){const a=(Math.random()-.5)*2.2+(dir>0?0:Math.PI);flecks.push({u,v,vu:Math.cos(a)*(.3+Math.random()*.5),vv:Math.sin(a)*(.3+Math.random()*.5),r:Math.random()*TAU,life:.5})}};
   const say=(t,col)=>pops.push({t,c:col||'#ffd60a',life:1.1});
   function serve(){const a=(Math.random()*.6-.3);b={u:L*.62,v:.5+(Math.random()*.3-.15),vu:-Math.cos(a)*(1.15+score*.04),vv:Math.sin(a)*.8};rally=0;trail=[]}
   const toScr=(u,v)=>horiz?[ox+u*scale,oy+v*scale]:[ox+v*scale,oy+(L-u)*scale];
@@ -2555,15 +2558,15 @@ function pongGame(cv,s,done){
     {const sp0=Math.hypot(b.vu,b.vv);if(Math.abs(b.vu)<sp0*.55){const su=Math.sign(b.vu)||-1;b.vu=su*sp0*.55;b.vv=Math.sign(b.vv)*sp0*Math.sqrt(1-.3025)}}
     b.u+=b.vu*dt;b.v+=b.vv*dt;
     if(b.v<BR){b.v=BR;b.vv=Math.abs(b.vv)}if(b.v>1-BR){b.v=1-BR;b.vv=-Math.abs(b.vv)}
-    trail.push([b.u,b.v]);if(trail.length>10)trail.shift();
+    trail.push([b.u,b.v]);if(trail.length>8)trail.shift();rot+=Math.hypot(b.vu,b.vv)*dt*9*(b.vu>0?1:-1);
     const sp=Math.hypot(b.vu,b.vv);
     if(b.vu<0&&b.u-BR<=PX&&b.u>PX-.05&&Math.abs(b.v-me)<PH/2+BR){
       const off=(b.v-me)/(PH/2),ns=Math.min(3.4,sp*1.05+.02),ang=Math.max(-.95,Math.min(.95,off*.85+Math.max(-.3,Math.min(.3,meV*.1))));
-      b.vu=Math.cos(ang)*ns;b.vv=Math.sin(ang)*ns;b.u=PX+BR;rally++;hits++;flash=.12;if(rally>best)best=rally;
+      b.vu=Math.cos(ang)*ns;b.vv=Math.sin(ang)*ns;b.u=PX+BR;rally++;hits++;flash=.14;fleck(b.u,b.v,1);if(rally>best)best=rally;
       if(rally>0&&rally%10===0)say('RALLY '+rally+'!','#3df2e0')}
     if(b.vu>0&&b.u+BR>=L-PX&&b.u<L-PX+.05&&Math.abs(b.v-cpu)<PH/2+BR){
       const off=(b.v-cpu)/(PH/2),ns=Math.min(3.4,sp*1.03+.01),ang=Math.PI-Math.max(-.9,Math.min(.9,off*.8));
-      b.vu=Math.cos(ang)*ns;b.vv=Math.sin(ang)*ns;b.u=L-PX-BR}
+      b.vu=Math.cos(ang)*ns;b.vv=Math.sin(ang)*ns;b.u=L-PX-BR;cflash=.14;fleck(b.u,b.v,-1)}
     if(b.u>L+.08){score++;say('POINT!','#38d39f');serveT=.9}
     if(b.u<-.08){lives--;say(lives>0?'MISSED':'GAME OVER','#ff4d6d');serveT=.9;if(lives<=0)over=0}
   }
@@ -2575,25 +2578,54 @@ function pongGame(cv,s,done){
     if(horiz){scale=Math.min((W-pad*2)/L,(H-top-pad)/1);ox=(W-L*scale)/2;oy=top+(H-top-pad-scale)/2}
     else{scale=Math.min((W-pad*2)/1,(H-top-pad)/L);ox=(W-scale)/2;oy=top+(H-top-pad-L*scale)/2}
     if(over<0)update(dt);else{over+=dt;if(over>1.4){stopped=true;cleanup();done(score,`Longest rally ${best} · ${hits} returns`);return}}
-    c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#14121b';c.fillRect(0,0,W,H);
-    // table
+    c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#16131c';c.fillRect(0,0,W,H);
+    // classroom floor tiles
+    c.fillStyle='rgba(255,255,255,.025)';const tile=44;for(let y=0;y<H;y+=tile)for(let x=((y/tile)%2)*tile;x<W;x+=tile*2)c.fillRect(x,y,tile,tile);
+    // two desks pushed together
     const [tx,ty]=toScr(0,0),[tx2,ty2]=toScr(L,1),x0=Math.min(tx,tx2),y0=Math.min(ty,ty2),tw=Math.abs(tx2-tx),th=Math.abs(ty2-ty);
-    c.fillStyle='rgba(0,0,0,.4)';rr(c,x0+6,y0+8,tw,th,10);c.fill();
-    c.fillStyle='#1f5fa8';rr(c,x0,y0,tw,th,8);c.fill();c.strokeStyle='#f4f4fa';c.lineWidth=3;rr(c,x0+2,y0+2,tw-4,th-4,6);c.stroke();
-    c.lineWidth=1.5;c.beginPath();const [m1x,m1y]=toScr(0,.5),[m2x,m2y]=toScr(L,.5);c.moveTo(m1x,m1y);c.lineTo(m2x,m2y);c.stroke();
-    const [n1x,n1y]=toScr(L/2,-.02),[n2x,n2y]=toScr(L/2,1.02);c.strokeStyle='#e8e8f0';c.lineWidth=5;c.beginPath();c.moveTo(n1x,n1y);c.lineTo(n2x,n2y);c.stroke();c.strokeStyle='#141218';c.lineWidth=1;c.setLineDash([3,3]);c.stroke();c.setLineDash([]);
-    // paddles
-    const paddle=(u,v,col,glow)=>{const ph=PH*scale,pw=.03*scale,[px,py]=toScr(u,v);c.save();c.translate(px,py);if(!horiz)c.rotate(Math.PI/2);
-      c.shadowColor=col;c.shadowBlur=glow?18:6;c.fillStyle=col;rr(c,-pw/2,-ph/2,pw,ph,pw/2);c.fill();c.shadowBlur=0;c.strokeStyle='#141218';c.lineWidth=1.5;c.stroke();c.restore()};
-    paddle(PX-.012,me,'#ffd60a',flash>0);paddle(L-PX+.012,cpu,'#d7263d');flash-=dt;
-    // ball
-    if(serveT<=0||over>=0){trail.forEach((p,i)=>{const [x,y]=toScr(p[0],p[1]);c.globalAlpha=i/trail.length*.35;c.fillStyle='#ffd60a';c.beginPath();c.arc(x,y,BR*scale*(i/trail.length),0,TAU);c.fill()});c.globalAlpha=1;
-      const [bx,by]=toScr(b.u,b.v);c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.arc(bx+4,by+5,BR*scale,0,TAU);c.fill();c.fillStyle='#fff6e0';c.beginPath();c.arc(bx,by,BR*scale,0,TAU);c.fill()}
+    c.fillStyle='rgba(0,0,0,.45)';rr(c,x0+7,y0+10,tw,th,12);c.fill();
+    const wg=horiz?c.createLinearGradient(0,y0,0,y0+th):c.createLinearGradient(x0,0,x0+tw,0);wg.addColorStop(0,'#c99366');wg.addColorStop(.5,'#b98154');wg.addColorStop(1,'#a8703f');
+    c.fillStyle='#6e4426';rr(c,x0-5,y0-5,tw+10,th+10,12);c.fill();c.fillStyle=wg;rr(c,x0,y0,tw,th,8);c.fill();
+    c.save();rr(c,x0,y0,tw,th,8);c.clip();
+    c.strokeStyle='rgba(90,50,20,.22)';c.lineWidth=1.2;for(let k=0;k<9;k++){const v=.06+k*.11;c.beginPath();for(let t=0;t<=20;t++){const u=t/20*L,[x,y]=toScr(u,v+Math.sin(t*.9+k*1.7)*.012);t?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}
+    // pencil doodles on the desks
+    c.strokeStyle='rgba(40,30,60,.28)';c.fillStyle='rgba(40,30,60,.28)';c.lineWidth=1.6;c.lineCap='round';
+    const at=(u,v)=>toScr(u,v),sz=scale*.05;
+    {const[x,y]=at(L*.24,.22);c.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,r=k%2?sz*.45:sz;c.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r)}c.closePath();c.stroke()}
+    {const[x,y]=at(L*.3,.8);c.beginPath();c.arc(x,y,sz*.8,0,TAU);c.stroke();c.beginPath();c.arc(x,y+sz*.1,sz*.45,.2,Math.PI-.2);c.stroke();c.beginPath();c.arc(x-sz*.28,y-sz*.2,1.6,0,TAU);c.arc(x+sz*.28,y-sz*.2,1.6,0,TAU);c.fill()}
+    {const[x,y]=at(L*.74,.3);c.font=`${Math.round(sz*1.4)}px "Comic Sans MS",cursive`;c.textAlign='center';c.textBaseline='middle';c.fillText('A+',x,y)}
+    {const[x,y]=at(L*.8,.76);c.font=`${Math.round(sz*.9)}px "Comic Sans MS",cursive`;c.textAlign='center';c.fillText('2+2=4',x,y)}
+    c.restore();
+    // seam where the desks meet, with a ruler lying across it as the net
+    {const[a,b2]=at(L/2,0),[a2,b3]=at(L/2,1);c.strokeStyle='rgba(40,20,8,.6)';c.lineWidth=3;c.beginPath();c.moveTo(a,b2);c.lineTo(a2,b3);c.stroke()}
+    {const rw=.045;const[p1x,p1y]=at(L/2-rw/2,-.04),[p2x,p2y]=at(L/2+rw/2,1.04),rx=Math.min(p1x,p2x),ry=Math.min(p1y,p2y),rwid=Math.abs(p2x-p1x),rhei=Math.abs(p2y-p1y);
+      c.fillStyle='rgba(0,0,0,.35)';rr(c,rx+3,ry+4,rwid,rhei,3);c.fill();c.fillStyle='#ffd60a';rr(c,rx,ry,rwid,rhei,3);c.fill();c.strokeStyle='#b88a00';c.lineWidth=1;c.stroke();
+      c.strokeStyle='#3a2a10';c.lineWidth=1;c.beginPath();for(let k=1;k<40;k++){const v=-.04+k*(1.08/40),m=k%5===0?.6:.3;const[q1x,q1y]=at(L/2-rw/2,v),[q2x,q2y]=at(L/2-rw/2+rw*m,v);c.moveTo(q1x,q1y);c.lineTo(q2x,q2y)}c.stroke()}
+    // erasers
+    const eraser=(u,v,body,band,glow)=>{const ph=PH*scale,pw=.042*scale,[px,py]=toScr(u,v);c.save();c.translate(px,py);if(!horiz)c.rotate(Math.PI/2);
+      c.fillStyle='rgba(0,0,0,.35)';rr(c,-pw/2+3,-ph/2+4,pw,ph,pw*.3);c.fill();
+      if(glow){c.shadowColor=band;c.shadowBlur=20}
+      c.fillStyle=body;rr(c,-pw/2,-ph/2,pw,ph,pw*.3);c.fill();c.shadowBlur=0;
+      c.fillStyle=band;c.fillRect(-pw/2,-ph*.22,pw,ph*.44);
+      c.fillStyle='rgba(255,255,255,.85)';c.fillRect(-pw*.3,-ph*.12,pw*.6,ph*.24);
+      c.fillStyle=band;c.fillRect(-pw*.18,-ph*.07,pw*.36,ph*.03);c.fillRect(-pw*.18,ph*.03,pw*.36,ph*.03);
+      c.fillStyle='rgba(255,255,255,.25)';rr(c,-pw/2+2,-ph/2+3,pw*.3,ph*.18,2);c.fill();
+      c.strokeStyle='rgba(20,18,24,.6)';c.lineWidth=1.2;rr(c,-pw/2,-ph/2,pw,ph,pw*.3);c.stroke();c.restore()};
+    eraser(PX-.016,me,'#ff8fb3','#3d6bff',flash>0);eraser(L-PX+.016,cpu,'#f4f4fa','#d7263d',cflash>0);flash-=dt;cflash-=dt;
+    // paper flecks
+    flecks.forEach(f=>{f.life-=dt;f.u+=f.vu*dt;f.v+=f.vv*dt;f.r+=dt*8;const[x,y]=toScr(f.u,f.v);c.save();c.translate(x,y);c.rotate(f.r);c.globalAlpha=Math.max(0,f.life*2);c.fillStyle='#f4f1e8';c.fillRect(-2.5,-1.5,5,3);c.restore()});c.globalAlpha=1;flecks=flecks.filter(f=>f.life>0);
+    // the paper wad
+    const wad=(x,y,r,a)=>{c.save();c.translate(x,y);c.rotate(a);c.beginPath();WAD.forEach(([t,k],i)=>{const px=Math.cos(t)*r*k,py=Math.sin(t)*r*k;i?c.lineTo(px,py):c.moveTo(px,py)});c.closePath();
+      const g=c.createRadialGradient(-r*.35,-r*.35,r*.1,0,0,r*1.1);g.addColorStop(0,'#ffffff');g.addColorStop(.6,'#ece8de');g.addColorStop(1,'#c9c3b4');c.fillStyle=g;c.fill();c.strokeStyle='#8f8878';c.lineWidth=1;c.stroke();
+      c.strokeStyle='rgba(120,112,96,.7)';c.lineWidth=.9;c.beginPath();c.moveTo(-r*.6,-r*.1);c.lineTo(-r*.1,r*.15);c.lineTo(r*.2,-r*.35);c.moveTo(-r*.2,r*.55);c.lineTo(r*.05,r*.1);c.lineTo(r*.55,r*.3);c.moveTo(-r*.45,-r*.5);c.lineTo(-r*.15,-r*.25);c.stroke();
+      c.strokeStyle='rgba(74,168,255,.5)';c.beginPath();c.moveTo(-r*.7,r*.25);c.lineTo(-r*.2,r*.35);c.stroke();c.restore()};
+    if(serveT<=0||over>=0){trail.forEach((p,i)=>{const [x,y]=toScr(p[0],p[1]);c.globalAlpha=i/trail.length*.25;c.fillStyle='#f4f1e8';c.beginPath();c.arc(x,y,BR*scale*.7*(i/trail.length),0,TAU);c.fill()});c.globalAlpha=1;
+      const [bx,by]=toScr(b.u,b.v);c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(bx+4,by+6,BR*scale*1.1,BR*scale*.8,0,0,TAU);c.fill();wad(bx,by,BR*scale*1.6,rot)}
     // hud
     c.textBaseline='middle';c.textAlign='left';c.font='22px Anton,Impact,sans-serif';c.fillStyle='#f4efe7';c.fillText('POINTS '+score,14,24);
-    c.textAlign='center';c.fillStyle='#a69fb0';c.font='16px Anton,Impact,sans-serif';c.fillText(rally>1?'RALLY '+rally:'CPU LEVEL '+(1+Math.min(14,score)),W/2,24);
-    c.textAlign='right';for(let i=0;i<3;i++){c.globalAlpha=i<lives?1:.2;c.fillStyle='#fff6e0';c.beginPath();c.arc(W-20-i*22,24,7,0,TAU);c.fill()}c.globalAlpha=1;
-    if(serveT>0&&over<0&&score===0&&lives===3){c.textAlign='center';c.font=`${W<500?15:19}px Anton,Impact,sans-serif`;c.lineWidth=4;c.strokeStyle='#141218';const t2=horiz?'MOVE YOUR MOUSE (OR W / S) TO MOVE THE YELLOW PADDLE':'DRAG LEFT AND RIGHT TO MOVE THE YELLOW PADDLE';const[cx,cy]=toScr(L*.3,.5);c.strokeText(t2,W/2,horiz?cy:cy);c.fillStyle='#ffd60a';c.fillText(t2,W/2,cy)}
+    c.textAlign='center';c.fillStyle='#a69fb0';c.font='16px Anton,Impact,sans-serif';c.fillText(rally>1?'RALLY '+rally:'RIVAL LEVEL '+(1+Math.min(14,score)),W/2,24);
+    c.textAlign='right';for(let i=0;i<3;i++){c.globalAlpha=i<lives?1:.2;wad(W-20-i*24,24,8,i*1.3)}c.globalAlpha=1;
+    if(serveT>0&&over<0&&score===0&&lives===3){c.textAlign='center';c.font=`${W<500?15:19}px Anton,Impact,sans-serif`;c.lineWidth=4;c.strokeStyle='#141218';const t2=horiz?'MOVE YOUR MOUSE (OR W / S) TO MOVE YOUR PINK ERASER':'DRAG LEFT AND RIGHT TO MOVE YOUR PINK ERASER';const[cx,cy]=toScr(L*.3,.5);c.strokeText(t2,W/2,horiz?cy:cy);c.fillStyle='#ffd60a';c.fillText(t2,W/2,cy)}
     pops.forEach((p,i)=>{p.life-=dt;c.globalAlpha=Math.min(1,p.life*3);c.textAlign='center';c.font=`${W<500?28:38}px Anton,Impact,sans-serif`;c.lineWidth=6;c.strokeStyle='#141218';const y=H*.45-(1.1-p.life)*30-i*44;c.strokeText(p.t,W/2,y);c.fillStyle=p.c;c.fillText(p.t,W/2,y)});c.globalAlpha=1;pops=pops.filter(p=>p.life>0);
     if(over>=0){c.fillStyle=`rgba(15,13,20,${Math.min(.7,over)})`;c.fillRect(0,0,W,H)}
     raf=requestAnimationFrame(frame)}
