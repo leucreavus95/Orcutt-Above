@@ -16,6 +16,9 @@ function rlNew(){return{v:1,started:false,heroes:{},gear:[],gid:1,gold:2000,gems
 function rlMigrate(p){if(!p||typeof p!=='object')return null;const d=rlNew();for(const k in d)if(p[k]===undefined)p[k]=d[k];
   if(!p.sq){(p.gear||[]).forEach(g=>(g.sub||[]).forEach(q=>{if(q[0]==='hp')q[1]=Math.max(1,Math.round(q[1]/RL_SQ));else if(q[0]==='atk'||q[0]==='def')q[1]=Math.max(1,Math.round(q[1]/RL_SQ))}));p.sq=1}
   return p}
+function rlGiftHero(p,g){const[id,f]=String(g).split('@');if(!RL_H[id])return null;const fm=Math.max(0,Math.min(2,+f||0)),want=Math.min([1,CR_EVO[0],CR_EVO[1]][fm],rlMaxLv(RL_H[id].r));
+  if(!rlAddHero(p,id)){const h=p.heroes[id],k=[1,2,0].find(k=>h.sk[k]<rlSkMax(id,k));if(k!=null)h.sk[k]++}
+  const h=p.heroes[id];if(h.lv<want){h.lv=Math.min(want,rlMaxLv(h.st));h.xp=0}return crName(id,h.lv)}
 function rlAddHero(p,id){if(p.heroes[id])return false;p.heroes[id]={lv:1,xp:0,st:RL_H[id].r,sk:[1,1,1],g:[0,0,0,0,0,0]};return true}
 
 /* ---------- storage: one document per student ---------- */
