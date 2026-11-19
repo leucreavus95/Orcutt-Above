@@ -296,7 +296,10 @@ async function duelCancel(){
 // Answer a challenge: 'go' (accept), 'no' (decline) or 'busy'. Accept only wins if it's still waiting.
 async function duelAnswer(fromUid,inv,ans){
   const db=LIVE.rt;let ok=false;
-  try{const r=await db.ref('matches/'+inv.mid+'/st').transaction(cur=>cur==='wait'?ans:undefined);ok=r.committed&&ans==='go'}catch(e){}
+  // Firebase first runs a transaction against the local copy, which is empty (null) until the server answers.
+  // Returning a value for null lets the server re-run it with the real status; returning undefined would give up.
+  try{const r=await db.ref('matches/'+inv.mid+'/st').transaction(cur=>cur==='wait'||cur===null?ans:undefined);
+    ok=!!(r&&r.committed&&ans==='go'&&r.snapshot&&r.snapshot.val()==='go')}catch(e){console.warn('Answer failed',e&&e.message)}
   await db.ref('invites/'+DUEL.cid+'/'+DUEL.uid+'/'+fromUid).remove().catch(()=>{});
   return ok;
 }
