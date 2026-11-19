@@ -1622,6 +1622,16 @@ function sRanks(s){
   <div class="panel scroll"><table><tbody>${list.map((x,i)=>`<tr style="${x.id===s.id?'background:var(--surface2)':''}"><td class="num" style="width:40px"><span style="font-family:var(--display);font-size:26px;color:${['#ffd60a','#d9dbe3','#e0965a'][i]||'var(--muted)'}">${i+1}</span></td><td style="width:64px"><span class="${frameCls(x.equip)}" style="display:block;width:52px">${avatarSVG(x.equip)}</span></td><td><b>${esc(x.name)}</b><br>${titleTag(x.equip)}</td><td>${rankBadge(x.points)}</td><td class="num" style="text-align:right"><b>${x.points}</b> pts</td></tr>`).join('')}</tbody></table></div>`;
 }
 /* ---------- arena ---------- */
+function raidParty(rb,s){return`<div class="party"><span class="muted" style="align-self:center">Raid party</span>${Object.entries({...rb.dmg,[s.id]:rb.dmg[s.id]||0}).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([id,n])=>{const x=S(id);return x?`<span class="pm ${id===s.id?'me':''}" title="${esc(x.name)}"><span class="${frameCls(x.equip)}">${avatarSVG(x.equip)}</span><span class="num">${n}</span></span>`:''}).join('')}</div>`}
+// While a raid is on screen, pull in classmates' hits from the shared boss without redrawing the whole page.
+function raidSync(){
+  const g=ui.game,s=S(ui.sId);if(!g||g.mode!=='raid'||g.over||!s)return;
+  const b=bossOf(s.classId),hp=b&&b.active?b.hp:0;
+  if(b){const el=document.querySelector('.arena .party');if(el){const t=document.createElement('div');t.innerHTML=raidParty(b,s);el.replaceWith(t.firstElementChild)}}
+  if(hp===g.hp)return;
+  g.hp=hp;const st=document.getElementById('stage');if(st&&b)st.setAttribute('aria-label',`${BOSSES[b.k].n}: ${hp} of ${b.max} HP.`);
+  if(hp<=0&&!g.locked){stopTick();g.over='win';save();render()}
+}
 function sArena(s){
   const g=ui.game,c=C(s.classId)||{level:2},left=capLeft(s);
   if(!g)return`<div class="spread"><div><h2>Arena</h2><p class="muted">${LEVELS[c.level]} · ${state.settings.games.perCorrect} coins per right answer · ${left} arena coins left today</p></div></div>
@@ -1633,7 +1643,7 @@ function sArena(s){
   if(g.over)return`<div class="arena" style="text-align:center"><h2 class="${g.over==='win'?'good':'bad'}" style="font-size:64px">${g.over==='win'?'Victory':'Defeated'}</h2><p>${g.correct} right out of ${g.total}${g.best>=3?` · best streak ${g.best}`:''}</p><p class="big"><span class="coin num">+${g.earned}</span></p>${g.capped?'<p class="muted">You hit today\'s arena coin limit. You can keep playing for practice.</p>':''}<div class="row" style="justify-content:center"><button class="btn pri" data-a="gstart" data-v="${g.mode}">Run it back</button><button class="btn" data-a="gquit">Change mode</button></div></div>`;
   return`<div class="arena"><div class="vs ${raid&&rb?'hide':''}"><div class="side2"><b>${esc(s.name.split(' ')[0])}</b><span class="hearts" aria-label="${g.lives} lives">${'♥'.repeat(g.lives)}<span style="opacity:.25">${'♥'.repeat(3-g.lives)}</span></span></div><h3 class="muted">vs</h3><div class="side2 r"><b>${raid&&rb?esc(BOSSES[rb.k].n):m.n+' rival'}</b><div class="hp" aria-label="Health ${g.hp} of ${raid&&rb?rb.max:m.hp}"><i style="width:${g.hp/(raid&&rb?rb.max:m.hp)*100}%"></i></div><span class="muted num">${g.hp} HP</span></div></div>
    ${raid&&rb?`<div id="stage" class="stage" role="img" aria-label="${esc(BOSSES[rb.k].n)}: ${g.hp} of ${rb.max} HP. You have ${g.lives} of 3 lives."></div>
-   <div class="party"><span class="muted" style="align-self:center">Raid party</span>${Object.entries({...rb.dmg,[s.id]:rb.dmg[s.id]||0}).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([id,n])=>{const x=S(id);return x?`<span class="pm ${id===s.id?'me':''}" title="${esc(x.name)}"><span class="${frameCls(x.equip)}">${avatarSVG(x.equip)}</span><span class="num">${n}</span></span>`:''}).join('')}</div>`:''}
+   ${raidParty(rb,s)}`:''}
    <div class="timer"><i id="tbar"></i></div>
    <div class="q"><small>${esc(g.q.topic)}</small>${g.q.q}</div>
    <div class="choices">${g.q.choices.map((ch,i)=>{let cls='';if(g.locked){if(ch===g.q.answer)cls='right';else if(i===g.picked)cls='wrong'}return`<button class="choice ${cls}" data-a="answer" data-v="${i}" ${g.locked?'disabled':''}><kbd>${i+1}</kbd>${esc(ch)}</button>`}).join('')}</div>
@@ -2872,7 +2882,7 @@ function answer(i){
   stopTick();g.locked=true;g.picked=i;g.total++;s.answered=(s.answered||0)+1;
   const ok=i!=null&&g.q.choices[i]===g.q.answer;g.lastOk=ok;
   if(ok){g.correct++;s.correct=(s.correct||0)+1;g.streak++;g.best=Math.max(g.best,g.streak);const d=g.streak>=3?2:1;g.lastD=d;s.xp=(s.xp||0)+XP.correct;
-    if(g.mode==='raid'){const b=bossOf(s.classId);if(b&&b.active){b.hp=Math.max(0,b.hp-d);b.dmg[s.id]=(b.dmg[s.id]||0)+d;g.dealt+=d;g.hp=b.hp}else g.hp=0}
+    if(g.mode==='raid'){const b=bossOf(s.classId);if(b&&b.active){b.hp=Math.max(0,b.hp-d);b.dmg[s.id]=(b.dmg[s.id]||0)+d;g.dealt+=d;g.hp=b.hp;save()}else g.hp=0}
     else g.hp=Math.max(0,g.hp-d);
     grant(s,g,state.settings.games.perCorrect)}
   else{g.streak=0;g.lives--}
@@ -3040,7 +3050,7 @@ function liveBusy(){const a=document.activeElement;return(ui.duel&&ui.duel.phase
 function liveSoon(){clearTimeout(store.rt);if(liveBusy()){store.rt=setTimeout(liveSoon,1500);return}render()}
 async function liveBoot(){
   store.kind='live';store.status='saved';ui.live={phase:'loading'};wire();render();
-  LIVE.onChange=liveSoon;LIVE.onError=()=>setStatus('error');
+  LIVE.onChange=()=>{try{raidSync()}catch(e){console.warn(e)}liveSoon()};LIVE.onError=()=>setStatus('error');
   let who=null;try{who=await lWhoAmI()}catch(e){}
   if(who&&who.role==='teacher')return liveEnterTeacher(who.user);
   if(who&&who.role==='student')return liveEnterStudent(who.sess);
