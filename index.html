@@ -172,6 +172,7 @@ button.item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .duelwait.invite .miniav{animation:buyPop .5s cubic-bezier(.2,1.5,.4,1) both;box-shadow:0 0 0 3px #ff5fa2,0 10px 30px -10px #ff5fa2}
 .duelbar{width:100%;max-width:320px;height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}.duelbar i{display:block;height:100%;background:#ff5fa2;animation:drain 20s linear forwards}
 @keyframes drain{from{width:100%}to{width:0}}
+.duelcoins{margin:0;font-weight:700}
 .duelover .miniav{width:84px;height:84px;border-radius:18px;margin:0 auto}
 .modal.shopm{width:min(720px,100%);overflow:hidden;position:relative}
 .shopv{display:grid;grid-template-columns:minmax(0,250px) 1fr;gap:24px;align-items:center;--rc:var(--common)}
@@ -1282,7 +1283,7 @@ function defaultState(){
     log:[],itemCfg:{},bosses:[{id:'b1',classId:'c1',k:0,hp:64,max:100,reward:40,active:true,dmg:{s1:12,s3:9,s7:15}}],
     settings:{coinsPerPoint:5,penaltyCoins:false,leaderboard:'top5',shop:true,
       drops:{on:true,cost:100,rates:{common:60,rare:28,epic:10,legendary:2},pity:10,dupe:30},
-      games:{on:true,perCorrect:2,cap:60},arcade:{on:true,cost:25,daily:0,off:{}}}};
+      games:{on:true,perCorrect:2,cap:60},arcade:{on:true,cost:25,daily:0,off:{},duelFee:5}}};
 }
 // Demo data with fresh ids, so demo classes never collide between teachers on the live site.
 function demoFresh(){const d=defaultState(),m={};const nid=o=>{m[o]=uid();return m[o]};d.classes.forEach(c=>c.id=nid(c.id));d.students.forEach(s=>{s.id=nid(s.id);s.classId=m[s.classId]});d.bosses.forEach(b=>{b.id=uid();b.classId=m[b.classId];const dm={};for(const k in b.dmg)dm[m[k]]=b.dmg[k];b.dmg=dm});return d}
@@ -1795,12 +1796,14 @@ function arcButtons(s,g,again){
   return`<div class="row" style="${again?'justify-content:center':''}"><button class="btn pri" data-a="arcPlay" data-v="${g.id}" ${dis}>${again?'Play again':'Play'} · ${cost}</button></div>${why}`;
 }
 /* ---------- live duels ---------- */
+const duelFee=()=>{const f=+((state.settings.arcade||{}).duelFee??5);return f>0?Math.floor(f):0};
+const feeTxt=()=>duelFee()?`Entry ${duelFee()} coins, and you get 1 back for every point you score.`:'Free to play.';
 const nameOf=sid=>{const x=S(sid);return x?x.name:'A classmate'};
 const first=sid=>nameOf(sid).split(' ')[0];
 function duelCardBits(s){
   if(typeof duelReady!=='function'||!duelReady())return'';
   const n=duelOnline().filter(x=>!x.busy).length,r=s.duel||{w:0,l:0};
-  return`<button class="btn duelbtn" data-a="duelOpen">⚔ Challenge a classmate${n?` <span class="dot-on">${n} online</span>`:''}</button><p class="muted small" style="margin:0">Live 1-on-1, first to 5. Free to play. Your record: <b class="num">${r.w||0}</b> W · <b class="num">${r.l||0}</b> L</p>`;
+  return`<button class="btn duelbtn" data-a="duelOpen">⚔ Challenge a classmate${n?` <span class="dot-on">${n} online</span>`:''}</button><p class="muted small" style="margin:0">Live 1-on-1, first to 5. ${feeTxt()} Your record: <b class="num">${r.w||0}</b> W · <b class="num">${r.l||0}</b> L</p>`;
 }
 function miniAv(sid){const x=S(sid);return x?`<span class="miniav">${avatarSVG({...x.equip,head:x.equip.head},true).replace('viewBox="0 0 200 220"','viewBox="46 30 108 108"')}</span>`:'<span class="miniav"></span>'}
 function duelListSheet(){
@@ -1808,15 +1811,16 @@ function duelListSheet(){
   if(o){const nm=first(o.toSid),msg={no:`${nm} said not right now.`,busy:`${nm} is in the middle of something.`,gone:`${nm} isn't available anymore.`,late:`${nm} didn't answer.`}[o.st];
     if(msg)return`<div class="duelwait">${miniAv(o.toSid)}<h3>${esc(msg)}</h3><div class="row" style="justify-content:center"><button class="btn pri" data-a="duelCancel">Pick someone else</button><button class="btn" data-a="close">Close</button></div></div>`;
     return`<div class="duelwait">${miniAv(o.toSid)}<h3>Waiting for ${esc(nm)}…</h3><p class="muted">They have 20 seconds to accept.</p><div class="duelbar"><i></i></div><button class="btn" data-a="duelCancel">Cancel challenge</button></div>`}
-  const me=S(ui.sId),list=duelOnline().filter(x=>S(x.sid)&&S(x.sid).classId===me.classId).sort((a,b)=>a.busy-b.busy||nameOf(a.sid).localeCompare(nameOf(b.sid)));
+  const me=S(ui.sId),fee=duelFee(),poor=me.coins<fee,list=duelOnline().filter(x=>S(x.sid)&&S(x.sid).classId===me.classId).sort((a,b)=>a.busy-b.busy||nameOf(a.sid).localeCompare(nameOf(b.sid)));
+  const broke=x=>(S(x.sid).coins||0)<fee;
   return`<div class="row" style="justify-content:space-between"><h3>⚔ Challenge a classmate</h3><button class="btn sm" data-a="close">Close</button></div>
-   <p class="muted">Desk Rally, live and 1-on-1. First to 5 wins. ${m.msg?`<b class="bad">${esc(m.msg)}</b>`:''}</p>
-   <div class="duellist">${list.map(x=>`<div class="duelrow">${miniAv(x.sid)}<div><b>${esc(nameOf(x.sid))}</b><span class="${x.busy?'muted':'good'}">${x.busy?'In a game':'● Available'}</span></div><button class="btn sm ${x.busy?'':'pri'}" data-a="duelAsk" data-v="${x.uid}" data-sid="${x.sid}" ${x.busy?'disabled':''}>Challenge</button></div>`).join('')||'<p class="muted">No classmates are online right now. They show up here while they have Orcutt Above open.</p>'}</div>`;
+   <p class="muted">Desk Rally, live and 1-on-1. First to 5 wins. ${feeTxt()} ${m.msg?`<b class="bad">${esc(m.msg)}</b>`:''}</p>${poor?`<p class="bad">You need ${fee} coins to challenge someone. You have ${me.coins}.</p>`:''}
+   <div class="duellist">${list.map(x=>`<div class="duelrow">${miniAv(x.sid)}<div><b>${esc(nameOf(x.sid))}</b><span class="${x.busy||broke(x)?'muted':'good'}">${x.busy?'In a game':broke(x)?'Not enough coins':'● Available'}</span></div><button class="btn sm ${x.busy||broke(x)||poor?'':'pri'}" data-a="duelAsk" data-v="${x.uid}" data-sid="${x.sid}" ${x.busy||broke(x)||poor?'disabled':''}>Challenge</button></div>`).join('')||'<p class="muted">No classmates are online right now. They show up here while they have Orcutt Above open.</p>'}</div>`;
 }
 function inviteSheet(){const v=ui.invite;if(!v)return'';
-  return`<div class="duelwait invite">${miniAv(v.sid)}<p class="got">Challenge!</p><h3>${esc(nameOf(v.sid))} challenged you to Desk Rally</h3><p class="muted">Live 1-on-1, first to 5.</p><div class="duelbar"><i></i></div><div class="row" style="justify-content:center"><button class="btn pri" data-a="inviteYes">Accept</button><button class="btn" data-a="inviteNo">Not now</button></div></div>`}
+  return`<div class="duelwait invite">${miniAv(v.sid)}<p class="got">Challenge!</p><h3>${esc(nameOf(v.sid))} challenged you to Desk Rally</h3><p class="muted">Live 1-on-1, first to 5. ${feeTxt()}</p>${S(ui.sId).coins<duelFee()?`<p class="bad">You need ${duelFee()} coins to play. You have ${S(ui.sId).coins}.</p>`:''}<div class="duelbar"><i></i></div><div class="row" style="justify-content:center"><button class="btn pri" data-a="inviteYes" ${S(ui.sId).coins<duelFee()?'disabled':''}>Accept</button><button class="btn" data-a="inviteNo">Not now</button></div></div>`}
 async function duelAsk(uid,sid){
-  if(!duelReady())return;ui.modal={type:'duel'};
+  if(!duelReady())return;if(S(ui.sId).coins<duelFee()){ui.modal={type:'duel',msg:`You need ${duelFee()} coins to challenge someone.`};return renderModal()}ui.modal={type:'duel'};
   try{await duelChallenge(uid,sid)}catch(e){console.warn(e);ui.modal={type:'duel',msg:'That challenge could not be sent.'};return renderModal()}
   renderModal();const o=DUEL.out;setTimeout(()=>{if(DUEL.out===o&&o.st==='wait'){o.st='late';duelCancelKeep(o)}},20000);
 }
@@ -1841,14 +1845,15 @@ function duelInvites(){
   }
 }
 async function inviteAnswer(yes){
-  const v=ui.invite;if(!v)return;ui.invite=null;clearTimeout(ui.inviteT);ui.modal=null;renderModal();
+  const v=ui.invite;if(!v)return;if(yes&&S(ui.sId).coins<duelFee())yes=false;ui.invite=null;clearTimeout(ui.inviteT);ui.modal=null;renderModal();
   const ok=await duelAnswer(v.fromUid,{mid:v.mid},yes?'go':'no');
   if(yes){if(ok)duelBegin({mid:v.mid,role:'b',oppUid:v.fromUid,oppSid:v.sid});else toast('That challenge expired.')}
 }
 function duelIsBusy(){return!!((ui.duel&&ui.duel.phase==='play')||(ui.arc&&ui.arc.phase==='play')||(ui.game&&!ui.game.over)||(typeof rlUI==='function'&&rlUI().b))}
 function duelBegin(d){
   leaveGame();if(DUEL.out)duelCancel();ui.modal=null;ui.invite=null;ui.mode='student';ui.sTab='arcade';
-  ui.duel={...d,phase:'play'};DUEL.ch=duelChannel(d.mid);duelSetBusy(true);render();
+  const s=S(ui.sId),fee=Math.min(duelFee(),s?s.coins:0);if(s&&fee){s.coins-=fee;save()}
+  ui.duel={...d,phase:'play',fee};DUEL.ch=duelChannel(d.mid);duelSetBusy(true);render();
 }
 function duelMount(){
   const host=document.getElementById('arcstage'),s=S(ui.sId),d=ui.duel;if(!host||!s||!d||d.phase!=='play')return;
@@ -1859,16 +1864,18 @@ function duelMount(){
 function duelFinish(res){
   const d=ui.duel;if(!d||d.phase!=='play')return;
   if(AR.stop){AR.stop();AR.stop=null}
-  const s=S(ui.sId);if(s){s.duel=s.duel||{w:0,l:0};if(res.win)s.duel.w=(s.duel.w||0)+1;else s.duel.l=(s.duel.l||0)+1;save()}
+  const s=S(ui.sId),fee=d.fee||0,back=fee?Math.min(fee,res.left===true?fee:Math.max(0,res.my|0)):0;
+  if(s){s.duel=s.duel||{w:0,l:0};if(res.win)s.duel.w=(s.duel.w||0)+1;else s.duel.l=(s.duel.l||0)+1;s.coins+=back;save()}
+  res={...res,fee,back};
   if(DUEL.ch){DUEL.ch.close(d.role==='a');DUEL.ch=null}
   ui.duel={...d,phase:'over',res};duelSetBusy(false);render();
 }
 function duelScreen(s){
   const d=ui.duel,nm=nameOf(d.oppSid);
-  if(d.phase==='play')return`<div class="arena"><div class="row" style="justify-content:space-between"><h3>Desk Rally · You vs ${esc(first(d.oppSid))}</h3><button class="btn sm" data-a="duelLeave">Leave match</button></div><div id="arcstage" class="stage arc tall"></div><p class="muted" style="text-align:center">You're the pink eraser on your side. First to 5 wins.</p></div>`;
+  if(d.phase==='play')return`<div class="arena"><div class="row" style="justify-content:space-between"><h3>Desk Rally · You vs ${esc(first(d.oppSid))}</h3><button class="btn sm" data-a="duelLeave">Leave match</button></div><div id="arcstage" class="stage arc tall"></div><p class="muted" style="text-align:center">You're the pink eraser on your side. First to 5 wins.${d.fee?` You paid ${d.fee} coins and get 1 back for every point you score.`:''}</p></div>`;
   const r=d.res||{},rec=s.duel||{w:0,l:0};
   const head=r.left==='me'?'You left the match':r.left?`${esc(first(d.oppSid))} left. You win!`:r.win?'You win!':`${esc(first(d.oppSid))} wins`;
-  return`<div class="arena duelover ${r.win?'won':''}" style="text-align:center">${miniAv(d.oppSid)}<h3 class="muted">Desk Rally vs ${esc(nm)}</h3><h2 class="${r.win?'good':''}" style="font-size:48px;margin:0">${head}</h2>${r.left?'':`<p class="big num">${r.my||0} – ${r.opp||0}</p>`}<p class="muted">Your duel record: <b class="num">${rec.w||0}</b> wins · <b class="num">${rec.l||0}</b> losses</p><div class="row" style="justify-content:center"><button class="btn pri" data-a="duelRematch">Rematch</button><button class="btn" data-a="duelBack">Back to the arcade</button></div></div>`;
+  return`<div class="arena duelover ${r.win?'won':''}" style="text-align:center">${miniAv(d.oppSid)}<h3 class="muted">Desk Rally vs ${esc(nm)}</h3><h2 class="${r.win?'good':''}" style="font-size:48px;margin:0">${head}</h2>${r.left?'':`<p class="big num">${r.my||0} – ${r.opp||0}</p>`}${r.fee?`<p class="duelcoins"><span class="coin num">+${r.back}</span> back of your ${r.fee} entry${r.back===r.fee?' · you broke even':` · net <b class="num">−${r.fee-r.back}</b>`}</p>`:''}<p class="muted">Your duel record: <b class="num">${rec.w||0}</b> wins · <b class="num">${rec.l||0}</b> losses</p><div class="row" style="justify-content:center"><button class="btn pri" data-a="duelRematch" ${S(ui.sId).coins<duelFee()?'disabled':''}>Rematch</button><button class="btn" data-a="duelBack">Back to the arcade</button></div></div>`;
 }
 function sArcade(s){
   const a=state.settings.arcade,left=arcLeft(s),games=ARCADE.filter(g=>!a.off[g.id]),lim=a.daily>0?`${left} of ${a.daily} plays left today.`:'';
@@ -1886,6 +1893,8 @@ function tArcade(){
   return`<div class="spread"><div><h2>Arcade</h2><p class="muted">Just-for-fun mini-games students pay coins to play. One play is one life. Arcade games never give coins, points or XP, so they only spend what students earned in class and the math arena.</p></div></div>
   <div class="stack"><div class="bgrid"><div class="panel stack"><h3>Access</h3><label class="chk"><input type="checkbox" id="set-arc" data-c="set" data-k="arcade.on" data-t="bool"${a.on?' checked':''}>Arcade is open to students</label>
     <div class="row"><label class="f">Coins per play<input type="number" id="set-acost" data-c="set" data-k="arcade.cost" data-t="int" value="${a.cost}" min="0"></label><label class="f">Plays per student per day (0 = no limit, the current setting)<input type="number" id="set-aday" data-c="set" data-k="arcade.daily" data-t="int" value="${a.daily}" min="0"></label></div>
+    <div class="row"><label class="f">Desk Rally duel entry (coins)<input type="number" id="set-dfee" data-c="set" data-k="arcade.duelFee" data-t="int" value="${a.duelFee??5}" min="0" max="50"></label></div>
+    <p class="muted">Both players pay the entry when a duel starts and get 1 coin back for every point they score, up to the entry. The winner breaks even and nobody can come out ahead, so losing on purpose never pays. Set it to 0 to make duels free.</p>
     <p class="muted">Switch the arcade off during work time and on as a reward. It disappears from the student menu while it is off.</p></div>
    <div class="panel stack"><h3>Games</h3>${ARCADE.map(g=>`<label class="chk"><input type="checkbox" id="ag-${g.id}" data-c="arcOn" data-v="${g.id}"${a.off[g.id]?'':' checked'}>${esc(g.name)}</label>`).join('')}<p class="muted">More games will be listed here as they are added.</p></div></div>
    ${ARCADE.map(g=>{const top=arcTop(g.id,null,10);return`<div class="panel scroll"><h3 style="margin-bottom:8px">${esc(g.name)} high scores</h3>${top.length?`<table><thead><tr><th>#</th><th>Student</th><th>Class</th><th>Best</th><th>Plays</th></tr></thead><tbody>${top.map((x,i)=>`<tr><td class="num">${i+1}</td><td><b>${esc(x.name)}</b></td><td class="muted">${esc((C(x.classId)||{}).name||'')}</td><td class="num"><b>${arcBest(x,g.id)}</b></td><td class="num">${x.arc[g.id].plays||0}</td></tr>`).join('')}</tbody></table>`:'<p class="muted">No one has played yet.</p>'}</div>`}).join('')}</div>`;
