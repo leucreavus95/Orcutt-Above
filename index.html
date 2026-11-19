@@ -151,6 +151,39 @@ td{padding:8px;border-bottom:1px solid var(--line);vertical-align:middle}
 .item[aria-pressed="true"]{box-shadow:0 0 0 2px var(--accent);border-color:var(--accent)}
 .item.locked .thumb{filter:grayscale(1) brightness(.55)}
 .item .nm{font-weight:700;line-height:1.15}
+button.item{cursor:pointer;color:inherit;font:inherit;transition:transform .15s,box-shadow .15s,border-color .15s}
+button.item:hover{transform:translateY(-3px);box-shadow:0 10px 24px -12px #000;border-color:rgba(255,255,255,.18)}
+button.item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.item .price{margin-top:auto;display:flex;justify-content:center;padding:6px 8px;border-radius:9px;background:var(--accent);color:#17140a;font-weight:800}
+.item .price.short{background:rgba(255,255,255,.08);color:var(--muted)}
+.item .own-tag,.item .lock-tag{margin-top:auto;text-align:center;padding:6px 8px;border-radius:9px;font-weight:700;font-size:13px;background:rgba(56,211,159,.12);color:#38d39f}
+.item .own-tag.on{background:#38d39f;color:#0b241a}
+.item .lock-tag{background:rgba(255,255,255,.06);color:var(--muted)}
+.item.owned .thumb{opacity:.8}
+.modal.shopm{width:min(720px,100%);overflow:hidden;position:relative}
+.shopv{display:grid;grid-template-columns:minmax(0,250px) 1fr;gap:24px;align-items:center;--rc:var(--common)}
+.shopv.rare{--rc:var(--rare)}.shopv.epic{--rc:var(--epic)}.shopv.legendary{--rc:var(--legendary)}
+.shopv-card{position:relative;isolation:isolate}
+.shopv-card>.frame{position:relative;z-index:1;box-shadow:0 24px 50px -24px var(--rc)}
+.shopv-info{display:flex;flex-direction:column;gap:10px}
+.shopv-info h2{font-size:clamp(26px,4vw,36px);line-height:1.02;margin:0}
+.ledger{display:grid;grid-template-columns:auto auto;justify-content:start;gap:4px 18px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.ledger span{color:var(--muted)}.ledger b{text-align:right}
+.shopv .got{margin:0;font-family:Anton,Impact,sans-serif;font-size:20px;letter-spacing:.04em;text-transform:uppercase;color:var(--rc)}
+.shopv .paid{margin:0;color:var(--muted)}.shopv .small{font-size:13px;margin:0}
+.shopv.bought .shopv-card>.frame{animation:buyPop .6s cubic-bezier(.2,1.5,.4,1) both}
+.shopv .rays{position:absolute;inset:-35%;z-index:0;background:repeating-conic-gradient(from 0deg,var(--rc) 0 8deg,transparent 8deg 22deg);opacity:.32;border-radius:50%;-webkit-mask:radial-gradient(circle,#000 25%,transparent 68%);mask:radial-gradient(circle,#000 25%,transparent 68%);animation:raySpin 9s linear infinite}
+.shopv.bought .shopv-info>*{animation:riseIn .45s ease-out both}
+.shopv.bought .shopv-info>*:nth-child(2){animation-delay:.08s}.shopv.bought .shopv-info>*:nth-child(3){animation-delay:.14s}.shopv.bought .shopv-info>*:nth-child(4){animation-delay:.2s}.shopv.bought .shopv-info>*:nth-child(5){animation-delay:.26s}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:3}
+.confetti i{position:absolute;top:-14px;left:var(--x);width:8px;height:12px;border-radius:2px;background:var(--c);transform:rotate(var(--r));animation:confFall 1.6s cubic-bezier(.3,.6,.5,1) var(--d) both}
+.ticking{color:var(--accent)!important;text-shadow:0 0 12px rgba(255,214,10,.6)}
+@keyframes buyPop{0%{transform:scale(.7) rotate(-4deg);opacity:0}60%{transform:scale(1.06) rotate(1deg);opacity:1}100%{transform:none}}
+@keyframes raySpin{to{transform:rotate(360deg)}}
+@keyframes riseIn{from{transform:translateY(10px);opacity:0}}
+@keyframes confFall{0%{transform:translateY(0) rotate(var(--r));opacity:1}100%{transform:translateY(520px) rotate(calc(var(--r) + 540deg));opacity:0}}
+@media(max-width:620px){.shopv{grid-template-columns:1fr;justify-items:center;text-align:center}.shopv-card{width:min(240px,70vw)}.shopv-info{align-items:center}.ledger{justify-content:center}}
+@media(prefers-reduced-motion:reduce){.shopv .rays,.confetti i,.shopv.bought .shopv-card>.frame,.shopv.bought .shopv-info>*{animation:none}.confetti{display:none}}
 .thumb{aspect-ratio:10/11;display:grid;place-items:center;background:var(--bg);border-radius:6px;overflow:hidden}
 .thumb .frame{width:70%;aspect-ratio:1;display:block}
 .thumb .frame>span{display:block;width:100%;height:100%;background:var(--surface);border-radius:8px}
@@ -1510,14 +1543,52 @@ function sLocker(s){
   }
   return`<div class="home"><div class="showcase"><div class="float">${playerCard(s)}</div></div><div class="stack"><div class="row">${slots.map(([k,n])=>`<button class="pill" data-a="slot" data-v="${k}" aria-pressed="${ui.slot===k}">${n}</button>`).join('')}</div>${body}</div></div>`;
 }
+const SLOTHINT={top:'Worn on your avatar',head:'Worn on your head',acc:'An accessory for your avatar',pet:'Rides along on your card',banner:'The background of your card',frame:'The border around your card',title:'Shows above your name'};
 function sShop(s){
   const L=levelOf(s.xp).L;if(!SLOTS.some(x=>x[0]===ui.shopSlot))ui.shopSlot='top';
-  const all=ITEMS.filter(i=>!i.free&&itemOn(i.id)&&itemPrice(i.id)!=null&&!s.owned.includes(i.id));
-  const rf=ui.shopRar||'all',list=all.filter(i=>i.slot===ui.shopSlot&&(rf==='all'||i.rarity===rf)).sort((x,y)=>itemPrice(x.id)-itemPrice(y.id));
-  return`<div class="spread"><div><h2>Shop</h2><p class="muted">Previews show the item on your avatar. Some gear unlocks at a level, and the rarest only comes from drops.</p></div><span class="row"><span class="lv">Level ${L}</span><span class="pill"><span class="coin num">${s.coins}</span></span></span></div>
-  <div class="row" style="margin-bottom:16px">${SLOTS.map(([k,n])=>`<button class="pill" data-a="shopSlot" data-v="${k}" aria-pressed="${ui.shopSlot===k}">${n} <span class="muted num">${all.filter(i=>i.slot===k).length}</span></button>`).join('')}</div>
-  <div class="row" style="margin:-6px 0 14px;gap:6px">${['all','common','rare','epic'].map(r=>`<button class="pill sm" data-a="shopRar" data-v="${r}" aria-pressed="${rf===r}">${r==='all'?'All':`<span class="rar ${r}">${r}</span>`}</button>`).join('')}</div>
-  <div class="items">${list.map(i=>{const p=itemPrice(i.id),lock=i.lvl&&L<i.lvl,can=!lock&&s.coins>=p;return`<div class="item ${i.rarity}">${itemThumb(s,i)}<span class="nm">${esc(i.name)}</span><span class="rar ${i.rarity}">${i.rarity}${i.lvl?` · level ${i.lvl}+`:''}</span><button class="btn sm ${can?'pri':''}" data-a="buy" data-v="${i.id}" ${can?'':'disabled'}>${lock?`Reach level ${i.lvl}`:`<span class="coin num">${p}</span>`}</button></div>`}).join('')||'<p class="muted">You own everything here. Check another category, or try a drop.</p>'}</div>`;
+  const sale=ITEMS.filter(i=>!i.free&&itemOn(i.id)&&itemPrice(i.id)!=null);
+  const rf=ui.shopRar||'all',hide=!!ui.shopHide;
+  const list=sale.filter(i=>i.slot===ui.shopSlot&&(rf==='all'||i.rarity===rf)&&!(hide&&owns(s,i.id))).sort((x,y)=>itemPrice(x.id)-itemPrice(y.id));
+  const left=k=>sale.filter(i=>i.slot===k&&!owns(s,i.id)).length;
+  const card=i=>{const p=itemPrice(i.id),own=owns(s,i.id),on=s.equip[i.slot]===i.id,lock=!own&&i.lvl&&L<i.lvl,short=!own&&!lock&&s.coins<p;
+    const foot=own?`<span class="own-tag ${on?'on':''}">${on?'✓ Wearing':'✓ Owned'}</span>`:lock?`<span class="lock-tag">🔒 Level ${i.lvl}</span>`:`<span class="price ${short?'short':''}"><span class="coin num">${p}</span></span>`;
+    return`<button class="item ${i.rarity}${own?' owned':''}${lock?' locked':''}" data-a="shopView" data-v="${i.id}" title="${esc(i.name)}">${itemThumb(s,i)}<span class="nm">${esc(i.name)}</span><span class="rar ${i.rarity}">${i.rarity}</span>${foot}</button>`};
+  return`<div class="spread"><div><h2>Shop</h2><p class="muted">Tap anything to try it on before you buy. The rarest gear only comes from drops.</p></div><span class="row"><span class="lv">Level ${L}</span><span class="pill"><span class="coin num" id="shop-coins">${s.coins}</span></span></span></div>
+  <div class="row" style="margin-bottom:16px">${SLOTS.map(([k,n])=>`<button class="pill" data-a="shopSlot" data-v="${k}" aria-pressed="${ui.shopSlot===k}">${n} <span class="muted num">${left(k)}</span></button>`).join('')}</div>
+  <div class="row" style="margin:-6px 0 14px;gap:6px">${['all','common','rare','epic'].map(r=>`<button class="pill sm" data-a="shopRar" data-v="${r}" aria-pressed="${rf===r}">${r==='all'?'All':`<span class="rar ${r}">${r}</span>`}</button>`).join('')}<button class="pill sm" data-a="shopHide" aria-pressed="${hide}" style="margin-left:auto">${hide?'✓ ':''}Hide owned</button></div>
+  <div class="items">${list.map(card).join('')||`<p class="muted">${hide?'You own everything here. Turn off "Hide owned" to see it all, or try a drop.':'Nothing here right now.'}</p>`}</div>`;
+}
+// Try-on and purchase sheet.
+function shopSheet(m){
+  const s=S(ui.sId),i=ITEM[m.id];if(!s||!i)return'';
+  const L=levelOf(s.xp).L,p=itemPrice(i.id),own=owns(s,i.id),on=s.equip[i.slot]===i.id,lock=!own&&i.lvl&&L<i.lvl,short=!own&&!lock&&s.coins<p;
+  const slotName=(SLOTS.find(x=>x[0]===i.slot)||[,,'item'])[2];
+  const preview=playerCard({...s,equip:{...s.equip,[i.slot]:i.id}});
+  if(m.phase==='bought'){
+    const bits=Array.from({length:26},(_,k)=>`<i style="--x:${(k*37)%100}%;--d:${(k%7)*.07}s;--r:${(k*53)%360}deg;--c:${['var(--rc)','#ffd60a','#fff','var(--rc)','#3df2e0'][k%5]}"></i>`).join('');
+    const verb=['banner','frame','title'].includes(i.slot)?'Use it now':'Wear it now';
+    return`<div class="shopv bought ${i.rarity}"><div class="confetti" aria-hidden="true">${bits}</div>
+      <div class="shopv-card"><div class="rays" aria-hidden="true"></div>${preview}</div>
+      <div class="shopv-info"><p class="got">It's yours!</p><h2>${esc(i.name)}</h2><span class="rar ${i.rarity}">${i.rarity} ${slotName}</span>
+        <p class="paid"><span class="coin num">−${m.paid}</span> · <span class="num">${s.coins}</span> coins left</p>
+        <div class="row"><button class="btn pri" data-a="shopWear" data-v="${i.id}">${verb}</button><button class="btn" data-a="close">Keep shopping</button></div>
+        <p class="muted small">It's saved in your locker any time you want to switch.</p></div></div>`}
+  const act=own?(on?`<button class="btn" disabled>✓ ${['banner','frame','title'].includes(i.slot)?'In use':'Wearing it'}</button>`:`<button class="btn pri" data-a="shopWear" data-v="${i.id}">${['banner','frame','title'].includes(i.slot)?'Use it':'Wear it'}</button>`)
+    :lock?`<button class="btn" disabled>Unlocks at level ${i.lvl}</button>`
+    :`<button class="btn pri" data-a="buy" data-v="${i.id}" ${short?'disabled':''}>Buy for <span class="coin num">${p}</span></button>`;
+  const money=own?`<p class="muted">You own this. It's in your locker.</p>`
+    :lock?`<p class="muted">Reach level ${i.lvl} to buy this. You're level ${L}.</p>`
+    :`<div class="ledger"><span>Price</span><b class="coin num">${p}</b><span>You have</span><b class="coin num">${s.coins}</b><span>After buying</span><b class="coin num ${short?'bad':''}">${short?'—':s.coins-p}</b></div>${short?`<p class="bad">You need ${p-s.coins} more coins.</p>`:''}`;
+  return`<div class="shopv ${i.rarity}"><div class="shopv-card">${preview}</div>
+    <div class="shopv-info"><span class="rar ${i.rarity}">${i.rarity} ${slotName}</span><h2>${esc(i.name)}</h2><p class="muted">${SLOTHINT[i.slot]||''}${i.slot==='title'?`: <span class="ttag ${i.rarity}">${esc(i.name)}</span>`:''}</p>
+      ${money}<div class="row">${act}<button class="btn" data-a="close">${own?'Close':'Not now'}</button></div></div></div>`;
+}
+function countCoins(from,to){
+  const els=[...document.querySelectorAll('.hud-stat[title="Coins"] b, #shop-coins')];if(!els.length||from===to)return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const t0=performance.now(),dur=700;
+  const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3),v=Math.round(from+(to-from)*e);els.forEach(el=>{el.textContent=v;el.classList.toggle('ticking',k<1)});if(k<1)requestAnimationFrame(step)};
+  requestAnimationFrame(step);
 }
 function sDrops(s){
   const d=state.settings.drops,tot=RARS.reduce((a,r)=>a+Math.max(0,+d.rates[r]||0),0)||1,dr=ui.drop;
@@ -2647,6 +2718,7 @@ function leaveGame(){arcStop();if(ui.game){stopTick();ui.game=null;save()}}
 function renderModal(){
   const m=ui.modal,el=document.getElementById('modal');if(!m){el.innerHTML='';return}
   let h='';
+  if(m.type==='shop'){el.innerHTML=`<div class="scrim" data-a="scrim"><div class="modal shopm" role="dialog" aria-modal="true" aria-label="Shop item">${shopSheet(m)}</div></div>`;return}
   if(m.type==='award'){
     const names=m.ids.length===1?esc(S(m.ids[0]).name):m.label||`${m.ids.length} students`;
     const col=sign=>state.behaviors.filter(b=>Math.sign(b.pts)===sign).map(b=>`<button class="bbtn ${sign>0?'pos':'neg'}" data-a="give" data-v="${b.id}"><span>${esc(b.name)}</span><b class="${sign>0?'good':'bad'} num">${signed(b.pts)}</b></button>`).join('');
@@ -2737,7 +2809,10 @@ const A={
   lookTab(d){ui.lookTab=d.v;render()},
   lookRand(){const s=S(ui.sId),r=n=>Math.random()*n|0;Object.assign(s.equip,{skin:r(SKINS.length),shape:r(SHAPES.length),hair:r(HAIRS.length),hairc:Math.random()<.7?r(6):r(HAIRC.length),eyes:r(EYES.length),eyec:r(EYEC.length),brows:r(BROWS.length),nose:r(NOSES.length),face:r(FACES.length),det:Math.random()<.5?0:r(DETAILS.length)});save();render()},
   equip(d){const s=S(ui.sId),i=ITEM[d.v];if(i&&owns(s,i.id)){s.equip[i.slot]=i.id;save();render();if(ui.sTab==='drops')toast(i.name+' equipped')}},
-  buy(d){const s=S(ui.sId),i=ITEM[d.v],p=itemPrice(d.v);if(!i||p==null||s.coins<p||s.owned.includes(i.id)||(i.lvl&&levelOf(s.xp).L<i.lvl))return;s.coins-=p;s.owned.push(i.id);save();render();toast('Bought '+i.name+'. Find it in your locker.')},
+  buy(d){const s=S(ui.sId),i=ITEM[d.v],p=itemPrice(d.v);if(!i||p==null||s.coins<p||s.owned.includes(i.id)||(i.lvl&&levelOf(s.xp).L<i.lvl))return;const was=s.coins;s.coins-=p;s.owned.push(i.id);save();ui.modal={type:'shop',id:i.id,phase:'bought',paid:p};render();countCoins(was,s.coins)},
+  shopView(d){ui.modal={type:'shop',id:d.v,phase:'view'};renderModal()},
+  shopWear(d){const s=S(ui.sId),i=ITEM[d.v];if(!i||!owns(s,i.id))return;s.equip[i.slot]=i.id;save();ui.modal=null;render();toast(['banner','frame','title'].includes(i.slot)?'Now using '+i.name:'Now wearing '+i.name)},
+  shopHide(){ui.shopHide=!ui.shopHide;render()},
   drop(){const s=S(ui.sId),d=state.settings.drops;if(s.coins<d.cost||(ui.drop&&ui.drop.phase==='open'))return;
     const r=rollDrop(s);if(!r){toast('No items are in drops right now');return}save();
     const still=matchMedia('(prefers-reduced-motion:reduce)').matches;ui.drop={phase:still?'done':'open',...r};render();
