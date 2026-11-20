@@ -60,6 +60,14 @@ const RL_ART={
         spell:[{vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],hand:[75,120],bySkill:[{shot:'art/fx-dk-cres1.webp'},{shot:'art/fx-dk-ring2.webp'},{shot:'art/fx-dk-cres1.webp',aoe:'fan'}]},
                {vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],hand:[85,120],bySkill:[{shot:'art/fx-dk-flame2.webp'},{shot:'art/fx-dk-ring2.webp'},{burst:'art/fx-dk-impact2.webp',aoe:'erupt'}]},
                {vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],hand:[85,130],bySkill:[{shot:'art/fx-dk-fly3.webp'},{shot:'art/fx-dk-beam3.webp'},{burst:'art/fx-dk-erupt3.webp',aoe:'erupt'}]}]},
+  // Orrin, the astral spellweaver: one casting picture per skill, painted starlight effects per skill
+  astra:{f:[{src:'art/astra-1.webp',ax:132,ay:382,h:372,w:239,ih:401},{src:'art/astra-2.webp',ax:191,ay:546,h:496,w:335,ih:567},{src:'art/astra-3.webp',ax:169,ay:609,h:560,w:353,ih:631}],pose:'skill',
+        c:[[{src:'art/astra-1c1.webp',ax:282,ay:624,h:560,w:703,ih:703},{src:'art/astra-1c2.webp',ax:239,ay:486,h:560,w:700,ih:563},{src:'art/astra-1c3.webp',ax:293,ay:564,h:560,w:676,ih:703}],
+           [{src:'art/astra-2c1.webp',ax:381,ay:651,h:602,w:703,ih:708},{src:'art/astra-2c2.webp',ax:386,ay:580,h:602,w:708,ih:638},{src:'art/astra-2c3.webp',ax:232,ay:647,h:602,w:693,ih:708}],
+           [{src:'art/astra-3c1.webp',ax:262,ay:634,h:616,w:703,ih:701},{src:'art/astra-3c2.webp',ax:374,ay:643,h:616,w:708,ih:699},{src:'art/astra-3c3.webp',ax:303,ay:652,h:616,w:701,ih:701}]],
+        spell:[{vp:['#ffffff','#f1e4ff','#b98cff','#3b2385'],hand:[60,118],bySkill:[{shot:'art/fx-as-bolt1.webp'},{shot:'art/fx-as-arc1.webp'},{shot:'art/fx-as-shards1.webp',aoe:'fan'}]},
+               {vp:['#ffffff','#f1e4ff','#b98cff','#3b2385'],hand:[80,128],bySkill:[{shot:'art/fx-as-beam2.webp'},{shot:'art/fx-as-ring2.webp'},{burst:'art/fx-as-swirl2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#f1e4ff','#b98cff','#3b2385'],hand:[80,130],bySkill:[{shot:'art/fx-as-rain3.webp'},{shot:'art/fx-as-portal3.webp'},{shot:'art/fx-as-bolt1.webp',sigil:'art/fx-as-portal3.webp',aoe:'rain'}]}]},
 };
 (function(){
   const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.src=f.src})};preload();
