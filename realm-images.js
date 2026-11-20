@@ -9,7 +9,8 @@ const RL_ART={
   // c (optional): casting frames for each form, played in order during a spell:
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
-  halo:{f:['art/halo-1.webp','art/halo-2.webp','art/halo-3.webp'],
+  // f: standing art for each form, with the same placement fields (w/ih = file size).
+  halo:{f:[{src:'art/halo-1.webp',ax:99,ay:520,h:520,w:199,ih:520},{src:'art/halo-2.webp',ax:106,ay:520,h:520,w:212,ih:520},{src:'art/halo-3.webp',ax:123,ay:520,h:520,w:246,ih:520}],
         // the spell each form throws, matched to its casting art.
         // hand = where the spell leaves his hand, in sprite units from his feet (x forward, y up)
         spell:[{kind:'bolt',vp:['#ffffff','#e4ffd0','#8df06a','#2f9d3c'],hand:[68,136]},
@@ -18,22 +19,31 @@ const RL_ART={
         c:[[{src:'art/halo-1c1.webp',ax:218,ay:477,h:536},{src:'art/halo-1c2.webp',ax:216,ay:507,h:536},{src:'art/halo-1c3.webp',ax:190,ay:429,h:479}],
            [{src:'art/halo-2c1.webp',ax:267,ay:514,h:536},{src:'art/halo-2c2.webp',ax:272,ay:493,h:536},{src:'art/halo-2c3.webp',ax:290,ay:416,h:479}],
            [{src:'art/halo-3c1.webp',ax:309,ay:526,h:536},{src:'art/halo-3c2.webp',ax:250,ay:504,h:536},{src:'art/halo-3c3.webp',ax:290,ay:421,h:479}]],
-        a:[[303,790],[327,802],[398,843]]}   // pixel size of each standing figure (w,h)
+        },
+  kael:{f:[{src:'art/kael-1.webp',ax:100,ay:528,h:527,w:323,ih:550},{src:'art/kael-2.webp',ax:121,ay:531,h:529,w:357,ih:552},{src:'art/kael-3.webp',ax:107,ay:548,h:533,w:339,ih:567}],
+        c:[[{src:'art/kael-1c1.webp',ax:320,ay:601,h:592,w:609,ih:647},{src:'art/kael-1c2.webp',ax:349,ay:615,h:592,w:643,ih:682},{src:'art/kael-1c3.webp',ax:229,ay:483,h:592,w:650,ih:528}],
+           [{src:'art/kael-2c1.webp',ax:227,ay:610,h:627,w:682,ih:659},{src:'art/kael-2c2.webp',ax:333,ay:620,h:627,w:645,ih:679},{src:'art/kael-2c3.webp',ax:203,ay:608,h:627,w:624,ih:648}],
+           [{src:'art/kael-3c1.webp',ax:264,ay:595,h:623,w:658,ih:612},{src:'art/kael-3c2.webp',ax:289,ay:645,h:623,w:654,ih:679},{src:'art/kael-3c3.webp',ax:163,ay:561,h:623,w:661,ih:602}]],
+        spell:[{kind:'bolt',vp:['#ffffff','#dffff5','#8ef0d0','#2a9d8a'],hand:[61,106]},
+               {kind:'lance',vp:['#ffffff','#fff3c0','#ffd24a','#d98a12'],hand:[55,125]},
+               {kind:'shards',vp:['#ffffff','#e6dcff','#a98bff','#5a2fd6'],hand:[70,139]}]},
 };
 (function(){
-  const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(s=>{const i=new Image();i.src=s})};preload();
+  const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.src=f.src})};preload();
   const lvOf=(id,o)=>o.lv!=null?o.lv:(o.stage!=null?[1,CR_EVO[0],CR_EVO[1]][o.stage]:crLv(id));
   const oldPort=rlHeroSVG,oldBody=rlHeroBody;
   // card portrait: element backdrop, figure shown head to knees
   rlHeroSVG=function(id,opt){const A=RL_ART[id];if(!A)return oldPort(id,opt);
-    const o=opt||{},h=RL_H[id],E=RL_EL[h.el],lv=lvOf(id,o),s=crStage(lv),[iw,ih]=A.a[s],u='ra'+id+s;
-    const H=330,W=H*iw/ih,x=100-W/2+(s===2?-W*.04:0),y=s===2?-4:4;
+    const o=opt||{},h=RL_H[id],E=RL_EL[h.el],lv=lvOf(id,o),s=crStage(lv),F=A.f[s],u='ra'+id+s;
+    const k=330/F.h*(s===2?1.04:1),W=F.w*k,H=F.ih*k,x=100-F.ax*k,y=338-F.ay*k;
     const motes=o.motes===false?'':[[.1,.2,2.6,0],[.16,.7,2,1.2],[.86,.16,2.2,.6],[.08,.48,1.6,2],[.9,.66,1.8,1.6]].map(m=>`<circle class="rl-mote" cx="${m[0]*200}" cy="${m[1]*220}" r="${m[2]*1.3}" fill="${E.l}" style="animation-delay:-${m[3]}s"/>`).join('');
-    return`<svg class="rl-port cr-port rl-art" viewBox="0 0 200 220" role="img" aria-label="${esc(crName(id,lv))}"><defs><radialGradient id="${u}bg" cx=".55" cy=".42" r=".8"><stop offset="0" stop-color="${E.l}" stop-opacity=".6"/><stop offset=".45" stop-color="${E.c}" stop-opacity=".55"/><stop offset="1" stop-color="${E.d}"/></radialGradient></defs><rect class="crbg" width="200" height="220" fill="#0f0d14"/><rect class="crbg" width="200" height="220" fill="url(#${u}bg)"/><g class="crbg" opacity=".2" stroke="${E.l}" fill="none"><circle cx="104" cy="110" r="84" stroke-width="1.2"/></g>${motes}<image href="${A.f[s]}" x="${x.toFixed(1)}" y="${y}" width="${W.toFixed(1)}" height="${H}" preserveAspectRatio="xMidYMin meet"/></svg>`};
+    return`<svg class="rl-port cr-port rl-art" viewBox="0 0 200 220" role="img" aria-label="${esc(crName(id,lv))}"><defs><radialGradient id="${u}bg" cx=".55" cy=".42" r=".8"><stop offset="0" stop-color="${E.l}" stop-opacity=".6"/><stop offset=".45" stop-color="${E.c}" stop-opacity=".55"/><stop offset="1" stop-color="${E.d}"/></radialGradient></defs><rect class="crbg" width="200" height="220" fill="#0f0d14"/><rect class="crbg" width="200" height="220" fill="url(#${u}bg)"/><g class="crbg" opacity=".2" stroke="${E.l}" fill="none"><circle cx="104" cy="110" r="84" stroke-width="1.2"/></g>${motes}<image href="${F.src}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${W.toFixed(1)}" height="${H.toFixed(1)}" preserveAspectRatio="none"/></svg>`};
   // battle sprite: a canvas the motion loop below draws into
   rlHeroBody=function(id,lv){const A=RL_ART[id];if(!A)return oldBody(id,lv);
     const L=lv==null?crLv(id):lv,s=crStage(L);setTimeout(artLoop,0);
     return`<div class="rl-body rl-artbox" data-id="${id}" data-s="${s}" role="img" aria-label="${esc(crName(id,L))}"><canvas class="rl-artcv"></canvas></div>`};
+  // name tags and hit boxes: painted heroes stand about 224 tall on the 240 sprite box
+  const oldBox=crBoxOf;crBoxOf=function(u){if(u.kind==='hero'&&RL_ART[u.id])return{box:[0,crStage(u.lv)===2?0:6,240,228]};return oldBox(u)};
   for(const k in RL_PC)delete RL_PC[k];
 })();
 
@@ -68,7 +78,7 @@ function artPose(st,now,speed){ // the figure's shape at this moment
   return P}
 function artDraw(cv,now){
   const box=cv.parentNode,id=box.dataset.id,s=+box.dataset.s,A=RL_ART[id];if(!A)return;
-  const img=artImg(A.f[s]);if(!img)return;const FR=A.c&&A.c[s]&&A.c[s].length?A.c[s]:null;if(FR)FR.forEach(f=>artImg(f.src));
+  const F0=A.f[s],img=artImg(F0.src);if(!img)return;const FR=A.c&&A.c[s]&&A.c[s].length?A.c[s]:null;if(FR)FR.forEach(f=>artImg(f.src));
   const dpr=Math.min(2,window.devicePixelRatio||1),cw=Math.round(cv.clientWidth*dpr),ch=Math.round(cv.clientHeight*dpr);if(!cw||!ch)return;
   if(cv.width!==cw||cv.height!==ch){cv.width=cw;cv.height=ch}
   const spr=cv.closest('.rlb-spr'),unit=cv.closest('.rlb-u'),b=typeof rlUI==='function'&&rlUI().b,speed=b&&b.speed||1,dir=unit&&unit.classList.contains('e')?-1:1;
@@ -80,11 +90,13 @@ function artDraw(cv,now){
   const P=artPose(st,now,speed),E=RL_EL[RL_H[id].el],t=(now+st.ph)/1000;
   const sc=cw/AW,buf=st.buf;if(buf.width!==cw||buf.height!==ch){buf.width=cw;buf.height=ch}
   const g=buf.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cw,ch);g.setTransform(sc,0,0,sc,-AX0*sc,-AY0*sc);
-  const strips=(im,alpha)=>{const iw=im.naturalWidth,ih=im.naturalHeight,H=(s===2?238:224)*P.sy,W=(s===2?238:224)*iw/ih*P.sx;g.globalAlpha=alpha;
-    for(let i=0;i<STRIPS;i++){const v=1-(i+.5)/STRIPS,y0=228-(1-i/STRIPS)*H,y1=228-(1-(i+1)/STRIPS)*H,
-      cape=v<.55?Math.sin(Math.PI*v/.55):0,off=dir*P.lean*Math.pow(v,1.3)+P.sway*Math.sin(t*1.7+v*4)*cape+P.drift*v*v,
-      sx=1+P.chest*Math.exp(-Math.pow((v-.68)/.12,2)),w=W*sx;
-      g.drawImage(im,0,i*ih/STRIPS,iw,ih/STRIPS+.6,120-w/2+off,y0,w,y1-y0+.7)}};
+  const strips=(im,alpha)=>{const iw=im.naturalWidth,ih=im.naturalHeight,k=(s===2?238:224)/F0.h*iw/F0.w,ky=k*P.sy;g.globalAlpha=alpha;
+    // k converts file pixels to sprite units; the anchor (ax,ay) between the feet lands on (120,228)
+    const ax=F0.ax*iw/F0.w,ay=F0.ay*ih/F0.ih,fh=F0.h*iw/F0.w;
+    for(let i=0;i<STRIPS;i++){const sy0=i*ih/STRIPS,sy1=(i+1)*ih/STRIPS,v=Math.max(0,(ay-(sy0+sy1)/2)/fh),y0=228-(ay-sy0)*ky,y1=228-(ay-sy1)*ky,
+      cape=v<.55?Math.sin(Math.PI*v/.55):0,off=dir*P.lean*Math.pow(Math.min(v,1.2),1.3)+P.sway*Math.sin(t*1.7+v*4)*cape+P.drift*v*v,
+      sx=P.sx*(1+P.chest*Math.exp(-Math.pow((v-.68)/.12,2)));
+      g.drawImage(im,0,sy0,iw,sy1-sy0+.6,120-ax*k*sx+off,y0,iw*k*sx,y1-y0+.7)}};
   const Hs=s===2?238:224,frame=(f,al)=>{const im=artImg(f.src),k=Hs/f.h*(1+(P.pulse||0));g.save();g.globalAlpha=al;g.translate(120-dir*7*(P.kick||0),228);g.scale(dir*k,k);g.drawImage(im,-f.ax,-f.ay);g.restore()};
   if(P.seq)P.seq.forEach(([i,al])=>{if(al<=0)return;if(i<0)strips(img,al);else frame(FR[i],al)});else strips(img,1);g.globalAlpha=1;
   const c=cv.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cw,ch);

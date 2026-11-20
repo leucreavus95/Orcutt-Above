@@ -12,8 +12,9 @@ const rlDay=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+
 const rlWeek=()=>Math.floor((Date.now()/864e5+3)/7);
 
 /* ---------- profile ---------- */
-function rlNew(){return{v:1,started:false,heroes:{},gear:[],gid:1,gold:2000,gems:0,energy:60,eT:Date.now(),ess:{fire:0,water:0,wind:0,light:0,dark:0},tomes:2,pos:'g0',seen:{g0:1},vis:{g0:1},clr:{},chests:{},shr:{},q:{},daily:null,team:[],pity:0,pulls:0,tower:0,kills:{},math:{ok:0,tot:0},log:[]}}
-function rlMigrate(p){if(!p||typeof p!=='object')return null;const d=rlNew();for(const k in d)if(p[k]===undefined)p[k]=d[k];
+function rlNew(){return{v:2,started:false,heroes:{},gear:[],gid:1,gold:2000,gems:0,energy:60,eT:Date.now(),ess:{any:0},tomes:2,pos:'g0',seen:{g0:1},vis:{g0:1},clr:{},chests:{},shr:{},q:{},daily:null,team:[],pity:0,pulls:0,tower:0,kills:{},math:{ok:0,tot:0},log:[]}}
+function rlMigrate(p){if(!p||typeof p!=='object'||p.v!==2)return null; // v2: element-free Realm, older saves start fresh
+  const d=rlNew();for(const k in d)if(p[k]===undefined)p[k]=d[k];
   if(!p.sq){(p.gear||[]).forEach(g=>(g.sub||[]).forEach(q=>{if(q[0]==='hp')q[1]=Math.max(1,Math.round(q[1]/RL_SQ));else if(q[0]==='atk'||q[0]==='def')q[1]=Math.max(1,Math.round(q[1]/RL_SQ))}));p.sq=1}
   return p}
 function rlGiftHero(p,g){const[id,f]=String(g).split('@');if(!RL_H[id])return null;const fm=Math.max(0,Math.min(2,+f||0)),want=Math.min([1,CR_EVO[0],CR_EVO[1]][fm],rlMaxLv(RL_H[id].r));
@@ -93,7 +94,7 @@ function rlEquip(p,hid,gid){const g=p.gear.find(x=>x.i===gid);if(!g)return;for(c
 const rlOwner=(p,gid)=>Object.keys(p.heroes).find(id=>p.heroes[id].g.includes(gid));
 
 /* ---------- summoning ---------- */
-function rlFeatured(){const fives=RL_HEROES.filter(h=>h.r===5);return fives[rlWeek()%fives.length].id}
+function rlFeatured(){const top=Math.max(...RL_HEROES.map(h=>h.r)),f=RL_HEROES.filter(h=>h.r===top);return f[rlWeek()%f.length].id}
 function rlSummon(p,n){
   const c=rlCfg(),out=[],R=c.rates,tot=(+R[3]||0)+(+R[4]||0)+(+R[5]||0)||100,feat=rlFeatured();
   for(let i=0;i<n;i++){
@@ -101,10 +102,10 @@ function rlSummon(p,n){
     let x=Math.random()*tot,r=x<(+R[5]||0)?5:x<(+R[5]||0)+(+R[4]||0)?4:3;
     if(c.pity>0&&p.pity>=c.pity)r=5;
     if(n>=10&&i===n-1&&!out.some(o=>RL_H[o.id].r>=4)&&r<4)r=4;
-    let pool=RL_HEROES.filter(h=>h.r===r),id=(r===5&&Math.random()<.5)?feat:rlRand(pool).id;
+    let pool=RL_HEROES.filter(h=>h.r===r);if(!pool.length){const rs=[...new Set(RL_HEROES.map(h=>h.r))].sort((a,b)=>Math.abs(a-r)-Math.abs(b-r)||b-a);pool=RL_HEROES.filter(h=>h.r===rs[0])}let id=(r===5&&Math.random()<.5)?feat:rlRand(pool).id;
     if(r===5)p.pity=0;
     const isNew=rlAddHero(p,id);let note='new';
-    if(!isNew){const h=p.heroes[id];const idx=[1,2,0].find(k=>h.sk[k]<rlSkMax(id,k));if(idx!=null){h.sk[idx]++;note='skill'}else{p.ess[RL_H[id].el]+=10*r;note='ess'}}
+    if(!isNew){const h=p.heroes[id];const idx=[1,2,0].find(k=>h.sk[k]<rlSkMax(id,k));if(idx!=null){h.sk[idx]++;note='skill'}else{p.ess.any+=10*r;note='ess'}}
     out.push({id,note});
   }
   return out;
@@ -114,7 +115,7 @@ function rlSummon(p,n){
 function rlMonUnit(type,el,lv,o){
   const m=RL_MON[type].m,g=(1+.13*(lv-1))*(1+lv*.016),gd=1+.085*(lv-1),bs=o&&o.boss?3.6:o&&o.elite?2.1:1,ba=o&&o.boss?1.25:o&&o.elite?1.12:1;
   const sk=RL_MON[type].sk.slice();if(o&&(o.boss||o.elite))sk.push(RL_BOSS_SK(el));
-  return{kind:'mon',id:type,el,lv,boss:!!(o&&o.boss),elite:!!(o&&o.elite),name:(o&&o.name)||(RL_EL[el].n+' '+RL_MON[type].n),sk,skl:[1,1,1],
+  return{kind:'mon',id:type,el,lv,boss:!!(o&&o.boss),elite:!!(o&&o.elite),name:(o&&o.name)||RL_MON[type].n,sk,skl:[1,1,1],
     stats:{hp:Math.round(40*m[0]*g*bs),atk:rlR1(6*m[1]*g*ba),def:rlR1(4.2*m[2]*gd*(o&&o.boss?1.2:1)),spd:m[3]+Math.floor(lv/6),cr:15,cd:50,acc:Math.round(lv*.7),res:Math.round(15+lv*.5),steal:0}};
 }
 function rlEncounter(nodeId,o){
@@ -152,7 +153,7 @@ function rlEff(u,k){let v=u.stats[k];
   if(k==='spd'){if(rlHas(u,'spdUp'))v*=1.3;if(rlHas(u,'slow'))v*=.7}
   if(k==='cr'&&rlHas(u,'critUp'))v+=30;
   return v}
-function rlAdv(a,b){if(RL_EL[a].beats===b)return 1;if(RL_EL[b].beats===a)return-1;return 0}
+function rlAdv(a,b){return 0} // no element matchups
 /* advance the turn bar until someone can act; returns that unit or null when battle is over */
 function rlNextActor(B){
   if(B.status!=='go')return null;
@@ -281,7 +282,7 @@ function rlReward(p,rw,lv){const got=[];if(!rw)return got;
   if(rw.gems){p.gems+=rw.gems;got.push({k:'gems',v:rw.gems})}
   if(rw.gold){p.gold+=rw.gold;got.push({k:'gold',v:rw.gold})}
   if(rw.tomes){p.tomes+=rw.tomes;got.push({k:'tomes',v:rw.tomes})}
-  if(rw.essence){p.ess[rw.essence[0]]+=rw.essence[1];got.push({k:'ess',el:rw.essence[0],v:rw.essence[1]})}
+  if(rw.essence){p.ess.any+=rw.essence[1];got.push({k:'ess',el:'any',v:rw.essence[1]})}
   if(rw.energy){p.energy+=rw.energy;got.push({k:'energy',v:rw.energy})}
   if(rw.gear){const g=rlGearNew(p,{r:rw.gear,set:rw.set});got.push({k:'gear',g})}
   return got}
@@ -296,9 +297,9 @@ function rlFinish(p,ctx,won,team){
   if(ctx.kind==='tower'){if(ctx.floor>p.tower){p.tower=ctx.floor;first=true;const gm=10+Math.floor(ctx.floor/5)*5;p.gems+=gm;res.items.push({k:'gems',v:gm})}rlQ(p,'tower',{n:p.tower})}
   else if(ctx.node){first=!p.clr[ctx.node];p.clr[ctx.node]=(p.clr[ctx.node]||0)+1;
     if(first&&ctx.kind!=='dungeon'){const gm=ctx.kind==='boss'?100:ctx.kind==='elite'?50:Math.max(10,Math.round(lv*2.5));p.gems+=gm;res.items.push({k:'gems',v:gm})}}
-  if(ctx.kind==='dungeon'){const D=RL_DUNGEON[ctx.node];const e=6+ctx.tier*6;p.ess[D.el]+=e;res.items.push({k:'ess',el:D.el,v:e});const g=rlGearNew(p,{r:rlDropRarity(lv,8+ctx.tier*4),set:rlRand(D.sets)});res.items.push({k:'gear',g});if(Math.random()<.35){p.tomes++;res.items.push({k:'tomes',v:1})}rlQ(p,'dungeon',{node:ctx.node})}
+  if(ctx.kind==='dungeon'){const D=RL_DUNGEON[ctx.node];const e=6+ctx.tier*6;p.ess.any+=e;res.items.push({k:'ess',el:'any',v:e});const g=rlGearNew(p,{r:rlDropRarity(lv,8+ctx.tier*4),set:rlRand(D.sets)});res.items.push({k:'gear',g});if(Math.random()<.35){p.tomes++;res.items.push({k:'tomes',v:1})}rlQ(p,'dungeon',{node:ctx.node})}
   else{const ch=ctx.kind==='boss'?1:ctx.kind==='elite'?.75:ctx.kind==='tower'?.6:.32;if(Math.random()<ch){const g=rlGearNew(p,{r:rlDropRarity(lv,ctx.kind==='boss'?20:ctx.kind==='elite'?10:0)});res.items.push({k:'gear',g})}
-    if(Math.random()<.2){const e=RL_ELS[Math.floor(Math.random()*5)];p.ess[e]+=2+Math.floor(lv/5);res.items.push({k:'ess',el:e,v:2+Math.floor(lv/5)})}}
+    if(Math.random()<.2){const e='any';p.ess[e]+=2+Math.floor(lv/5);res.items.push({k:'ess',el:e,v:2+Math.floor(lv/5)})}}
   if(ctx.node)rlQ(p,'win',{node:ctx.node});rlQ(p,'winAny',{});
   (ctx.kills||[]).forEach(k=>{p.kills[k]=(p.kills[k]||0)+1;rlQ(p,'kill',{el:k});rlQ(p,'killAny',{})});
   if(p.gear.length>220){const spare=p.gear.filter(g=>!rlOwner(p,g.i)&&g.lv===0&&g.r==='common');spare.slice(0,p.gear.length-220).forEach(g=>{p.gold+=rlSellVal(g)});const ids=new Set(spare.slice(0,p.gear.length-220).map(g=>g.i));p.gear=p.gear.filter(g=>!ids.has(g.i))}
