@@ -141,3 +141,11 @@ function artImpact(x,y,S,K){const P=S.vp;vfxP({x,y,life:.35,s:6*K,grow:170*K,c:P
   if(S.kind==='bolt')for(let i=0;i<22;i++){const a=Math.random()*6.283,v=vR(80,280)*K;vfxP({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,drag:.9,life:vR(.3,.6),s:vR(3,7)*K,c:rlRand(P),shape:'leaf',vr:vR(-10,10)})}
   else if(S.kind==='lance'){vfxP({x,y,life:.35,s:34*K,c:P[0],shape:'star',vr:3});for(let i=0;i<20;i++){const a=Math.random()*6.283,v=vR(100,300)*K;vfxP({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,drag:.88,life:vR(.25,.5),s:vR(2,5)*K,c:rlRand(P),shape:'star',vr:8})}}
   else for(let i=0;i<18;i++){const a=Math.random()*6.283,v=vR(90,300)*K;vfxP({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-80,ay:520,drag:.96,life:vR(.4,.8),s:vR(4,9)*K,c:rlRand(P),shape:'dia',rot:a,vr:vR(-9,9)})}}
+
+/* ---------- painted battle backgrounds ----------
+   Add art/bg-<kind>.webp and list it here. Kinds: wind, fire, water,
+   light, dark, arena, archive. Any kind not listed keeps its drawing. */
+const RL_BGART={};
+(function(){const old=rlStageBG;rlStageBG=function(kind){const f=RL_BGART[kind];if(!f)return old(kind);
+  return`<div class="rl-bgart" style="background-image:url('${f}')" aria-hidden="true"></div>`};
+  const st=document.createElement('style');st.textContent=`.rl-bgart{position:absolute;inset:0;background-size:cover;background-position:center 70%}`;document.head.appendChild(st)})();
