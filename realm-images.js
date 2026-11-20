@@ -10,7 +10,7 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
-  halo:{f:[{src:'art/halo-1.webp',ax:99,ay:520,h:520,w:199,ih:520,ht:7,cx:99},{src:'art/halo-2.webp',ax:106,ay:520,h:520,w:212,ih:520,ht:5,cx:102},{src:'art/halo-3.webp',ax:123,ay:520,h:520,w:246,ih:520,ht:8,cx:138}],
+  halo:{f:[{src:'art/halo-1.webp',ax:99,ay:520,h:520,w:199,ih:520,ht:7,cx:99,sc:0.6582},{src:'art/halo-2.webp',ax:106,ay:520,h:520,w:212,ih:520,ht:5,cx:102,sc:0.6484},{src:'art/halo-3.webp',ax:123,ay:520,h:520,w:246,ih:520,ht:8,cx:138,sc:0.6168}],
         // the spell each form throws, matched to its casting art.
         // hand = where the spell leaves his hand, in sprite units from his feet (x forward, y up)
         spell:[{kind:'bolt',paint:{shot:'art/fx-halo-shot1.webp',aoe:'fan'},vp:['#ffffff','#e4ffd0','#8df06a','#2f9d3c'],hand:[68,136]},
@@ -94,7 +94,7 @@ const RL_ART={
     const o=opt||{},h=RL_H[id],E=RL_EL[h.el],lv=lvOf(id,o),s=crStage(lv),F=A.f[s],u='ra'+id+s;
     // zoom to head-to-knees, but never wider than the card, and centre the whole picture
     // (body plus any floating effects) so nothing gets cut off at the sides
-    const L=Math.max(40,F.ay-(F.ht||0)),k=300/L,W=F.w*k,H=F.ih*k,x=100-(F.cx!=null?F.cx:F.ax)*k,y=20-(F.ht||0)*k; // head near the top, face and torso fill the middle
+    const R=A.f[1]||F,L=Math.max(40,(R.ay-(R.ht||0))/(R.sc||1)),kk=300/L/(F.sc||1),W=F.w*kk,H=F.ih*kk,x=100-(F.cx!=null?F.cx:F.ax)*kk,y=20-(F.ht||0)*kk; // one zoom per hero (set by the middle form), so every form keeps its true size
     const motes=o.motes===false?'':[[.1,.2,2.6,0],[.16,.7,2,1.2],[.86,.16,2.2,.6],[.08,.48,1.6,2],[.9,.66,1.8,1.6]].map(m=>`<circle class="rl-mote" cx="${m[0]*200}" cy="${m[1]*220}" r="${m[2]*1.3}" fill="${E.l}" style="animation-delay:-${m[3]}s"/>`).join('');
     return`<svg class="rl-port cr-port rl-art" viewBox="0 0 200 220" role="img" aria-label="${esc(crName(id,lv))}"><defs><radialGradient id="${u}bg" cx=".55" cy=".42" r=".8"><stop offset="0" stop-color="${E.l}" stop-opacity=".6"/><stop offset=".45" stop-color="${E.c}" stop-opacity=".55"/><stop offset="1" stop-color="${E.d}"/></radialGradient></defs><rect class="crbg" width="200" height="220" fill="#0f0d14"/><rect class="crbg" width="200" height="220" fill="url(#${u}bg)"/><g class="crbg" opacity=".2" stroke="${E.l}" fill="none"><circle cx="104" cy="110" r="84" stroke-width="1.2"/></g>${motes}<image href="${F.src}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${W.toFixed(1)}" height="${H.toFixed(1)}" preserveAspectRatio="none"/></svg>`};
   // battle sprite: a canvas the motion loop below draws into
