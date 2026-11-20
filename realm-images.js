@@ -13,9 +13,9 @@ const RL_ART={
   halo:{f:[{src:'art/halo-1.webp',ax:99,ay:520,h:520,w:199,ih:520},{src:'art/halo-2.webp',ax:106,ay:520,h:520,w:212,ih:520},{src:'art/halo-3.webp',ax:123,ay:520,h:520,w:246,ih:520}],
         // the spell each form throws, matched to its casting art.
         // hand = where the spell leaves his hand, in sprite units from his feet (x forward, y up)
-        spell:[{kind:'bolt',vp:['#ffffff','#e4ffd0','#8df06a','#2f9d3c'],hand:[68,136]},
-               {kind:'lance',vp:['#ffffff','#fff3c0','#ffd24a','#d98a12'],hand:[34,137]},
-               {kind:'shards',vp:['#ffffff','#e6dcff','#a98bff','#5a2fd6'],hand:[58,132]}],
+        spell:[{kind:'bolt',paint:{shot:'art/fx-halo-shot1.webp',aoe:'fan'},vp:['#ffffff','#e4ffd0','#8df06a','#2f9d3c'],hand:[68,136]},
+               {kind:'lance',paint:{shot:'art/fx-halo-shot2.webp',aoe:'fan'},vp:['#ffffff','#fff3c0','#ffd24a','#d98a12'],hand:[34,137]},
+               {kind:'shards',paint:{shot:'art/fx-halo-shot3.webp',sigil:'art/fx-halo-sigil3.webp',aoe:'fan'},vp:['#ffffff','#e6dcff','#a98bff','#5a2fd6'],hand:[58,132]}],
         c:[[{src:'art/halo-1c1.webp',ax:218,ay:477,h:536},{src:'art/halo-1c2.webp',ax:216,ay:507,h:536},{src:'art/halo-1c3.webp',ax:190,ay:429,h:479}],
            [{src:'art/halo-2c1.webp',ax:267,ay:514,h:536},{src:'art/halo-2c2.webp',ax:272,ay:493,h:536},{src:'art/halo-2c3.webp',ax:290,ay:416,h:479}],
            [{src:'art/halo-3c1.webp',ax:309,ay:526,h:536},{src:'art/halo-3c2.webp',ax:250,ay:504,h:536},{src:'art/halo-3c3.webp',ax:290,ay:421,h:479}]],
@@ -26,9 +26,9 @@ const RL_ART={
            [{src:'art/kael-3c1.webp',ax:264,ay:595,h:623,w:658,ih:612},{src:'art/kael-3c2.webp',ax:289,ay:645,h:623,w:654,ih:679},{src:'art/kael-3c3.webp',ax:163,ay:561,h:623,w:661,ih:602}]],
         // Kael's own magic: a compass rose that charts a route (skill 1), stars falling
         // from a constellation map (skill 3), and wind ribbons for allies (skill 2)
-        spell:[{kind:'needle',aoe:'starfall',support:'winds',vp:['#ffffff','#dffff5','#7fe8c8','#1f8c78'],hand:[61,106]},
-               {kind:'needle',aoe:'starfall',support:'winds',vp:['#ffffff','#fff1c8','#ffcf5a','#3fae98'],hand:[55,125]},
-               {kind:'needle',aoe:'starfall',support:'winds',vp:['#ffffff','#e9defc','#b28cff','#2b1d44'],hand:[70,139]}]},
+        spell:[{kind:'needle',support:'paint',paint:{shot:'art/fx-kael-shot1.webp',aura:'art/fx-kael-vortex.webp',aoe:'rain',route:true},vp:['#ffffff','#dffff5','#7fe8c8','#1f8c78'],hand:[61,106]},
+               {kind:'needle',support:'paint',paint:{shot:'art/fx-kael-shot2.webp',sigil:'art/fx-kael-sigil2.webp',aura:'art/fx-kael-vortex.webp',aoe:'rain',route:true},vp:['#ffffff','#fff1c8','#ffcf5a','#3fae98'],hand:[55,125]},
+               {kind:'needle',support:'paint',paint:{shot:'art/fx-kael-shot3.webp',sigil:'art/fx-kael-sigil3.webp',aura:'art/fx-kael-vortex.webp',aoe:'rain',route:true},vp:['#ffffff','#e9defc','#b28cff','#2b1d44'],hand:[70,139]}]},
   // Thornwick: each casting picture belongs to one skill (attack, shield, special),
   // so he takes the pose of the skill he is using instead of playing a sequence.
   thornwick:{f:[{src:'art/thornwick-1.webp',ax:140,ay:409,h:490,w:254,ih:422},{src:'art/thornwick-2.webp',ax:199,ay:588,h:490,w:361,ih:595},{src:'art/thornwick-3.webp',ax:201,ay:598,h:520,w:375,ih:604}],pose:'skill',
@@ -299,3 +299,53 @@ vfxBloom=function(h,ids,S){const P=S.vp,W=S.wood,sp=vSp(),pts=ids.map(t=>rlbPt(t
         if(!q.hit&&t2>=snap){q.hit=1;vfxP({x:q.x,y:q.y,life:.35,s:10,grow:220,c:P[2],shape:'shock'});for(let j=0;j<18;j++){const a=Math.random()*6.283,v=vR(120,300);vfxP({x:q.x+Math.cos(a)*R*.8,y:q.y+Math.sin(a)*R*.8,vx:Math.cos(a)*v,vy:Math.sin(a)*v,ay:300,drag:.95,life:vR(.4,.7),s:vR(4,7),c:rlRand([P[2],P[3],W[0]]),shape:'leaf',vr:vR(-10,10),glow:false})}}}});
     if(!hit&&pts.every(q=>q.hit)){hit=true;res()}
     if(t>fly+snap+hold+out+pts.length*.06/sp+.05)this.done=true}})})};
+
+/* ================================================================
+   PAINTED SPELLS (used by every hero from here on)
+   Cut the magic out of a hero's casting sheet and list it on each form's spell:
+     paint:{ shot:'art/..'   a projectile pointing right; flies from the hand to the target
+             burst:'art/..'  (optional) impact picture; otherwise the shot flares into a star
+             sigil:'art/..'  (optional) magic circle: flashes on targets, or hangs above them for 'rain'
+             aura:'art/..'   (optional) wraps each ally for support skills
+             aoe:'fan'|'rain' area skills: shots to every enemy, or a sigil above each enemy that drops a shot
+             route:true      leave a dotted map-route behind the shot }
+   ================================================================ */
+function paintScale(h){return Math.max(1,h.k*1.7)}
+function paintBurst(x,y,S,K,big){const P=S.vp,p=S.paint,img=p.burst&&artImg(p.burst),sig=p.sigil&&artImg(p.sigil),shot=artImg(p.shot);let t=0;const life=.42/vSp();
+  VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/life),a=k<.25?k/.25:1-(k-.25)/.75,s=.55+.65*(1-Math.pow(1-k,3));c.save();c.globalCompositeOperation='lighter';c.globalAlpha=Math.max(0,a);c.translate(x,y);
+    if(img){const w=110*K*s*(big?1.2:1),h=w*img.naturalHeight/img.naturalWidth;c.drawImage(img,-w/2,-h/2,w,h)}
+    else if(sig&&big){c.rotate(t*1.5);const w=120*K*s;c.drawImage(sig,-w/2,-w/2,w,w)}
+    else if(shot){c.rotate(t*.8);const L=70*K*s,H=L*shot.naturalHeight/shot.naturalWidth;for(let i=0;i<3;i++){c.rotate(2.094);c.drawImage(shot,0,-H/2,L,H)}}
+    c.restore();if(k>=1)this.done=true}});
+  for(let i=0;i<14;i++){const a=Math.random()*6.283,v=vR(90,260)*K;vfxP({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,drag:.88,life:vR(.25,.5),s:vR(2,4)*K,c:rlRand(P)})}}
+function paintShot(x0,y0,x1,y1,S,K,big,arc){const p=S.paint,img=artImg(p.shot),P=S.vp,sp=vSp(),dur=(big?.34:.28)/sp,trail=[];let t=0;
+  return new Promise(res=>{VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/dur),e=k*k*(3-2*k),bend=arc||0,x=x0+(x1-x0)*e,y=y0+(y1-y0)*e+bend*Math.sin(Math.PI*e),
+      dx=(x1-x0)+bend*Math.PI*Math.cos(Math.PI*e)*0,ang=Math.atan2((y1-y0)+bend*Math.PI*Math.cos(Math.PI*e),x1-x0);trail.push([x,y]);
+    c.save();if(p.route&&trail.length>1){c.setLineDash([6*K,7*K]);c.lineWidth=2*K;c.strokeStyle=P[2];c.globalAlpha=.8;c.beginPath();trail.forEach(([a,b],i)=>i?c.lineTo(a,b):c.moveTo(a,b));c.stroke();c.setLineDash([])}
+    c.globalCompositeOperation='lighter';c.globalAlpha=1;
+    if(img){const L=(big?130:105)*K,H=L*img.naturalHeight/img.naturalWidth;c.translate(x,y);c.rotate(ang);c.drawImage(img,-L*.85,-H/2,L,H)}
+    c.restore();if(Math.random()<.8)vfxP({x,y,vx:-Math.cos(ang)*80+vR(-30,30),vy:-Math.sin(ang)*80+vR(-30,30),life:vR(.2,.4),s:vR(2,4)*K,c:rlRand(P)});
+    if(k>=1){this.done=true;paintBurst(x1,y1,S,K,big);res()}}})})}
+function paintRain(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),K=paintScale(h),sig=p.sigil&&artImg(p.sigil),shot=artImg(p.shot),open=.3/sp,fall=.18/sp,hold=.25/sp;
+  for(let i=0;i<12;i++)vfxP({x:h.x,y:h.y,vx:vR(-60,60),vy:vR(-380,-200),drag:.92,life:vR(.3,.6),s:vR(2,4)*K,c:rlRand(P)});
+  return Promise.all(pts.map((q,i)=>new Promise(res=>{const sx=q.x,sy=Math.max(40,q.y-q.h*1.05);let t=-i*.08/sp,hit=false;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const g=Math.min(1,t/open),fade=Math.max(0,1-Math.max(0,t-open-fall-hold)/.25);
+      c.save();c.globalCompositeOperation='lighter';c.translate(sx,sy);c.globalAlpha=g*fade;c.scale(1,.42);c.rotate(t*1.8);
+      if(sig){const w=110*K*(.4+.6*g);c.drawImage(sig,-w/2,-w/2,w,w)}else{const gr=c.createRadialGradient(0,0,0,0,0,50*K);gr.addColorStop(0,P[1]);gr.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=gr;c.beginPath();c.arc(0,0,50*K,0,6.283);c.fill()}
+      c.restore();const t2=t-open;
+      if(t2>0&&t2<fall&&shot){const k=t2/fall,y=sy+(q.y-sy)*k*k,L=110*K,H=L*shot.naturalHeight/shot.naturalWidth;c.save();c.globalCompositeOperation='lighter';c.translate(sx,y);c.rotate(Math.PI/2);c.drawImage(shot,-L*.85,-H/2,L,H);c.restore()}
+      if(t2>=fall&&!hit){hit=true;paintBurst(q.x,q.y,S,K,true);vfxP({x:q.x,y:q.y,life:.35,s:8,grow:200*K,c:P[2],shape:'shock'});res()}
+      if(fade<=0&&hit)this.done=true}})})))}
+function paintSupport(S,e){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.aura||p.sigil);if(!img)return;e.t.forEach((uid,n)=>{const q=rlbPt(uid);if(!q)return;let t=-n*.07/sp;const life=.9/sp;
+  VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}const a=Math.sin(Math.PI*k),H=q.h*1.05*(.85+.15*k);
+    c.save();c.globalCompositeOperation='lighter';c.globalAlpha=a;c.translate(q.x,q.y);c.rotate(-t*4);const w=H*img.naturalWidth/img.naturalHeight;c.drawImage(img,-w/2,-H/2,w,H);c.rotate(Math.PI);c.globalAlpha=a*.5;c.drawImage(img,-w/2,-H/2,w,H);c.restore();
+    if(Math.random()<.4)vfxP({x:q.x+vR(-q.w/3,q.w/3),y:q.y+vR(-q.h/3,q.h/3),vy:vR(-90,-30),life:vR(.3,.6),s:vR(2,4),c:rlRand(P)})}})})}
+(function(){const oFire=rlArtFire,oShot=vfxArtShot,oSup=rlArtSupport;
+  rlArtFire=async function(S,e,sk,ult){if(!S.paint)return oFire(S,e,sk,ult);const h=rlArtHand(S);if(!h)return;const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;const K=paintScale(h),sp=vSp();
+    if(sk.tg==='eA'&&S.paint.aoe==='rain')return paintRain(h,pts,S);
+    const n=sk.tg==='eA'?1:Math.min(3,sk.h||1),arc=S.paint.route?-60:-18;
+    await Promise.all(pts.flatMap((q,j)=>Array.from({length:n},(_,i)=>new Promise(r=>setTimeout(()=>paintShot(h.x,h.y,q.x,q.y,S,K,sk.tg==='eA'||ult,arc*(j%2?-1:1)).then(r),(i*120+j*70)/sp)))))};
+  vfxArtShot=function(h,tp,S,big){return S.paint?paintShot(h.x,h.y,tp.x,tp.y,S,paintScale(h),big,-18):oShot(h,tp,S,big)};
+  rlArtSupport=function(S,e,sk){return S.paint&&(S.paint.aura||S.paint.sigil)?paintSupport(S,e):oSup(S,e,sk)};
+  Object.values(RL_ART).forEach(A=>(A.spell||[]).forEach(S=>S&&S.paint&&['shot','burst','sigil','aura'].forEach(k=>S.paint[k]&&artImg(S.paint[k]))));
+})();
