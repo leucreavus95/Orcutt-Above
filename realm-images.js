@@ -76,6 +76,14 @@ const RL_ART={
         spell:[{vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],hand:[90,128],bySkill:[{shot:'art/fx-ar-leaf1.webp'},{shot:'art/fx-ar-twin1.webp'},{shot:'art/fx-ar-twin1.webp',aoe:'fan'}]},
                {vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],hand:[95,135],bySkill:[{shot:'art/fx-ar-leaf2.webp'},{shot:'art/fx-ar-triple2.webp'},{shot:'art/fx-ar-gold2.webp',aoe:'fan'}]},
                {vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],hand:[95,135],bySkill:[{shot:'art/fx-ar-burst3.webp'},{shot:'art/fx-ar-star3.webp'},{shot:'art/fx-ar-star3.webp',burst:'art/fx-ar-burst3.webp',aoe:'fan'}]}]},
+  // Kairo, the waterweaver: one casting picture per skill, painted water effects per skill
+  kairo:{f:[{src:'art/tide-1.webp',ax:102,ay:308,h:347,w:159,ih:315},{src:'art/tide-2.webp',ax:195,ay:410,h:446,w:304,ih:419},{src:'art/tide-3.webp',ax:234,ay:608,h:580,w:456,ih:617}],pose:'skill',
+        c:[[{src:'art/tide-1c1.webp',ax:377,ay:588,h:560,w:703,ih:659},{src:'art/tide-1c2.webp',ax:350,ay:650,h:560,w:708,ih:669},{src:'art/tide-1c3.webp',ax:260,ay:599,h:560,w:701,ih:700}],
+           [{src:'art/tide-2c1.webp',ax:249,ay:654,h:616,w:703,ih:675},{src:'art/tide-2c2.webp',ax:409,ay:630,h:616,w:708,ih:701},{src:'art/tide-2c3.webp',ax:396,ay:633,h:616,w:701,ih:708}],
+           [{src:'art/tide-3c1.webp',ax:297,ay:676,h:658,w:699,ih:697},{src:'art/tide-3c2.webp',ax:267,ay:664,h:658,w:708,ih:685},{src:'art/tide-3c3.webp',ax:359,ay:678,h:658,w:700,ih:697}]],
+        spell:[{vp:['#ffffff','#dff7ff','#5fd0e6','#0f5a6e'],hand:[70,120],bySkill:[{shot:'art/fx-wv-arc1.webp'},{shot:'art/fx-wv-swirl1.webp'},{shot:'art/fx-wv-spike1.webp',aoe:'fan'}]},
+               {vp:['#ffffff','#dff7ff','#5fd0e6','#0f5a6e'],hand:[90,130],bySkill:[{shot:'art/fx-wv-lance2.webp'},{shot:'art/fx-wv-wave2.webp'},{burst:'art/fx-wv-vortex2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#dff7ff','#5fd0e6','#0f5a6e'],hand:[95,130],bySkill:[{shot:'art/fx-wv-spear3.webp'},{shot:'art/fx-wv-whirl3.webp'},{burst:'art/fx-wv-geyser3.webp',aoe:'erupt'}]}]},
 };
 (function(){
   const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.src=f.src})};preload();

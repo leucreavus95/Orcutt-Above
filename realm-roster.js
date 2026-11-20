@@ -40,6 +40,11 @@ const RL_ROSTER=[
    hero:{n:'Sylvara',r:4,role:'atk',spd:113,it:'staff',o:'cloak',hg:'hood',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cr',v:10},
      ev:['Sylvara','Sylvara Leafwing','Sylvara, the Star Archer'],
      sk:[rlSk('Swift Shot',{m:3.6,fx:[['mark',1,35]]}),rlSk('Twin Volley',{cd:3,m:1.6,h:3,fx:[['defBreak',1,30]]}),rlSk('Starfall Rain',{cd:5,tg:'eA',m:2.3,fx:[['slow',1,50]]})]}}
+,
+  {id:'kairo',col:{c:'#3fc0d8',l:'#dff7ff',d:'#0b3440'},vp:['#ffffff','#dff7ff','#5fd0e6','#0f5a6e'],
+   hero:{n:'Kairo',r:5,role:'atk',spd:106,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:15},
+     ev:['Kairo','Kairo Tidecaller','Kairo, the Deep Sovereign'],
+     sk:[rlSk('Riptide',{m:3.8,fx:[['slow',1,40]]}),rlSk('Crashing Wave',{cd:3,m:3.2,fx:[['atbDown',30,60]]}),rlSk('Maelstrom',{cd:5,tg:'eA',m:2.6,fx:[['defBreak',2,45]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){
