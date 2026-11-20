@@ -220,7 +220,7 @@ function rlArtSupport(S,e,sk){if(S.support==='barkshield')return rlArtSupportBar
 
 /* ---------- Thornwick's magic ---------- */
 // skill 1: a glowing crack races along the ground, then thorned roots burst up around the target
-function vfxRoots(h,uid,tid,S){const P=S.vp,W=S.wood,sp=vSp(),a=rlbPt(uid,'foot'),b=rlbPt(tid,'foot');if(!a||!b)return Promise.resolve();
+var vfxRoots=function(h,uid,tid,S){const P=S.vp,W=S.wood,sp=vSp(),a=rlbPt(uid,'foot'),b=rlbPt(tid,'foot');if(!a||!b)return Promise.resolve();
   const K=Math.max(1,b.w/150),run=.26/sp,grow=.18/sp,hold=.22/sp,back=.2/sp,path=[];
   const N=18;for(let i=0;i<=N;i++){const k=i/N;path.push([a.x+(b.x-a.x)*k+(i&&i<N?vR(-6,6):0),a.y+(b.y-a.y)*k+(i&&i<N?vR(-5,5):0)])}
   const spikes=Array.from({length:6},(_,i)=>({dx:(i-2.5)*14*K+vR(-5,5),h:vR(55,95)*K,w:vR(9,14)*K,lean:(i-2.5)*.12+vR(-.1,.1)}));
@@ -236,7 +236,7 @@ function vfxRoots(h,uid,tid,S){const P=S.vp,W=S.wood,sp=vSp(),a=rlbPt(uid,'foot'
         c.globalCompositeOperation='lighter';c.fillStyle=P[1];c.globalAlpha=.8;c.beginPath();c.arc(0,-H,3*K,0,6.283);c.fill();c.restore()}
       if(t2>grow+hold+back)this.done=true}}})})}
 // skill 3: a ribbon of glowing pollen sweeps the field, then a great flower blooms under every enemy
-function vfxBloom(h,ids,S){const P=S.vp,sp=vSp(),pts=ids.map(t=>rlbPt(t,'foot')).filter(Boolean);if(!pts.length)return Promise.resolve();
+var vfxBloom=function(h,ids,S){const P=S.vp,sp=vSp(),pts=ids.map(t=>rlbPt(t,'foot')).filter(Boolean);if(!pts.length)return Promise.resolve();
   const K=Math.max(1,pts[0].w/150),sweep=.4/sp,open=.28/sp,hold=.2/sp;
   const far=pts.reduce((m,q)=>q.x>m.x?q:m,pts[0]);
   return new Promise(res=>{let t=0,hit=false;VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/sweep);
@@ -248,7 +248,7 @@ function vfxBloom(h,ids,S){const P=S.vp,sp=vSp(),pts=ids.map(t=>rlbPt(t,'foot'))
       if(g>=1&&!hit){hit=true;for(const q of pts){vfxP({x:q.x,y:q.y-20*K,life:.4,s:8*K,grow:200*K,c:P[2],shape:'shock'});for(let i=0;i<22;i++){const a=-Math.PI*vR(.05,.95),v=vR(120,320)*K;vfxP({x:q.x,y:q.y-10*K,vx:Math.cos(a)*v,vy:Math.sin(a)*v,ay:380,drag:.97,life:vR(.5,.9),s:vR(4,8)*K,c:rlRand(P),shape:'leaf',vr:vR(-10,10)})}}res()}
       if(fade<=0)this.done=true}}})})}
 // skill 2: leaves gather in front of each ally and lock into a glowing leaf-shield
-function rlArtSupportBark(S,e){const P=S.vp,W=S.wood,sp=vSp();e.t.forEach((uid,n)=>{const q=rlbPt(uid);if(!q)return;const K=q.w/240,d=1,cx=q.x+q.w*.22*d,cy=q.y;let t=-n*.07/sp;
+var rlArtSupportBark=function(S,e){const P=S.vp,W=S.wood,sp=vSp();e.t.forEach((uid,n)=>{const q=rlbPt(uid);if(!q)return;const K=q.w/240,d=1,cx=q.x+q.w*.22*d,cy=q.y;let t=-n*.07/sp;
   const leaves=Array.from({length:12},()=>({a:vR(0,6.283),r:vR(90,150)*K,o:vR(-.4,.4)}));
   VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const gather=.3/sp,hold=.55/sp,out=.25/sp;if(t>gather+hold+out){this.done=true;return}
     c.save();c.globalCompositeOperation='lighter';
@@ -260,3 +260,42 @@ function rlArtSupportBark(S,e){const P=S.vp,W=S.wood,sp=vSp();e.t.forEach((uid,n
       for(let i=-2;i<=2;i++){const y=cy+i*Hh*.3;c.moveTo(cx,y);c.lineTo(cx+Ww*.8,y-Hh*.15);c.moveTo(cx,y);c.lineTo(cx-Ww*.8,y-Hh*.15)}c.stroke();
       const sh=(t*2.2)%1;c.globalAlpha=.6*fade*(1-sh);c.strokeStyle=P[1];c.lineWidth=2;c.beginPath();c.ellipse(cx,cy,Ww*(1+sh*1.5),Hh*(1+sh*.5),0,0,6.283);c.stroke()}
     c.restore()}})})}
+
+/* ---------- Thornwick, painted effects (cut from his own casting sheet) ---------- */
+const TH_FX={roots:'art/fx-th-roots.webp',ring:'art/fx-th-ring.webp',shield:'art/fx-th-shield.webp',beam:'art/fx-th-beam.webp'};
+Object.values(TH_FX).forEach(artImg);
+const thImg=k=>artImg(TH_FX[k]);
+const glow=(c,x,y,r,col,a)=>{c.save();c.globalCompositeOperation='lighter';c.globalAlpha=a;const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'#f6ffd8');g.addColorStop(.3,col);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,6.283);c.fill();c.restore()};
+// Thornroot: a dark crack runs along the ground, then gnarled roots tear up around the enemy
+vfxRoots=function(h,uid,tid,S){const P=S.vp,W=S.wood,sp=vSp(),a=rlbPt(uid,'foot'),b=rlbPt(tid,'foot');if(!a||!b)return Promise.resolve();
+  const K=b.w/150,run=.24/sp,grow=.14/sp,hold=.38/sp,back=.22/sp,path=[],N=16,img=thImg('roots');
+  for(let i=0;i<=N;i++){const k=i/N;path.push([a.x+(b.x-a.x)*k+(i&&i<N?vR(-5,5):0),a.y+(b.y-a.y)*k+(i&&i<N?vR(-3,3):0)])}
+  return new Promise(res=>{let t=0,hit=false;VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/run),n=Math.max(1,Math.round(k*N)),fade=Math.max(0,1-Math.max(0,t-run-grow-hold)/back);
+    c.save();c.globalAlpha=.85*fade;c.strokeStyle='#2a1a0c';c.lineWidth=5;c.lineCap='round';c.beginPath();path.slice(0,n+1).forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();
+    c.globalCompositeOperation='lighter';c.strokeStyle=P[2];c.lineWidth=1.6;c.stroke();c.restore();
+    if(k<1&&Math.random()<.7){const[x,y]=path[n];vfxP({x,y,vx:vR(-50,50),vy:vR(-140,-50),ay:520,life:vR(.3,.5),s:vR(2,4),c:rlRand(W),shape:'sq',vr:8,glow:false})}
+    const t2=t-run;if(t2>0){const g=t2<grow?1-Math.pow(1-t2/grow,3):1,sink=t2>grow+hold?Math.min(1,(t2-grow-hold)/back):0;
+      if(!hit){hit=true;rlbShake&&rlbShake(false);for(let i=0;i<16;i++)vfxP({x:b.x+vR(-50,50)*K,y:b.y,vx:vR(-140,140),vy:vR(-340,-120),ay:760,life:vR(.4,.7),s:vR(3,6),c:rlRand(W),shape:'sq',vr:10,glow:false});res()}
+      glow(c,b.x,b.y-10*K,70*K*g,P[2],.8*(1-sink));
+      if(img){const w=b.w*1.55,hh=w*img.naturalHeight/img.naturalWidth,H=hh*g*(1-sink*.6);c.save();c.globalAlpha=1-sink;c.drawImage(img,b.x-w/2,b.y+hh*.12-H,w,H);c.restore()}
+      if(t2>grow+hold+back)this.done=true}}})})};
+// Barkward: the crystal leaf-shield from his art forms in front of each ally
+rlArtSupportBark=function(S,e){const P=S.vp,sp=vSp(),img=thImg('shield');e.t.forEach((uid,n)=>{const q=rlbPt(uid);if(!q)return;const cx=q.x+q.w*.24,cy=q.y+q.h*.05;let t=-n*.08/sp;
+  const leaves=Array.from({length:10},()=>({a:vR(0,6.283),r:vR(80,140)*q.w/240}));
+  VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const gather=.22/sp,hold=.7/sp,out=.25/sp;if(t>gather+hold+out){this.done=true;return}
+    if(t<gather){const k=t/gather;for(const L of leaves){const r=L.r*(1-k);vfxP({x:cx+Math.cos(L.a+k*3)*r,y:cy+Math.sin(L.a+k*3)*r*.8,life:.08,s:4,c:P[2],shape:'leaf',rot:L.a})}return}
+    const k=Math.min(1,(t-gather)/(.14/sp)),fade=t>gather+hold?1-(t-gather-hold)/out:1,pop=.75+.25*(1-Math.pow(1-k,3))+.06*Math.sin(Math.min(1,k)*Math.PI);
+    const H=q.h*.62*pop;glow(c,cx,cy,H*.65,P[2],.5*fade);
+    if(img){const w=H*img.naturalWidth/img.naturalHeight;c.save();c.globalAlpha=fade;c.drawImage(img,cx-w/2,cy-H/2,w,H);c.restore()}
+    if(k<1&&k>.5)for(let i=0;i<3;i++)vfxP({x:cx+vR(-15,15),y:cy+vR(-H/2,H/2),vx:vR(-80,80),vy:vR(-80,40),life:.4,s:vR(2,4),c:rlRand(P),shape:'star',vr:6})}})})};
+// Wildbloom: green bolts streak from his staff, then a ring of living vines snaps shut around every enemy
+vfxBloom=function(h,ids,S){const P=S.vp,W=S.wood,sp=vSp(),pts=ids.map(t=>rlbPt(t)).filter(Boolean),beam=thImg('beam'),ring=thImg('ring');if(!pts.length)return Promise.resolve();
+  const fly=.26/sp,snap=.2/sp,hold=.35/sp,out=.25/sp;
+  return new Promise(res=>{let t=0,hit=false;VFX.items.push({step(dt,c){t+=dt;
+    pts.forEach((q,i)=>{const t0=i*.06/sp,k=Math.min(1,Math.max(0,(t-t0)/fly));
+      if(k>0&&k<1&&beam){const x=h.x+(q.x-h.x)*k,y=h.y+(q.y-h.y)*k,ang=Math.atan2(q.y-h.y,q.x-h.x),L=110*h.k*1.8;c.save();c.globalCompositeOperation='lighter';c.translate(x,y);c.rotate(ang);c.drawImage(beam,-L,-L*beam.naturalHeight/beam.naturalWidth/2,L,L*beam.naturalHeight/beam.naturalWidth);c.restore()}
+      const t2=t-t0-fly;if(t2>0&&ring){const s=t2<snap?1.7-0.75*(1-Math.pow(1-t2/snap,3)):.95,fade=t2>snap+hold?Math.max(0,1-(t2-snap-hold)/out):1,R=q.h*.62*s;
+        glow(c,q.x,q.y,R*.9,P[2],.35*fade);c.save();c.globalAlpha=Math.min(1,t2/(snap*.5))*fade;c.translate(q.x,q.y);c.rotate((1-Math.min(1,t2/snap))*-.6);c.drawImage(ring,-R,-R,R*2,R*2);c.restore();
+        if(!q.hit&&t2>=snap){q.hit=1;vfxP({x:q.x,y:q.y,life:.35,s:10,grow:220,c:P[2],shape:'shock'});for(let j=0;j<18;j++){const a=Math.random()*6.283,v=vR(120,300);vfxP({x:q.x+Math.cos(a)*R*.8,y:q.y+Math.sin(a)*R*.8,vx:Math.cos(a)*v,vy:Math.sin(a)*v,ay:300,drag:.95,life:vR(.4,.7),s:vR(4,7),c:rlRand([P[2],P[3],W[0]]),shape:'leaf',vr:vR(-10,10),glow:false})}}}});
+    if(!hit&&pts.every(q=>q.hit)){hit=true;res()}
+    if(t>fly+snap+hold+out+pts.length*.06/sp+.05)this.done=true}})})};
