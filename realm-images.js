@@ -84,6 +84,13 @@ const RL_ART={
         spell:[{vp:['#ffffff','#dff7ff','#5fd0e6','#0f5a6e'],hand:[70,120],bySkill:[{shot:'art/fx-wv-arc1.webp'},{shot:'art/fx-wv-swirl1.webp'},{shot:'art/fx-wv-spike1.webp',aoe:'fan'}]},
                {vp:['#ffffff','#dff7ff','#5fd0e6','#0f5a6e'],hand:[90,130],bySkill:[{shot:'art/fx-wv-lance2.webp'},{shot:'art/fx-wv-wave2.webp'},{burst:'art/fx-wv-vortex2.webp',aoe:'sweep'}]},
                {vp:['#ffffff','#dff7ff','#5fd0e6','#0f5a6e'],hand:[95,130],bySkill:[{shot:'art/fx-wv-spear3.webp'},{shot:'art/fx-wv-whirl3.webp'},{burst:'art/fx-wv-geyser3.webp',aoe:'erupt'}]}]},
+  // Tobin, the farmhand with a spear: no magic. He charges in for single hits (shown in his lunge pose)
+  // and sweeps the whole line with his spear for his area skill.
+  pike:{f:[{src:'art/pike-1.webp',ax:133,ay:440,h:372,w:230,ih:450},{src:'art/pike-2.webp',ax:155,ay:521,h:434,w:275,ih:530},{src:'art/pike-3.webp',ax:173,ay:581,h:496,w:296,ih:590}],melee:true,dashPose:2,
+        c:[[{src:'art/pike-1c1.webp',ax:225,ay:617,h:588,w:652,ih:634},{src:'art/pike-1c3.webp',ax:232,ay:617,h:588,w:655,ih:636},{src:'art/pike-1c2.webp',ax:248,ay:599,h:588,w:664,ih:617}],
+           [{src:'art/pike-2c1.webp',ax:221,ay:563,h:588,w:638,ih:581},{src:'art/pike-2c3.webp',ax:226,ay:563,h:588,w:643,ih:581},{src:'art/pike-2c2.webp',ax:249,ay:514,h:588,w:636,ih:532}],
+           [{src:'art/pike-3c1.webp',ax:224,ay:556,h:588,w:652,ih:608},{src:'art/pike-3c3.webp',ax:229,ay:553,h:588,w:655,ih:608},{src:'art/pike-3c2.webp',ax:241,ay:515,h:588,w:664,ih:584}]],
+        spell:[0,1,2].map(()=>({vp:['#ffffff','#f4ead0','#c9a26a','#5a4630'],hand:[95,130],bySkill:[null,null,{aoe:'spearsweep'}]}))},
 };
 (function(){
   const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.src=f.src})};preload();
@@ -124,6 +131,7 @@ function artPose(st,now,speed){ // the figure's shape at this moment
     if(T>=1150)st.cast=-1;else{const fi=Math.min(1,T/90),fo=T>1000?Math.min(1,(T-1000)/150):0;
       P.seq=fo>0?[[i,1-fo],[-1,fo]]:fi<1?[[-1,1-fi],[i,fi]]:[[i,1]];P.pulse=T>200&&T<700?.02*Math.sin((T-200)/40):0;P.kick=T>480&&T<900?Math.exp(-(T-480)/140):0;
       P.ring=Math.min(1,T/120)*(1-fo);P.glow=0}}
+  else if(st.dashOn&&st.frames&&st.dashPose!=null){P.seq=[[st.dashPose,1]];P.lean=0}
   else if(st.cast>=0&&st.frames){const T=(now-st.cast)*speed,C=CAST_T;
     if(T>=C[8])st.cast=-1;else{const seg=(a,b)=>Math.min(1,Math.max(0,(T-C[a])/(C[b]-C[a])));
       P.seq=T<C[1]?[[-1,1-seg(0,1)],[0,seg(0,1)]]:T<C[2]?[[0,1]]:T<C[3]?[[0,1-seg(2,3)],[1,seg(2,3)]]:T<C[4]?[[1,1]]:T<C[5]?[[1,1-seg(4,5)],[2,seg(4,5)]]:T<C[6]?[[2,1]]:T<C[7]?[[2,1-seg(6,7)],[-1,seg(6,7)]]:[[-1,1]];
@@ -149,7 +157,7 @@ function artDraw(cv,now){
     // the battle re-adds these classes within one frame, so watch each change
     const watch=(el,cls,key)=>{if(!el)return;new MutationObserver(rs=>{for(const r of rs)if(!(r.oldValue||'').split(' ').includes(cls)&&el.classList.contains(cls)){st[key]=performance.now();break}}).observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true})};
     watch(spr,'cast','cast');new MutationObserver(()=>{if(spr&&spr.dataset.sk!=null)st.sk=+spr.dataset.sk}).observe(spr,{attributes:true,attributeFilter:['data-sk']});if(spr&&spr.dataset.sk!=null)st.sk=+spr.dataset.sk;watch(unit,'hit','hit');watch(spr,'dash','dash')}
-  st.dashOn=!!(spr&&spr.classList.contains('dash'));st.mode=A.pose||'seq';st.frames=!!(FR&&FR.every(f=>artImg(f.src)));
+  st.dashOn=!!(spr&&spr.classList.contains('dash'));st.mode=A.pose||'seq';st.dashPose=A.dashPose;st.frames=!!(FR&&FR.every(f=>artImg(f.src)));
   const P=artPose(st,now,speed),E=RL_EL[RL_H[id].el],t=(now+st.ph)/1000;
   const sc=cw/AW,buf=st.buf;if(buf.width!==cw||buf.height!==ch){buf.width=cw;buf.height=ch}
   const g=buf.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cw,ch);g.setTransform(sc,0,0,sc,-AX0*sc,-AY0*sc);
@@ -412,8 +420,20 @@ function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst|
     pts.forEach((q,i)=>{if(!hit.has(i)&&x>=q.x){hit.add(i);paintBurst(q.x,q.y,Object.assign({},S,{paint:{shot:p.burst||p.shot}}),1.2,false)}});
     if(hit.size>=pts.length&&!this.r){this.r=1;res()}if(k>=1){this.done=true;if(!this.r)res()}}})})}
 (function(){const prev=rlArtFire,prevSup=rlArtSupport;
-  rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0];S=Object.assign({},S,{paint:p,bySkill:null});
+  rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0]||{};S=Object.assign({},S,{paint:p,bySkill:null});
+      if(p.aoe==='spearsweep'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxSpearSweep(pts,S)}
       if(sk.tg==='eA'&&(p.aoe==='erupt'||p.aoe==='sweep')){const h=rlArtHand(S);const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;return p.aoe==='erupt'?paintErupt(pts,S):paintSweep(h,pts,S)}}
     return prev(S,e,sk,ult)};
-  Object.values(RL_ART).forEach(A=>(A.spell||[]).forEach(S=>S&&S.bySkill&&S.bySkill.forEach(p=>['shot','burst','sigil','aura'].forEach(k=>p[k]&&artImg(p[k])))));
+  Object.values(RL_ART).forEach(A=>(A.spell||[]).forEach(S=>S&&S.bySkill&&S.bySkill.forEach(p=>p&&['shot','burst','sigil','aura'].forEach(k=>p[k]&&artImg(p[k])))));
 })();
+
+/* a broad spear sweep across the enemy line: silver slash arcs, dust and a shove */
+function vfxSpearSweep(pts,S){if(!pts.length)return Promise.resolve();const P=S.vp,sp=vSp();
+  return Promise.all(pts.map((q,i)=>new Promise(res=>{let t=-i*.07/sp,hit=false;const life=.42/sp,R=q.w*.75;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}
+      const a0=-2.4,a1=.6,a=a0+(a1-a0)*Math.min(1,k*1.6),fade=k<.6?1:1-(k-.6)/.4;
+      c.save();c.translate(q.x,q.y);c.globalAlpha=fade;c.lineCap='round';
+      for(let j=0;j<3;j++){c.strokeStyle=j===0?'rgba(60,45,30,.55)':j===1?'#e6ecf2':'#ffffff';c.lineWidth=[14,6,2][j];c.beginPath();c.arc(0,0,R,Math.max(a0,a-1.3),a);c.stroke()}
+      c.restore();
+      if(!hit&&k>.35){hit=true;rlbShake&&rlbShake(false);for(let j=0;j<14;j++)vfxP({x:q.x+vR(-q.w/3,q.w/3),y:q.y+q.h*.4,vx:vR(-160,160),vy:vR(-260,-80),ay:700,life:vR(.35,.6),s:vR(3,6),c:rlRand(['#8a6a4a','#c9a26a','#5a4630']),shape:'sq',vr:8,glow:false});
+        vfxP({x:q.x,y:q.y,life:.3,s:6,grow:150,c:'#f4ead0',shape:'shock'});res()}}})})))}

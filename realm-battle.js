@@ -66,15 +66,20 @@ function vfxInit(kind){const cv=document.getElementById('rlb-vfx');if(!cv)return
 function vfxSize(){const cv=VFX.cv;if(!cv)return;const r=cv.getBoundingClientRect(),d=Math.min(2,window.devicePixelRatio||1);VFX.W=r.width;VFX.H=r.height;if(cv.width!==Math.round(r.width*d)){cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d)}VFX.c.setTransform(d,0,0,d,0,0)}
 const vR=(a,b)=>a+Math.random()*(b-a);
 function vfxP(o){VFX.parts.push(Object.assign({vx:0,vy:0,ax:0,ay:0,drag:1,life:.6,s:4,c:'#fff',shape:'c',rot:0,vr:0,glow:true,grow:0},o,{max:o.life||.6}));}
+// If the battle screen re-renders mid-cast (e.g. a points update), finish any pending effects so the turn never stalls.
+function vfxFlush(){const d=document.createElement('canvas').getContext('2d');for(let k=0;k<4;k++)for(const it of VFX.items){if(it.done)continue;try{d.save();it.step(5,d)}catch(e){it.done=true}finally{d.restore()}}VFX.items=[]}
+setInterval(()=>{if(VFX.items.length&&!VFX.raf){VFX.last=performance.now();VFX.raf=requestAnimationFrame(vfxLoop)}},200);
 function vfxLoop(now){
-  if(!VFX.cv||!VFX.cv.isConnected){VFX.raf=0;VFX.parts=[];VFX.items=[];return}
+  if(!VFX.cv||!VFX.cv.isConnected){const n=document.getElementById('rlb-vfx');
+    if(n){VFX.cv=n;VFX.c=n.getContext('2d');vfxSize()}
+    else{vfxFlush();VFX.raf=0;VFX.parts=[];return}}
   const dt=Math.min(.05,(now-VFX.last)/1000);VFX.last=now;const c=VFX.c,W=VFX.W,H=VFX.H;
   if(W<2){vfxSize()}
   c.clearRect(0,0,W,H);
   // ambient
   VFX.amb+=dt;const k=VFX.kind,amb={wind:[.12,()=>vfxP({x:-10,y:vR(0,H*.7),vx:vR(40,90),vy:vR(-5,15),life:vR(5,9),s:vR(4,7),c:rlRand(['#7be08a','#b5f5c4','#d9c46a']),shape:'leaf',vr:vR(-3,3),glow:false})],fire:[.06,()=>vfxP({x:vR(0,W),y:H+5,vx:vR(-10,10),vy:vR(-60,-30),life:vR(2.5,5),s:vR(1.5,3.5),c:rlRand(['#ffb03d','#ff6a3d','#ffd27a'])})],water:[.15,()=>vfxP({x:vR(0,W),y:H+5,vx:vR(-6,6),vy:vR(-40,-20),life:vR(3,6),s:vR(2,5),c:'#bfe9ff',shape:'ring',glow:false})],light:[.1,()=>vfxP({x:vR(0,W),y:vR(0,H*.8),vy:vR(-8,-2),life:vR(2,4),s:vR(1.5,3),c:'#fff6c9',shape:'star'})],dark:[.12,()=>vfxP({x:vR(0,W),y:vR(H*.3,H),vx:vR(-6,6),vy:vR(-14,-4),life:vR(3,6),s:vR(2,4),c:'#c9a6ff'})],arena:[.2,()=>vfxP({x:vR(0,W),y:-5,vx:vR(-15,15),vy:vR(40,80),life:vR(3,5),s:vR(3,5),c:rlRand(['#ffd60a','#4aa8ff','#ff4d6d','#38d39f']),shape:'sq',vr:vR(-6,6),glow:false})],archive:[.18,()=>vfxP({x:vR(0,W),y:vR(0,H*.6),vx:vR(-4,4),vy:vR(2,8),life:vR(4,7),s:vR(1,2.4),c:'#f1e2b0'})]}[k];
   if(amb&&!STILL&&VFX.amb>amb[0]){VFX.amb=0;amb[1]()}
-  for(const it of VFX.items)it.step(dt,c);VFX.items=VFX.items.filter(i=>!i.done);
+  for(const it of VFX.items){try{c.save();it.step(dt,c)}catch(e){it.done=true;if(it.res)it.res()}finally{c.restore()}}VFX.items=VFX.items.filter(i=>!i.done);
   c.globalCompositeOperation='lighter';
   for(const p of VFX.parts){p.life-=dt;p.vx=(p.vx+p.ax*dt)*p.drag;p.vy=(p.vy+p.ay*dt)*p.drag;p.x+=p.vx*dt;p.y+=p.vy*dt;p.rot+=p.vr*dt;p.s+=p.grow*dt;
     const a=Math.max(0,Math.min(1,p.life/p.max*1.4));if(a<=0)continue;c.globalAlpha=a;c.globalCompositeOperation=p.glow?'lighter':'source-over';c.fillStyle=p.c;c.strokeStyle=p.c;
@@ -149,7 +154,7 @@ function rlbPt(uid,where){const st=document.getElementById('rlb-stage'),el=docum
 function rlbFloat(uid,text,cls){const box=document.getElementById('rlb-floats'),p=rlbPt(uid,'head');if(!box||!p)return;const f=document.createElement('span');f.className='rlb-float '+(cls||'');f.textContent=text;f.style.left=(p.x+vR(-18,18))+'px';f.style.top=(p.y+(cls==='name'?-24:0))+'px';box.appendChild(f);setTimeout(()=>f.remove(),1200)}
 function rlbShake(big){const c=document.getElementById('rlb-cam');if(!c||STILL)return;c.classList.remove('shake','shake2');void c.offsetWidth;c.classList.add(big?'shake2':'shake')}
 function rlbBanner(text,col){const box=document.getElementById('rlb-floats');if(!box)return;const w=document.createElement('div');w.className='rlb-ult';w.style.setProperty('--uc',col);w.innerHTML=`<span>${esc(text)}</span>`;box.appendChild(w);setTimeout(()=>w.remove(),1100)}
-function rlbMelee(u){if(u.kind==='hero')return u.sk&&RL_H[u.id].role==='def'&&!(typeof RL_ART!=='undefined'&&RL_ART[u.id]&&RL_ART[u.id].spell);return['wolf','treant','golem','crab','drake','papergolem','slime','owl'].includes(u.id)}
+function rlbMelee(u){if(u.kind==='hero'){const A=typeof RL_ART!=='undefined'&&RL_ART[u.id];if(A&&A.melee)return true;return u.sk&&RL_H[u.id].role==='def'&&!(A&&A.spell)}return['wolf','treant','golem','crab','drake','papergolem','slime','owl'].includes(u.id)}
 async function rlbPlay(ev){
   const b=rlUI().b,B=b.B;let lastEl='light';
   for(const e of ev){
