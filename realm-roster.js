@@ -25,6 +25,11 @@ const RL_ROSTER=[
    hero:{n:'Corvin',r:5,role:'atk',spd:115,it:'staff',o:'cloak',hg:'hood',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cr',v:15},
      ev:['Corvin','Corvin Rimequill','Corvin, the Winter Raven'],
      sk:[rlSk('Rime Cut',{m:3.9,fx:[['slow',1,40]]}),rlSk('Shardstorm',{cd:3,m:1.5,h:3,fx:[['defBreak',2,35]]}),rlSk('Whiteout',{cd:5,tg:'eA',m:2.6,fx:[['stun',1,30]]})]}}
+,
+  {id:'dusk',col:{c:'#d8463a',l:'#ffd2c4',d:'#3a0c10'},vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],
+   hero:{n:'Varek',r:4,role:'atk',spd:108,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:15},
+     ev:['Varek','Varek Duskblade','Varek, the Eclipse'],
+     sk:[rlSk('Dusk Cleave',{m:4.0,fx:[['defBreak',1,35]]}),rlSk('Crimson Crescent',{cd:3,m:2.2,h:2,fx:[['mark',2,40]]}),rlSk('Eclipse Ring',{cd:5,tg:'eA',m:2.6,fx:[['atkBreak',2,40]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

@@ -52,6 +52,14 @@ const RL_ART={
         spell:[{vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],hand:[70,110],bySkill:[{shot:'art/fx-rv-slash1.webp'},{shot:'art/fx-rv-shards.webp'},{burst:'art/fx-rv-frostburst.webp',aoe:'erupt'}]},
                {vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],hand:[80,130],bySkill:[{shot:'art/fx-rv-crescent.webp'},{shot:'art/fx-rv-shards.webp'},{burst:'art/fx-rv-wave.webp',aoe:'sweep'}]},
                {vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],hand:[80,135],bySkill:[{shot:'art/fx-rv-orb.webp'},{shot:'art/fx-rv-shards.webp'},{shot:'art/fx-rv-spiral.webp',aoe:'fan'}]}]},
+  // Varek, the dusk blade: one casting picture per skill, painted crimson-and-ember effects per skill
+  dusk:{f:[{src:'art/dusk-1.webp',ax:148,ay:494,h:562,w:236,ih:504},{src:'art/dusk-2.webp',ax:214,ay:562,h:562,w:341,ih:573},{src:'art/dusk-3.webp',ax:195,ay:602,h:597,w:358,ih:611}],pose:'skill',
+        c:[[{src:'art/dusk-1c1.webp',ax:317,ay:594,h:541,w:703,ih:679},{src:'art/dusk-1c2.webp',ax:341,ay:489,h:541,w:692,ih:571},{src:'art/dusk-1c3.webp',ax:420,ay:592,h:541,w:706,ih:703}],
+           [{src:'art/dusk-2c1.webp',ax:324,ay:605,h:667,w:703,ih:630},{src:'art/dusk-2c2.webp',ax:327,ay:501,h:667,w:701,ih:595},{src:'art/dusk-2c3.webp',ax:355,ay:638,h:667,w:706,ih:703}],
+           [{src:'art/dusk-3c1.webp',ax:319,ay:678,h:715,w:697,ih:704},{src:'art/dusk-3c2.webp',ax:333,ay:592,h:715,w:703,ih:668},{src:'art/dusk-3c3.webp',ax:284,ay:651,h:715,w:704,ih:706}]],
+        spell:[{vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],hand:[75,120],bySkill:[{shot:'art/fx-dk-cres1.webp'},{shot:'art/fx-dk-ring2.webp'},{shot:'art/fx-dk-cres1.webp',aoe:'fan'}]},
+               {vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],hand:[85,120],bySkill:[{shot:'art/fx-dk-flame2.webp'},{shot:'art/fx-dk-ring2.webp'},{burst:'art/fx-dk-impact2.webp',aoe:'erupt'}]},
+               {vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],hand:[85,130],bySkill:[{shot:'art/fx-dk-fly3.webp'},{shot:'art/fx-dk-beam3.webp'},{burst:'art/fx-dk-erupt3.webp',aoe:'erupt'}]}]},
 };
 (function(){
   const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.src=f.src})};preload();
