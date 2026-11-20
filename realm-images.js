@@ -24,9 +24,11 @@ const RL_ART={
         c:[[{src:'art/kael-1c1.webp',ax:320,ay:601,h:592,w:609,ih:647},{src:'art/kael-1c2.webp',ax:349,ay:615,h:592,w:643,ih:682},{src:'art/kael-1c3.webp',ax:229,ay:483,h:592,w:650,ih:528}],
            [{src:'art/kael-2c1.webp',ax:227,ay:610,h:627,w:682,ih:659},{src:'art/kael-2c2.webp',ax:333,ay:620,h:627,w:645,ih:679},{src:'art/kael-2c3.webp',ax:203,ay:608,h:627,w:624,ih:648}],
            [{src:'art/kael-3c1.webp',ax:264,ay:595,h:623,w:658,ih:612},{src:'art/kael-3c2.webp',ax:289,ay:645,h:623,w:654,ih:679},{src:'art/kael-3c3.webp',ax:163,ay:561,h:623,w:661,ih:602}]],
-        spell:[{kind:'bolt',vp:['#ffffff','#dffff5','#8ef0d0','#2a9d8a'],hand:[61,106]},
-               {kind:'lance',vp:['#ffffff','#fff3c0','#ffd24a','#d98a12'],hand:[55,125]},
-               {kind:'shards',vp:['#ffffff','#e6dcff','#a98bff','#5a2fd6'],hand:[70,139]}]},
+        // Kael's own magic: a compass rose that charts a route (skill 1), stars falling
+        // from a constellation map (skill 3), and wind ribbons for allies (skill 2)
+        spell:[{kind:'needle',aoe:'starfall',support:'winds',vp:['#ffffff','#dffff5','#7fe8c8','#1f8c78'],hand:[61,106]},
+               {kind:'needle',aoe:'starfall',support:'winds',vp:['#ffffff','#fff1c8','#ffcf5a','#3fae98'],hand:[55,125]},
+               {kind:'needle',aoe:'starfall',support:'winds',vp:['#ffffff','#e9defc','#b28cff','#2b1d44'],hand:[70,139]}]},
 };
 (function(){
   const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.src=f.src})};preload();
@@ -117,10 +119,11 @@ function rlArtSpell(u){const A=RL_ART[u.id];if(!A||!A.spell)return null;const st
   const key='art_'+u.id+st;if(!RL_VP[key])RL_VP[key]=S.vp;return Object.assign({key,uid:u.uid,side:u.side,big:st===2},S)}
 function rlArtHand(S){const f=rlbPt(S.uid,'foot');if(!f)return null;const d=S.side?-1:1,k=f.w/240;return{x:f.x+d*S.hand[0]*k,y:f.y-(12+S.hand[1])*k,d,k}}
 async function rlArtFire(S,e,sk,ult){const h=rlArtHand(S);if(!h)return;const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;
+  if(sk.tg==='eA'&&S.aoe==='starfall')return vfxStarfall(h,pts,S);
   const n=sk.tg==='eA'?1:Math.min(3,sk.h||1),sp=vSp(),jobs=[];
   for(const tp of pts)for(let i=0;i<n;i++)jobs.push(new Promise(r=>setTimeout(()=>vfxArtShot(h,tp,S,ult).then(r),(i*110+pts.indexOf(tp)*60)/sp)));
   await Promise.all(jobs)}
-function vfxArtShot(h,tp,S,big){const P=S.vp,sp=vSp(),x0=h.x,y0=h.y,x1=tp.x,y1=tp.y,ang=Math.atan2(y1-y0,x1-x0),ca=Math.cos(ang),sa=Math.sin(ang),dist=Math.hypot(x1-x0,y1-y0),K=h.k*(big?1.25:1);
+function vfxArtShot(h,tp,S,big){if(S.kind==='needle')return new Promise(r=>vfxNeedle(h,tp,S,big,Math.max(1,h.k*1.9)*(big?1.2:1),r));const P=S.vp,sp=vSp(),x0=h.x,y0=h.y,x1=tp.x,y1=tp.y,ang=Math.atan2(y1-y0,x1-x0),ca=Math.cos(ang),sa=Math.sin(ang),dist=Math.hypot(x1-x0,y1-y0),K=h.k*(big?1.25:1);
   // a short muzzle flash at the hand
   vfxP({x:x0,y:y0,life:.25,s:6*K,grow:160*K,c:P[2],shape:'shock'});for(let i=0;i<10;i++){const a=ang+vR(-.6,.6),v=vR(80,240)*K;vfxP({x:x0,y:y0,vx:Math.cos(a)*v,vy:Math.sin(a)*v,drag:.88,life:vR(.15,.35),s:vR(2,4)*K,c:rlRand(P)})}
   const shapes=S.kind==='shards'?(big?[0,-.09,.09,-.17,.17]:[0,-.1,.1]).map((o,i)=>({o,lag:i*.06,len:vR(26,38)})):[{o:0,lag:0,len:S.kind==='lance'?78:96}];
@@ -161,3 +164,41 @@ const RL_BGART={};
 (function(){const old=rlStageBG;rlStageBG=function(kind){const f=RL_BGART[kind];if(!f)return old(kind);
   return`<div class="rl-bgart" style="background-image:url('${f}')" aria-hidden="true"></div>`};
   const st=document.createElement('style');st.textContent=`.rl-bgart{position:absolute;inset:0;background-size:cover;background-position:center 70%}`;document.head.appendChild(st)})();
+
+/* ---------- Kael's magic ---------- */
+// skill 1: a spinning compass rose that curves to the target, drawing a dotted map route
+function vfxNeedle(h,tp,S,big,K,res){const P=S.vp,sp=vSp(),x0=h.x,y0=h.y,x1=tp.x,y1=tp.y,dur=.42/sp,bend=-Math.min(90,Math.abs(x1-x0)*.28),trail=[];let t=0;
+  VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/dur),e=k*k*(3-2*k),x=x0+(x1-x0)*e,y=y0+(y1-y0)*e+bend*Math.sin(Math.PI*e),R=12*K,rot=t*14;trail.push([x,y]);
+    c.save();c.globalCompositeOperation='lighter';
+    c.setLineDash([6*K,7*K]);c.lineWidth=2.4*K;c.strokeStyle=P[2];c.globalAlpha=.85;c.beginPath();trail.forEach(([a,b],i)=>i?c.lineTo(a,b):c.moveTo(a,b));c.stroke();c.setLineDash([]);
+    c.globalAlpha=1;const g=c.createRadialGradient(x,y,0,x,y,R*2.2);g.addColorStop(0,P[1]);g.addColorStop(.5,P[2]);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,R*2.2,0,6.283);c.fill();
+    c.translate(x,y);c.strokeStyle=P[0];c.lineWidth=2*K;c.beginPath();c.arc(0,0,R,0,6.283);c.stroke();
+    c.rotate(rot);c.fillStyle=P[0];for(let i=0;i<4;i++){c.rotate(Math.PI/2);c.beginPath();c.moveTo(0,-R*1.35);c.lineTo(R*.22,0);c.lineTo(-R*.22,0);c.closePath();c.fill()}
+    c.restore();
+    if(k>=1){this.done=true;vfxP({x:x1,y:y1,life:.45,s:R,grow:150*K,c:P[2],shape:'ring'});
+      // an X marks the spot, then four sparks fly to the compass points
+      VFX.items.push({t:0,step(dt,c){this.t+=dt;const a=Math.max(0,1-this.t/.5),L=16*K;c.save();c.globalCompositeOperation='lighter';c.globalAlpha=a;c.strokeStyle=P[1];c.lineWidth=4*K;c.lineCap='round';c.beginPath();c.moveTo(x1-L,y1-L);c.lineTo(x1+L,y1+L);c.moveTo(x1+L,y1-L);c.lineTo(x1-L,y1+L);c.stroke();c.restore();if(this.t>.5)this.done=true}});
+      for(let i=0;i<4;i++){const a=i*Math.PI/2;vfxP({x:x1,y:y1,vx:Math.cos(a)*260*K,vy:Math.sin(a)*260*K,drag:.86,life:.4,s:5*K,c:P[0],shape:'dia',rot:a})}
+      for(let i=0;i<10;i++){const a=Math.random()*6.283,v=vR(60,180)*K;vfxP({x:x1,y:y1,vx:Math.cos(a)*v,vy:Math.sin(a)*v,drag:.9,life:vR(.25,.5),s:vR(2,4)*K,c:rlRand(P)})}
+      res()}}})}
+// skill 3: a constellation map is drawn above the enemies, then a star falls on each one
+function vfxStarfall(h,pts,S){const P=S.vp,sp=vSp(),K=Math.max(1,h.k*2.2),sky=pts.map(q=>({x:q.x+vR(-30,30),y:Math.max(30,q.y-q.h*1.1-vR(40,90))}));
+  for(let i=0;i<14;i++)vfxP({x:h.x,y:h.y,vx:vR(-60,60),vy:vR(-420,-220),drag:.92,life:vR(.3,.6),s:vR(2,4)*K,c:rlRand(P),shape:'star',vr:6});
+  return new Promise(res=>{let t=0,hit=0;const draw=.38/sp,gap=.11/sp,fall=.22/sp;
+    VFX.items.push({step(dt,c){t+=dt;const a=Math.min(1,t/draw),fade=Math.max(0,1-Math.max(0,t-draw-gap*sky.length-fall)/.3);
+      c.save();c.globalCompositeOperation='lighter';c.globalAlpha=.9*fade;c.strokeStyle=P[1];c.lineWidth=2.4*K;c.setLineDash([5*K,5*K]);c.beginPath();
+      sky.forEach((s,i)=>{if(i){const p=sky[i-1],m=Math.min(1,a*sky.length-(i-1));if(m>0){c.moveTo(p.x,p.y);c.lineTo(p.x+(s.x-p.x)*m,p.y+(s.y-p.y)*m)}}});c.stroke();c.setLineDash([]);
+      sky.forEach((s,i)=>{const st=draw+gap*i,k=(t-st)/fall;
+        if(k<0){c.globalAlpha=Math.min(1,a*1.5)*fade;const R2=20*K*(1+.15*Math.sin(t*20+i)),g=c.createRadialGradient(s.x,s.y,0,s.x,s.y,R2);g.addColorStop(0,P[0]);g.addColorStop(.35,P[2]);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.beginPath();c.arc(s.x,s.y,R2,0,6.283);c.fill();c.fillStyle=P[0];c.save();c.translate(s.x,s.y);c.rotate(t*2);for(let j=0;j<4;j++){c.rotate(Math.PI/2);c.beginPath();c.moveTo(0,-R2*.9);c.lineTo(R2*.12,0);c.lineTo(-R2*.12,0);c.closePath();c.fill()}c.restore()}
+        else if(k<1){const q=pts[i],x=s.x+(q.x-s.x)*k*k,y=s.y+(q.y-s.y)*k*k;c.globalAlpha=1;const L=90*K,ang=Math.atan2(q.y-s.y,q.x-s.x),gx=x-Math.cos(ang)*L,gy=y-Math.sin(ang)*L,g=c.createLinearGradient(gx,gy,x,y);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,P[2]);c.strokeStyle=g;c.lineWidth=12*K;c.lineCap='round';c.beginPath();c.moveTo(gx,gy);c.lineTo(x,y);c.stroke();c.fillStyle=P[0];c.beginPath();c.arc(x,y,9*K,0,6.283);c.fill();c.fillStyle=P[1];c.globalAlpha=.5;c.beginPath();c.arc(x,y,18*K,0,6.283);c.fill()}
+        else if(!s.hit){s.hit=1;hit++;const q=pts[i];vfxP({x:q.x,y:q.y,life:.45,s:34*K,c:P[1],shape:'star',vr:2});vfxP({x:q.x,y:q.y,life:.35,s:6*K,grow:200*K,c:P[2],shape:'shock'});
+          for(let j=0;j<16;j++){const an=-Math.PI*vR(.1,.9),v=vR(120,300)*K;vfxP({x:q.x,y:q.y,vx:Math.cos(an)*v,vy:Math.sin(an)*v,ay:600,life:vR(.35,.7),s:vR(2,4)*K,c:rlRand(P),shape:'star',vr:8})}}});
+      c.restore();if(hit>=sky.length&&fade<=0){this.done=true}if(hit>=sky.length&&!this.r){this.r=1;res()}}})})}
+// skill 2: wind ribbons wrap each ally, with a compass ring at their feet
+function rlArtSupport(S,e,sk){const P=S.vp,sp=vSp();e.t.forEach((uid,n)=>{const q=rlbPt(uid,'foot');if(!q)return;const K=q.w/240,cx=q.x,base=q.y,top=q.y-q.h*.85;let t=-n*.06/sp;
+  VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const life=.85/sp,k=t/life;if(k>=1){this.done=true;return}const a=Math.sin(Math.PI*Math.min(1,k));
+    c.save();c.globalCompositeOperation='lighter';
+    c.globalAlpha=.7*a;c.strokeStyle=P[2];c.lineWidth=2*K;c.save();c.translate(cx,base);c.scale(1,.28);c.beginPath();c.arc(0,0,62*K,0,6.283);c.stroke();c.rotate(-t*3);c.fillStyle=P[1];for(let i=0;i<4;i++){c.rotate(Math.PI/2);c.beginPath();c.moveTo(0,-74*K);c.lineTo(6*K,-56*K);c.lineTo(-6*K,-56*K);c.closePath();c.fill()}c.restore();
+    for(let r=0;r<2;r++){c.globalAlpha=.85*a;c.strokeStyle=r?P[1]:P[2];c.lineWidth=(r?3:5)*K;c.beginPath();
+      for(let i=0;i<=40;i++){const v=i/40,y=base-(base-top)*v*Math.min(1,k*1.6),ang=v*9+t*9*(r?1:-1)+r*Math.PI;const x=cx+Math.cos(ang)*48*K*(1-v*.35);i?c.lineTo(x,y+Math.sin(ang)*8*K):c.moveTo(x,y+Math.sin(ang)*8*K)}c.stroke()}
+    c.restore();if(Math.random()<.5)vfxP({x:cx+vR(-40,40)*K,y:base-vR(0,1)*(base-top),vx:vR(-30,30),vy:vR(-140,-60),life:vR(.3,.6),s:vR(3,6)*K,c:rlRand(P),shape:'leaf',vr:vR(-8,8)})}})})}
