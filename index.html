@@ -2856,7 +2856,7 @@ function motoGame(cv,s,done){
 function pongGame(cv,s,done,resume,P){
   const c=cv.getContext('2d'),TAU=Math.PI*2,L=1.6,BR=.02,PH=.12,PX=.06;
   let W=0,H=0,raf=0,last=performance.now(),stopped=false,horiz=true,scale=1,ox=0,oy=0;
-  let me=.5,meV=0,meT=.5,cpu=.5,score=0,lives=3,rally=0,best=0,over=-1,serveT=1.1,hits=0;
+  let keyHold=0,me=.5,meV=0,meT=.5,cpu=.5,score=0,lives=3,rally=0,best=0,over=-1,serveT=1.1,hits=0;
   let b={u:L/2,v:.5,vu:0,vv:0},trail=[],pops=[],keys={},flash=0,cpuErr=0,cpuErrT=0,rot=0,flecks=[],cflash=0;
   // crumpled paper wad outline (fixed, so it keeps its shape while it spins)
   const WAD=Array.from({length:13},(_,k)=>{const a=k/13*TAU;return[a,.82+((k*7919)%13)/13*.36]});
@@ -2864,20 +2864,20 @@ function pongGame(cv,s,done,resume,P){
   const say=(t,col)=>pops.push({t,c:col||'#ffd60a',life:1.1});
   /* ---- two-player duel (P = {ch, role:'a'|'b', oppUid, oppName}) ---- */
   const TO=5,clamp=(x,a,b2)=>Math.max(a,Math.min(b2,x));
-  let myS=0,opS=0,handled=-1,lastN=-1,held=0,sentFirst=false,countdown=0,pres=null,oppV=.5;
+  let blend=null,shown=null,myS=0,opS=0,handled=-1,lastN=-1,held=0,sentFirst=false,countdown=0,pres=null,oppV=.5;
   const mine=E=>P.role==='b'?{...E,u:L-E.u,vu:-E.vu}:{...E};
   function traj(e,now){const dt=Math.max(0,(now-e.t)/1000),lo=BR,len=1-2*BR;const y=(e.v-lo)+e.vv*dt,m=((y%(2*len))+2*len)%(2*len);
     const fwd=m<=len;return{u:e.u+e.vu*dt,v:fwd?lo+m:lo+2*len-m,vv:fwd?e.vv:-e.vv}}
   function emit(x){const ev={...x};if(P.role==='b'){ev.u=L-ev.u;ev.vu=-ev.vu}ev.sa=P.role==='a'?myS:opS;ev.sb=P.role==='a'?opS:myS;P.ch.emit(ev)}
   function serveMe(now,delay){const a=(Math.random()*.6-.3),sp=Math.min(1.3,1+.03*(myS+opS));emit({k:'serve',u:L/2,v:.5+(Math.random()*.2-.1),vu:-Math.cos(a)*sp,vv:Math.sin(a)*sp,t:now+delay})}
   function pvpUpdate(dt){
-    P.ch.pad(me);oppV+=(P.ch.opp-oppV)*Math.min(1,dt*14);cpu=oppV;
+    P.ch.pad(me);oppV+=(P.ch.opp-oppV)*Math.min(1,dt*24);cpu=oppV;
     const now=P.ch.now(),E=P.ch.ev;
     if(P.ch.gone&&over<0){pres={win:true,left:true,my:myS,opp:opS};over=0;say((P.oppName||'Your rival')+' left','#ffd60a');return}
     if(!E){if(P.role==='a'&&!sentFirst){sentFirst=true;serveMe(now,3200)}return}
     const e=mine(E),pm=myS;
     myS=P.role==='a'?E.sa:E.sb;opS=P.role==='a'?E.sb:E.sa;
-    if(E.n!==lastN){lastN=E.n;
+    if(E.n!==lastN){lastN=E.n;if(shown)blend={u:shown.u-traj(e,now).u,v:shown.v-traj(e,now).v};
       if(E.k==='hit'&&e.vu<0){cflash=.14;fleck(L-PX-BR,e.v,-1);rally++;if(rally>best)best=rally}
       if(E.k==='serve'){rally=0;trail=[];if(myS>pm)say('POINT!','#38d39f')}}
     if(E.k==='end'){if(over<0){const win=E.w===P.ch.me;pres={win,my:myS,opp:opS};over=0;say(win?'YOU WIN!':'GOOD GAME',win?'#38d39f':'#ffd60a')}return}
@@ -2888,11 +2888,18 @@ function pongGame(cv,s,done,resume,P){
         if(Math.abs(at.v-me)<PH/2+BR){
           const sp=Math.hypot(e.vu,e.vv),off=(at.v-me)/(PH/2),ns=Math.min(2.8,sp*1.045+.015),ang=clamp(off*.85+clamp(meV*.1,-.3,.3),-.95,.95);
           handled=E.n;rally++;hits++;flash=.14;fleck(X,at.v,1);if(rally>best)best=rally;
-          emit({k:'hit',u:X,v:at.v,vu:Math.cos(ang)*ns,vv:Math.sin(ang)*ns,t:now});pos={u:X,v:at.v,vv:0};
+          emit({k:'hit',u:X,v:at.v,vu:Math.cos(ang)*ns,vv:Math.sin(ang)*ns,t:tc});pos=traj(mine(P.ch.ev),now);
         }else if(pos.u<-.08){handled=E.n;opS++;say('MISSED','#ff4d6d');
           if(opS>=TO)emit({k:'end',w:P.oppUid,u:pos.u,v:pos.v,vu:0,vv:0,t:now});else serveMe(now,1100)}
       }
-    }else{const X2=L-PX-BR;if(pos.u>X2){pos.u=X2;held+=dt;if(held>7&&over<0)P.ch.gone=true}else held=0}
+    }else{const X2=L-PX-BR,tc2=e.t+(X2-e.u)/e.vu*1000;
+      // the ball has reached the other player: while their answer is on its way over the network,
+      // keep it moving the way it most likely goes instead of freezing it at their paddle
+      if(now>tc2){const at=traj(e,tc2),wait=now-tc2;held+=dt;if(held>7&&over<0)P.ch.gone=true;
+        if(Math.abs(at.v-oppV)<PH/2+BR+.05){const sp=Math.hypot(e.vu,e.vv)*1.045;pos=traj({u:X2,v:at.v,vu:-Math.abs(e.vu)*1.045,vv:at.vv,t:tc2},Math.min(now,tc2+450))}
+        else if(wait>450)pos=traj(e,tc2+450)}else held=0}
+    if(blend){pos={...pos,u:pos.u+blend.u,v:pos.v+blend.v};const k=Math.exp(-dt*14);blend.u*=k;blend.v*=k;if(Math.abs(blend.u)+Math.abs(blend.v)<.002)blend=null}
+    shown={u:pos.u,v:pos.v};
     b.u=pos.u;b.v=pos.v;b.vu=e.vu;b.vv=pos.vv||0;
     if(countdown<=0){trail.push([b.u,b.v]);if(trail.length>8)trail.shift();rot+=Math.hypot(e.vu,e.vv)*dt*9*(e.vu>0?1:-1)}
   }
@@ -2906,9 +2913,11 @@ function pongGame(cv,s,done,resume,P){
   function cleanup(){cancelAnimationFrame(raf);cv.removeEventListener('pointerdown',pd);cv.removeEventListener('pointermove',pm);window.removeEventListener('keydown',kd);window.removeEventListener('keyup',ku)}
   function update(dt){
     if(window.__autoPaddle&&P&&b.vu<0)meT=b.v+(window.__autoErr||0)*Math.sin(performance.now()/300);
-    let kv=0;for(const k in keys)kv+=KM[k];if(kv)meT=me+Math.sign(kv)*.5;
+    let kv=0;for(const k in keys)kv+=KM[k];
+    // calmer paddle: keys ramp up from a slow start, the mouse/finger is followed with a little easing
+    if(kv){keyHold+=dt;meT=me+Math.sign(kv)*.5}else keyHold=0;
     meT=Math.max(PH*.6,Math.min(1-PH*.6,meT));
-    const prev=me,mx=3.4*dt;me+=Math.max(-mx,Math.min(mx,meT-me));meV=(me-prev)/dt;
+    const prev=me,mx=(kv?1.1+Math.min(1,keyHold/.35)*1.0:2.4)*dt,want=kv?meT-me:(meT-me)*Math.min(1,dt*16);me+=Math.max(-mx,Math.min(mx,want));meV=(me-prev)/dt;
     if(P){pvpUpdate(dt);return}
     // CPU: tracks the ball with limited speed and a wobbling aim error; gets better as you score
     const sk=Math.min(1,score/12),cs=1.05+sk*1.05;cpuErrT-=dt;if(cpuErrT<=0){cpuErrT=.5;cpuErr=(Math.random()*2-1)*PH*(.78-sk*.42)}
