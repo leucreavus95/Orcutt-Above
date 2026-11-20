@@ -44,6 +44,14 @@ const RL_ART={
         spell:[{vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],hand:[60,112],bySkill:[{shot:'art/fx-sc-arc1.webp'},{shot:'art/fx-sc-coins.webp'},{burst:'art/fx-sc-burst1.webp',aoe:'erupt'}]},
                {vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],hand:[70,124],bySkill:[{shot:'art/fx-sc-arc2.webp'},{shot:'art/fx-sc-spear.webp'},{burst:'art/fx-sc-wave2.webp',aoe:'sweep'}]},
                {vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],hand:[70,128],bySkill:[{shot:'art/fx-sc-sun.webp'},{shot:'art/fx-sc-swirl.webp'},{shot:'art/fx-sc-sparks.webp',aoe:'fan'}]}]},
+  // Corvin, the arctic raven duelist: one casting picture per skill, painted ice effects per skill
+  raven:{f:[{src:'art/raven-1.webp',ax:154,ay:415,h:496,w:268,ih:425},{src:'art/raven-2.webp',ax:180,ay:598,h:496,w:329,ih:608},{src:'art/raven-3.webp',ax:174,ay:596,h:527,w:354,ih:609}],pose:'skill',
+        c:[[{src:'art/raven-1c1.webp',ax:283,ay:532,h:564,w:701,ih:645},{src:'art/raven-1c2.webp',ax:279,ay:470,h:564,w:714,ih:556},{src:'art/raven-1c3.webp',ax:249,ay:501,h:564,w:696,ih:556}],
+           [{src:'art/raven-2c1.webp',ax:243,ay:564,h:635,w:703,ih:638},{src:'art/raven-2c2.webp',ax:277,ay:566,h:635,w:714,ih:623},{src:'art/raven-2c3.webp',ax:240,ay:563,h:635,w:696,ih:634}],
+           [{src:'art/raven-3c1.webp',ax:237,ay:626,h:713,w:700,ih:692},{src:'art/raven-3c2.webp',ax:352,ay:588,h:713,w:714,ih:657},{src:'art/raven-3c3.webp',ax:304,ay:634,h:713,w:696,ih:682}]],
+        spell:[{vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],hand:[70,110],bySkill:[{shot:'art/fx-rv-slash1.webp'},{shot:'art/fx-rv-shards.webp'},{burst:'art/fx-rv-frostburst.webp',aoe:'erupt'}]},
+               {vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],hand:[80,130],bySkill:[{shot:'art/fx-rv-crescent.webp'},{shot:'art/fx-rv-shards.webp'},{burst:'art/fx-rv-wave.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],hand:[80,135],bySkill:[{shot:'art/fx-rv-orb.webp'},{shot:'art/fx-rv-shards.webp'},{shot:'art/fx-rv-spiral.webp',aoe:'fan'}]}]},
 };
 (function(){
   const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.src=f.src})};preload();

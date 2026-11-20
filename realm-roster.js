@@ -20,6 +20,11 @@ const RL_ROSTER=[
    hero:{n:'Kheprin',r:4,role:'atk',spd:110,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:15},
      ev:['Kheprin','Kheprin Dunehide','Kheprin, the Sun Scarab'],
      sk:[rlSk('Dune Slash',{m:3.7,fx:[['defBreak',1,30]]}),rlSk("Scarab's Toll",{cd:3,m:2.1,h:2,fx:[['atkBreak',1,40]]}),rlSk('Sunstorm',{cd:5,tg:'eA',m:2.5,fx:[['slow',2,50]]})]}}
+,
+  {id:'raven',col:{c:'#5fb4f0',l:'#e4f6ff',d:'#13304f'},vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],
+   hero:{n:'Corvin',r:5,role:'atk',spd:115,it:'staff',o:'cloak',hg:'hood',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cr',v:15},
+     ev:['Corvin','Corvin Rimequill','Corvin, the Winter Raven'],
+     sk:[rlSk('Rime Cut',{m:3.9,fx:[['slow',1,40]]}),rlSk('Shardstorm',{cd:3,m:1.5,h:3,fx:[['defBreak',2,35]]}),rlSk('Whiteout',{cd:5,tg:'eA',m:2.6,fx:[['stun',1,30]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){
