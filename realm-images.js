@@ -10,7 +10,7 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
-  halo:{f:[{src:'art/halo-1.webp',ax:99,ay:520,h:520,w:199,ih:520,ht:7,cx:99,sc:0.6582},{src:'art/halo-2.webp',ax:106,ay:520,h:520,w:212,ih:520,ht:5,cx:102,sc:0.6484},{src:'art/halo-3.webp',ax:123,ay:520,h:520,w:246,ih:520,ht:8,cx:138,sc:0.6168}],
+  halo:{f:[{src:'art/halo-1.webp',ax:99,ay:520,h:520,w:199,ih:520,ht:7,cx:99,sc:0.6582,fy:40},{src:'art/halo-2.webp',ax:106,ay:520,h:520,w:212,ih:520,ht:5,cx:102,sc:0.6484,fy:40},{src:'art/halo-3.webp',ax:123,ay:520,h:520,w:246,ih:520,ht:8,cx:138,sc:0.6168,fy:45}],
         // the spell each form throws, matched to its casting art.
         // hand = where the spell leaves his hand, in sprite units from his feet (x forward, y up)
         spell:[{kind:'bolt',paint:{shot:'art/fx-halo-shot1.webp',aoe:'fan'},vp:['#ffffff','#e4ffd0','#8df06a','#2f9d3c'],hand:[68,136]},
@@ -20,7 +20,7 @@ const RL_ART={
            [{src:'art/halo-2c1.webp',ax:267,ay:514,h:536},{src:'art/halo-2c2.webp',ax:272,ay:493,h:536},{src:'art/halo-2c3.webp',ax:290,ay:416,h:479}],
            [{src:'art/halo-3c1.webp',ax:309,ay:526,h:536},{src:'art/halo-3c2.webp',ax:250,ay:504,h:536},{src:'art/halo-3c3.webp',ax:290,ay:421,h:479}]],
         },
-  kael:{f:[{src:'art/kael-1.webp',ax:100,ay:528,h:527,w:323,ih:550,ht:8,cx:150},{src:'art/kael-2.webp',ax:121,ay:531,h:529,w:357,ih:552,ht:6,cx:205},{src:'art/kael-3.webp',ax:107,ay:548,h:533,w:339,ih:567,ht:6,cx:199}],
+  kael:{f:[{src:'art/kael-1.webp',ax:100,ay:528,h:527,w:323,ih:550,ht:8,cx:150,fy:60},{src:'art/kael-2.webp',ax:121,ay:531,h:529,w:357,ih:552,ht:6,cx:205,fy:60},{src:'art/kael-3.webp',ax:107,ay:548,h:533,w:339,ih:567,ht:6,cx:199,fy:60}],
         c:[[{src:'art/kael-1c1.webp',ax:320,ay:601,h:592,w:609,ih:647,ht:38,cx:386},{src:'art/kael-1c2.webp',ax:349,ay:615,h:592,w:643,ih:682,ht:72,cx:359},{src:'art/kael-1c3.webp',ax:229,ay:483,h:592,w:650,ih:528,ht:20,cx:309}],
            [{src:'art/kael-2c1.webp',ax:227,ay:610,h:627,w:682,ih:659,ht:79,cx:385},{src:'art/kael-2c2.webp',ax:333,ay:620,h:627,w:645,ih:679,ht:38,cx:432},{src:'art/kael-2c3.webp',ax:203,ay:608,h:627,w:624,ih:648,ht:77,cx:333}],
            [{src:'art/kael-3c1.webp',ax:264,ay:595,h:623,w:658,ih:612,ht:23,cx:368},{src:'art/kael-3c2.webp',ax:289,ay:645,h:623,w:654,ih:679,ht:27,cx:404},{src:'art/kael-3c3.webp',ax:163,ay:561,h:623,w:661,ih:602,ht:31,cx:385}]],
@@ -31,13 +31,13 @@ const RL_ART={
                {kind:'needle',support:'paint',paint:{shot:'art/fx-kael-shot3.webp',sigil:'art/fx-kael-sigil3.webp',aura:'art/fx-kael-vortex.webp',aoe:'rain',route:true},vp:['#ffffff','#e9defc','#b28cff','#2b1d44'],hand:[70,139]}]},
   // Thornwick: each casting picture belongs to one skill (attack, shield, special),
   // so he takes the pose of the skill he is using instead of playing a sequence.
-  thornwick:{f:[{src:'art/thornwick-1.webp',ax:140,ay:409,h:490,w:254,ih:422,ht:15,cx:131},{src:'art/thornwick-2.webp',ax:199,ay:588,h:490,w:361,ih:595,ht:83,cx:210},{src:'art/thornwick-3.webp',ax:201,ay:598,h:520,w:375,ih:604,ht:27,cx:185}],pose:'skill',
+  thornwick:{f:[{src:'art/thornwick-1.webp',ax:140,ay:409,h:490,w:254,ih:422,ht:15,cx:131,fy:95},{src:'art/thornwick-2.webp',ax:199,ay:588,h:490,w:361,ih:595,ht:83,cx:210,fy:120},{src:'art/thornwick-3.webp',ax:201,ay:598,h:520,w:375,ih:604,ht:27,cx:185,fy:110}],pose:'skill',
         c:[[{src:'art/thornwick-1c1.webp',ax:348,ay:556,h:598,w:652,ih:574,ht:72,cx:342},{src:'art/thornwick-1c2.webp',ax:240,ay:526,h:598,w:459,ih:539,ht:13,cx:258},{src:'art/thornwick-1c3.webp',ax:218,ay:508,h:598,w:613,ih:521,ht:21,cx:249}],
            [{src:'art/thornwick-2c1.webp',ax:323,ay:603,h:560,w:613,ih:626,ht:52,cx:304},{src:'art/thornwick-2c2.webp',ax:338,ay:619,h:560,w:608,ih:636,ht:54,cx:349},{src:'art/thornwick-2c3.webp',ax:244,ay:542,h:560,w:659,ih:584,ht:50,cx:333}],
            [{src:'art/thornwick-3c1.webp',ax:251,ay:634,h:514,w:573,ih:645,ht:56,cx:291},{src:'art/thornwick-3c2.webp',ax:317,ay:630,h:514,w:648,ih:645,ht:16,cx:321},{src:'art/thornwick-3c3.webp',ax:298,ay:622,h:514,w:658,ih:645,ht:44,cx:358}]],
         spell:[0,1,2].map(()=>({kind:'roots',aoe:'bloom',support:'barkshield',vp:['#ffffff','#e3ffc9','#9ee35f','#3f7a23'],wood:['#8a6238','#5a3c1f'],hand:[70,150]}))},
   // Kheprin, the desert scarab: one casting picture per skill, and painted effects per skill
-  scarab:{f:[{src:'art/scarab-1.webp',ax:144,ay:380,h:486,w:226,ih:396,ht:29,cx:148},{src:'art/scarab-2.webp',ax:210,ay:483,h:486,w:325,ih:488,ht:29,cx:217},{src:'art/scarab-3.webp',ax:191,ay:575,h:516,w:370,ih:582,ht:26,cx:190}],pose:'skill',
+  scarab:{f:[{src:'art/scarab-1.webp',ax:144,ay:380,h:486,w:226,ih:396,ht:29,cx:148,fy:50},{src:'art/scarab-2.webp',ax:210,ay:483,h:486,w:325,ih:488,ht:29,cx:217,fy:45},{src:'art/scarab-3.webp',ax:191,ay:575,h:516,w:370,ih:582,ht:26,cx:190,fy:120}],pose:'skill',
         c:[[{src:'art/scarab-1c1.webp',ax:286,ay:423,h:528,w:643,ih:462,ht:52,cx:273},{src:'art/scarab-1c2.webp',ax:264,ay:466,h:528,w:609,ih:505,ht:49,cx:276},{src:'art/scarab-1c3.webp',ax:210,ay:477,h:528,w:613,ih:508,ht:45,cx:206}],
            [{src:'art/scarab-2c1.webp',ax:379,ay:497,h:579,w:700,ih:540,ht:42,cx:324},{src:'art/scarab-2c2.webp',ax:400,ay:531,h:579,w:701,ih:574,ht:57,cx:355},{src:'art/scarab-2c3.webp',ax:406,ay:517,h:579,w:703,ih:560,ht:39,cx:312}],
            [{src:'art/scarab-3c1.webp',ax:377,ay:571,h:704,w:703,ih:615,ht:16,cx:309},{src:'art/scarab-3c2.webp',ax:372,ay:636,h:704,w:703,ih:679,ht:46,cx:347},{src:'art/scarab-3c3.webp',ax:381,ay:652,h:704,w:703,ih:694,ht:26,cx:337}]],
@@ -45,7 +45,7 @@ const RL_ART={
                {vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],hand:[70,124],bySkill:[{shot:'art/fx-sc-arc2.webp'},{shot:'art/fx-sc-spear.webp'},{burst:'art/fx-sc-wave2.webp',aoe:'sweep'}]},
                {vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],hand:[70,128],bySkill:[{shot:'art/fx-sc-sun.webp'},{shot:'art/fx-sc-swirl.webp'},{shot:'art/fx-sc-sparks.webp',aoe:'fan'}]}]},
   // Corvin, the arctic raven duelist: one casting picture per skill, painted ice effects per skill
-  raven:{f:[{src:'art/raven-1.webp',ax:154,ay:415,h:496,w:268,ih:425,ht:8,cx:150},{src:'art/raven-2.webp',ax:180,ay:598,h:496,w:329,ih:608,ht:47,cx:179},{src:'art/raven-3.webp',ax:174,ay:596,h:527,w:354,ih:609,ht:24,cx:171}],pose:'skill',
+  raven:{f:[{src:'art/raven-1.webp',ax:154,ay:415,h:496,w:268,ih:425,ht:8,cx:150,fy:60},{src:'art/raven-2.webp',ax:180,ay:598,h:496,w:329,ih:608,ht:47,cx:179,fy:70},{src:'art/raven-3.webp',ax:174,ay:596,h:527,w:354,ih:609,ht:24,cx:171,fy:70}],pose:'skill',
         c:[[{src:'art/raven-1c1.webp',ax:283,ay:532,h:564,w:701,ih:645,ht:135,cx:287},{src:'art/raven-1c2.webp',ax:279,ay:470,h:564,w:714,ih:556,ht:21,cx:305},{src:'art/raven-1c3.webp',ax:249,ay:501,h:564,w:696,ih:556,ht:17,cx:269}],
            [{src:'art/raven-2c1.webp',ax:243,ay:564,h:635,w:703,ih:638,ht:36,cx:248},{src:'art/raven-2c2.webp',ax:277,ay:566,h:635,w:714,ih:623,ht:15,cx:264},{src:'art/raven-2c3.webp',ax:240,ay:563,h:635,w:696,ih:634,ht:63,cx:261}],
            [{src:'art/raven-3c1.webp',ax:237,ay:626,h:713,w:700,ih:692,ht:49,cx:242},{src:'art/raven-3c2.webp',ax:352,ay:588,h:713,w:714,ih:657,ht:50,cx:336},{src:'art/raven-3c3.webp',ax:304,ay:634,h:713,w:696,ih:682,ht:40,cx:233}]],
@@ -53,7 +53,7 @@ const RL_ART={
                {vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],hand:[80,130],bySkill:[{shot:'art/fx-rv-crescent.webp'},{shot:'art/fx-rv-shards.webp'},{burst:'art/fx-rv-wave.webp',aoe:'sweep'}]},
                {vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],hand:[80,135],bySkill:[{shot:'art/fx-rv-orb.webp'},{shot:'art/fx-rv-shards.webp'},{shot:'art/fx-rv-spiral.webp',aoe:'fan'}]}]},
   // Varek, the dusk blade: one casting picture per skill, painted crimson-and-ember effects per skill
-  dusk:{f:[{src:'art/dusk-1.webp',ax:148,ay:494,h:562,w:236,ih:504,ht:7,cx:155},{src:'art/dusk-2.webp',ax:214,ay:562,h:562,w:341,ih:573,ht:9,cx:224},{src:'art/dusk-3.webp',ax:195,ay:602,h:597,w:358,ih:611,ht:25,cx:201}],pose:'skill',
+  dusk:{f:[{src:'art/dusk-1.webp',ax:148,ay:494,h:562,w:236,ih:504,ht:7,cx:155,fy:45},{src:'art/dusk-2.webp',ax:214,ay:562,h:562,w:341,ih:573,ht:9,cx:224,fy:45},{src:'art/dusk-3.webp',ax:195,ay:602,h:597,w:358,ih:611,ht:25,cx:201,fy:65}],pose:'skill',
         c:[[{src:'art/dusk-1c1.webp',ax:317,ay:594,h:541,w:703,ih:679,ht:150,cx:325},{src:'art/dusk-1c2.webp',ax:341,ay:489,h:541,w:692,ih:571,ht:18,cx:349},{src:'art/dusk-1c3.webp',ax:420,ay:592,h:541,w:706,ih:703,ht:159,cx:402}],
            [{src:'art/dusk-2c1.webp',ax:324,ay:605,h:667,w:703,ih:630,ht:21,cx:313},{src:'art/dusk-2c2.webp',ax:327,ay:501,h:667,w:701,ih:595,ht:19,cx:301},{src:'art/dusk-2c3.webp',ax:355,ay:638,h:667,w:706,ih:703,ht:98,cx:387}],
            [{src:'art/dusk-3c1.webp',ax:319,ay:678,h:715,w:697,ih:704,ht:42,cx:329},{src:'art/dusk-3c2.webp',ax:333,ay:592,h:715,w:703,ih:668,ht:32,cx:279},{src:'art/dusk-3c3.webp',ax:284,ay:651,h:715,w:704,ih:706,ht:67,cx:303}]],
@@ -61,7 +61,7 @@ const RL_ART={
                {vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],hand:[85,120],bySkill:[{shot:'art/fx-dk-flame2.webp'},{shot:'art/fx-dk-ring2.webp'},{burst:'art/fx-dk-impact2.webp',aoe:'erupt'}]},
                {vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],hand:[85,130],bySkill:[{shot:'art/fx-dk-fly3.webp'},{shot:'art/fx-dk-beam3.webp'},{burst:'art/fx-dk-erupt3.webp',aoe:'erupt'}]}]},
   // Orrin, the astral spellweaver: one casting picture per skill, painted starlight effects per skill
-  astra:{f:[{src:'art/astra-1.webp',ax:132,ay:382,h:372,w:239,ih:401,ht:5,cx:129},{src:'art/astra-2.webp',ax:191,ay:546,h:496,w:335,ih:567,ht:54,cx:203},{src:'art/astra-3.webp',ax:169,ay:609,h:560,w:353,ih:631,ht:11,cx:165}],pose:'skill',
+  astra:{f:[{src:'art/astra-1.webp',ax:132,ay:382,h:372,w:239,ih:401,ht:5,cx:129,fy:45},{src:'art/astra-2.webp',ax:191,ay:546,h:496,w:335,ih:567,ht:54,cx:203,fy:95},{src:'art/astra-3.webp',ax:169,ay:609,h:560,w:353,ih:631,ht:11,cx:165,fy:120}],pose:'skill',
         c:[[{src:'art/astra-1c1.webp',ax:282,ay:624,h:560,w:703,ih:703,ht:193,cx:312},{src:'art/astra-1c2.webp',ax:239,ay:486,h:560,w:700,ih:563,ht:16,cx:293},{src:'art/astra-1c3.webp',ax:293,ay:564,h:560,w:676,ih:703,ht:157,cx:343}],
            [{src:'art/astra-2c1.webp',ax:381,ay:651,h:602,w:703,ih:708,ht:72,cx:349},{src:'art/astra-2c2.webp',ax:386,ay:580,h:602,w:708,ih:638,ht:60,cx:353},{src:'art/astra-2c3.webp',ax:232,ay:647,h:602,w:693,ih:708,ht:129,cx:243}],
            [{src:'art/astra-3c1.webp',ax:262,ay:634,h:616,w:703,ih:701,ht:42,cx:358},{src:'art/astra-3c2.webp',ax:374,ay:643,h:616,w:708,ih:699,ht:18,cx:384},{src:'art/astra-3c3.webp',ax:303,ay:652,h:616,w:701,ih:701,ht:30,cx:298}]],
@@ -69,7 +69,7 @@ const RL_ART={
                {vp:['#ffffff','#f1e4ff','#b98cff','#3b2385'],hand:[80,128],bySkill:[{shot:'art/fx-as-beam2.webp'},{shot:'art/fx-as-ring2.webp'},{burst:'art/fx-as-swirl2.webp',aoe:'sweep'}]},
                {vp:['#ffffff','#f1e4ff','#b98cff','#3b2385'],hand:[80,130],bySkill:[{shot:'art/fx-as-rain3.webp'},{shot:'art/fx-as-portal3.webp'},{shot:'art/fx-as-bolt1.webp',sigil:'art/fx-as-portal3.webp',aoe:'rain'}]}]},
   // Sylvara, the astral archer: one casting picture per skill, painted arrow effects per skill
-  sylva:{f:[{src:'art/sylva-1.webp',ax:132,ay:437,h:459,w:251,ih:447,ht:5,cx:135},{src:'art/sylva-2.webp',ax:176,ay:522,h:533,w:335,ih:532,ht:6,cx:172},{src:'art/sylva-3.webp',ax:166,ay:609,h:580,w:325,ih:618,ht:22,cx:147}],pose:'skill',
+  sylva:{f:[{src:'art/sylva-1.webp',ax:132,ay:437,h:459,w:251,ih:447,ht:5,cx:135,fy:40},{src:'art/sylva-2.webp',ax:176,ay:522,h:533,w:335,ih:532,ht:6,cx:172,fy:45},{src:'art/sylva-3.webp',ax:166,ay:609,h:580,w:325,ih:618,ht:22,cx:147,fy:100}],pose:'skill',
         c:[[{src:'art/sylva-1c1.webp',ax:269,ay:542,h:588,w:629,ih:591,ht:87,cx:286},{src:'art/sylva-1c2.webp',ax:269,ay:584,h:588,w:704,ih:701,ht:138,cx:290},{src:'art/sylva-1c3.webp',ax:228,ay:504,h:588,w:694,ih:584,ht:68,cx:250}],
            [{src:'art/sylva-2c1.webp',ax:274,ay:662,h:630,w:703,ih:699,ht:111,cx:291},{src:'art/sylva-2c2.webp',ax:277,ay:616,h:630,w:708,ih:675,ht:87,cx:306},{src:'art/sylva-2c3.webp',ax:269,ay:641,h:630,w:696,ih:701,ht:127,cx:291}],
            [{src:'art/sylva-3c1.webp',ax:233,ay:587,h:630,w:679,ih:666,ht:83,cx:267},{src:'art/sylva-3c2.webp',ax:337,ay:624,h:630,w:707,ih:686,ht:43,cx:363},{src:'art/sylva-3c3.webp',ax:233,ay:616,h:630,w:676,ih:671,ht:40,cx:257}]],
@@ -77,7 +77,7 @@ const RL_ART={
                {vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],hand:[95,135],bySkill:[{shot:'art/fx-ar-leaf2.webp'},{shot:'art/fx-ar-triple2.webp'},{shot:'art/fx-ar-gold2.webp',aoe:'fan'}]},
                {vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],hand:[95,135],bySkill:[{shot:'art/fx-ar-burst3.webp'},{shot:'art/fx-ar-star3.webp'},{shot:'art/fx-ar-star3.webp',burst:'art/fx-ar-burst3.webp',aoe:'fan'}]}]},
   // Kairo, the waterweaver: one casting picture per skill, painted water effects per skill
-  kairo:{f:[{src:'art/tide-1.webp',ax:102,ay:308,h:347,w:159,ih:315,ht:4,cx:104},{src:'art/tide-2.webp',ax:195,ay:410,h:446,w:304,ih:419,ht:6,cx:198},{src:'art/tide-3.webp',ax:234,ay:608,h:580,w:456,ih:617,ht:24,cx:233}],pose:'skill',
+  kairo:{f:[{src:'art/tide-1.webp',ax:102,ay:308,h:347,w:159,ih:315,ht:4,cx:104,fy:20},{src:'art/tide-2.webp',ax:195,ay:410,h:446,w:304,ih:419,ht:6,cx:198,fy:30},{src:'art/tide-3.webp',ax:234,ay:608,h:580,w:456,ih:617,ht:24,cx:233,fy:100}],pose:'skill',
         c:[[{src:'art/tide-1c1.webp',ax:377,ay:588,h:560,w:703,ih:659,ht:69,cx:391},{src:'art/tide-1c2.webp',ax:350,ay:650,h:560,w:708,ih:669,ht:80,cx:421},{src:'art/tide-1c3.webp',ax:260,ay:599,h:560,w:701,ih:700,ht:117,cx:287}],
            [{src:'art/tide-2c1.webp',ax:249,ay:654,h:616,w:703,ih:675,ht:66,cx:335},{src:'art/tide-2c2.webp',ax:409,ay:630,h:616,w:708,ih:701,ht:93,cx:380},{src:'art/tide-2c3.webp',ax:396,ay:633,h:616,w:701,ih:708,ht:106,cx:348}],
            [{src:'art/tide-3c1.webp',ax:297,ay:676,h:658,w:699,ih:697,ht:31,cx:250},{src:'art/tide-3c2.webp',ax:267,ay:664,h:658,w:708,ih:685,ht:33,cx:244},{src:'art/tide-3c3.webp',ax:359,ay:678,h:658,w:700,ih:697,ht:50,cx:368}]],
@@ -94,7 +94,7 @@ const RL_ART={
     const o=opt||{},h=RL_H[id],E=RL_EL[h.el],lv=lvOf(id,o),s=crStage(lv),F=A.f[s],u='ra'+id+s;
     // zoom to head-to-knees, but never wider than the card, and centre the whole picture
     // (body plus any floating effects) so nothing gets cut off at the sides
-    const R=A.f[1]||F,L=Math.max(40,(R.ay-(R.ht||0))/(R.sc||1)),kk=300/L/(F.sc||1),W=F.w*kk,H=F.ih*kk,x=100-(F.cx!=null?F.cx:F.ax)*kk,y=20-(F.ht||0)*kk; // one zoom per hero (set by the middle form), so every form keeps its true size
+    const R=A.f[1]||F,L=Math.max(40,(R.ay-(R.fy!=null?R.fy:R.ht||0))/(R.sc||1)),kk=320/L/(F.sc||1),W=F.w*kk,H=F.ih*kk,x=100-(F.cx!=null?F.cx:F.ax)*kk,y=58-(F.fy!=null?F.fy:(F.ht||0)+40)*kk; // one zoom per hero; every form's eyes sit on the same line
     const motes=o.motes===false?'':[[.1,.2,2.6,0],[.16,.7,2,1.2],[.86,.16,2.2,.6],[.08,.48,1.6,2],[.9,.66,1.8,1.6]].map(m=>`<circle class="rl-mote" cx="${m[0]*200}" cy="${m[1]*220}" r="${m[2]*1.3}" fill="${E.l}" style="animation-delay:-${m[3]}s"/>`).join('');
     return`<svg class="rl-port cr-port rl-art" viewBox="0 0 200 220" role="img" aria-label="${esc(crName(id,lv))}"><defs><radialGradient id="${u}bg" cx=".55" cy=".42" r=".8"><stop offset="0" stop-color="${E.l}" stop-opacity=".6"/><stop offset=".45" stop-color="${E.c}" stop-opacity=".55"/><stop offset="1" stop-color="${E.d}"/></radialGradient></defs><rect class="crbg" width="200" height="220" fill="#0f0d14"/><rect class="crbg" width="200" height="220" fill="url(#${u}bg)"/><g class="crbg" opacity=".2" stroke="${E.l}" fill="none"><circle cx="104" cy="110" r="84" stroke-width="1.2"/></g>${motes}<image href="${F.src}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${W.toFixed(1)}" height="${H.toFixed(1)}" preserveAspectRatio="none"/></svg>`};
   // battle sprite: a canvas the motion loop below draws into
