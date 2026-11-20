@@ -2856,7 +2856,7 @@ function motoGame(cv,s,done){
 function pongGame(cv,s,done,resume,P){
   const c=cv.getContext('2d'),TAU=Math.PI*2,L=1.6,BR=.02,PH=.12,PX=.06;
   let W=0,H=0,raf=0,last=performance.now(),stopped=false,horiz=true,scale=1,ox=0,oy=0;
-  let me=.5,meV=0,meT=.5,cpu=.5,score=0,lives=3,rally=0,best=0,over=-1,serveT=1.1,hits=0;
+  let keyHold=0,me=.5,meV=0,meT=.5,cpu=.5,score=0,lives=3,rally=0,best=0,over=-1,serveT=1.1,hits=0;
   let b={u:L/2,v:.5,vu:0,vv:0},trail=[],pops=[],keys={},flash=0,cpuErr=0,cpuErrT=0,rot=0,flecks=[],cflash=0;
   // crumpled paper wad outline (fixed, so it keeps its shape while it spins)
   const WAD=Array.from({length:13},(_,k)=>{const a=k/13*TAU;return[a,.82+((k*7919)%13)/13*.36]});
@@ -2913,9 +2913,11 @@ function pongGame(cv,s,done,resume,P){
   function cleanup(){cancelAnimationFrame(raf);cv.removeEventListener('pointerdown',pd);cv.removeEventListener('pointermove',pm);window.removeEventListener('keydown',kd);window.removeEventListener('keyup',ku)}
   function update(dt){
     if(window.__autoPaddle&&P&&b.vu<0)meT=b.v+(window.__autoErr||0)*Math.sin(performance.now()/300);
-    let kv=0;for(const k in keys)kv+=KM[k];if(kv)meT=me+Math.sign(kv)*.5;
+    let kv=0;for(const k in keys)kv+=KM[k];
+    // calmer paddle: keys ramp up from a slow start, the mouse/finger is followed with a little easing
+    if(kv){keyHold+=dt;meT=me+Math.sign(kv)*.5}else keyHold=0;
     meT=Math.max(PH*.6,Math.min(1-PH*.6,meT));
-    const prev=me,mx=3.4*dt;me+=Math.max(-mx,Math.min(mx,meT-me));meV=(me-prev)/dt;
+    const prev=me,mx=(kv?1.1+Math.min(1,keyHold/.35)*1.0:2.4)*dt,want=kv?meT-me:(meT-me)*Math.min(1,dt*16);me+=Math.max(-mx,Math.min(mx,want));meV=(me-prev)/dt;
     if(P){pvpUpdate(dt);return}
     // CPU: tracks the ball with limited speed and a wobbling aim error; gets better as you score
     const sk=Math.min(1,score/12),cs=1.05+sk*1.05;cpuErrT-=dt;if(cpuErrT<=0){cpuErrT=.5;cpuErr=(Math.random()*2-1)*PH*(.78-sk*.42)}
