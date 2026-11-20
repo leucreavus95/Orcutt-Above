@@ -158,10 +158,10 @@ async function rlbPlay(ev){
       rlbFloat(e.u,s.n+(e.p<1?' · half power':''),'name');
       if(ult&&!STILL){const d=document.getElementById('rlb-dim');if(d){d.classList.remove('on');void d.offsetWidth;d.classList.add('on')}rlbBanner(s.n,col);await rlbDelay(380)}
       if(foe&&s.m>0&&rlbMelee(u)&&s.tg==='e1'&&spr){const tp=rlbPt(e.t[0]);if(tp&&src){spr.style.setProperty('--dx',(tp.x-src.x+(u.side?tp.w*.55:-tp.w*.55))+'px');spr.style.setProperty('--dy',(tp.y-src.y)*.6+'px');spr.classList.add('dash');await rlbDelay(230);vfxBurst(tp.x,tp.y,u.el,22,1.2);rlbShake(false);setTimeout(()=>spr.classList.remove('dash'),120)}}
-      else if(foe&&s.m>0){if(spr){spr.classList.remove('cast');void spr.offsetWidth;spr.classList.add('cast')}if(src)vfxCharge(src.x,src.y,u.el,.28/b.speed);await rlbDelay(240);
+      else if(foe&&s.m>0){if(spr){spr.classList.remove('cast');void spr.offsetWidth;spr.classList.add('cast')}if(src)vfxCharge(src.x,src.y,u.el,.28/b.speed);await rlbDelay(240+(u.kind==='hero'&&typeof rlArtLead==='function'?rlArtLead(u.id):0));
         if(s.tg==='eA'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);await vfxAoe(u.el,pts)}
         else{const tp=rlbPt(e.t[0]);if(tp&&src){const n=Math.min(3,s.h||1);for(let i=0;i<n;i++){const p=vfxShot(src.x+(u.side?-20:20),src.y-10,tp.x,tp.y,u.el,ult);if(i===n-1)await p;else await rlbDelay(90)}}}}
-      else{if(spr){spr.classList.remove('cast');void spr.offsetWidth;spr.classList.add('cast')}if(src)vfxCharge(src.x,src.y,u.el,.28/b.speed);await rlbDelay(260);
+      else{if(spr){spr.classList.remove('cast');void spr.offsetWidth;spr.classList.add('cast')}if(src)vfxCharge(src.x,src.y,u.el,.28/b.speed);await rlbDelay(260+(u.kind==='hero'&&typeof rlArtLead==='function'?rlArtLead(u.id):0));
         e.t.forEach(t=>{const tp=rlbPt(t);if(!tp)return;const heal=s.fx.some(f=>f[0]==='heal'||f[0]==='healT'||f[0]==='revive');if(heal)vfxHeal(tp.x,tp.y);else vfxAura(tp.x,tp.y,col,true);const te=document.getElementById('rlu-'+t);if(te){te.classList.add('blessed');setTimeout(()=>te.classList.remove('blessed'),650)}});await rlbDelay(260)}
       await rlbDelay(60)}
     else if(e.k==='hit'){const el=document.getElementById('rlu-'+e.u);if(el){el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit')}

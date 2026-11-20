@@ -5,9 +5,14 @@
    and listing the id below. Heroes not listed keep their drawing.
    ================================================================ */
 const RL_ART={
-  // f: standing art for each form. c (optional): casting pose for each form,
-  //    same angle and scale, shown for a moment during a spell.
-  halo:{f:['art/halo-1.webp','art/halo-2.webp','art/halo-3.webp'],c:[],
+  // f: standing art for each form.
+  // c (optional): casting frames for each form, played in order during a spell:
+  //    reach, charge, release. ax/ay = point between the feet in the file,
+  //    h = how tall he would stand in that file's pixels (sets the scale).
+  halo:{f:['art/halo-1.webp','art/halo-2.webp','art/halo-3.webp'],
+        c:[[{src:'art/halo-1c1.webp',ax:218,ay:477,h:536},{src:'art/halo-1c2.webp',ax:216,ay:507,h:536},{src:'art/halo-1c3.webp',ax:190,ay:429,h:479}],
+           [{src:'art/halo-2c1.webp',ax:267,ay:514,h:536},{src:'art/halo-2c2.webp',ax:272,ay:493,h:536},{src:'art/halo-2c3.webp',ax:290,ay:416,h:479}],
+           [{src:'art/halo-3c1.webp',ax:309,ay:526,h:536},{src:'art/halo-3c2.webp',ax:250,ay:504,h:536},{src:'art/halo-3c3.webp',ax:290,ay:421,h:479}]],
         a:[[303,790],[327,802],[398,843]]}   // pixel size of each standing figure (w,h)
 };
 (function(){
@@ -34,12 +39,19 @@ const RL_ART={
 const ART_IMG={};
 function artImg(src){let i=ART_IMG[src];if(!i){i=ART_IMG[src]=new Image();i.src=src}return i.complete&&i.naturalWidth?i:null}
 const ART_ST=new WeakMap();let artRaf=0;
-const AX0=-30,AY0=-40,AW=300,AH=280,STRIPS=72;
+const AX0=-60,AY0=-80,AW=420,AH=330,STRIPS=72;
+const CAST_T=[0,70,260,320,480,520,950,1100,1150]; // reach in, hold, to charge, hold, to release (spell fires at 500), hold, back out, end
+function rlArtLead(id){const A=RL_ART[id];return A&&A.c&&A.c.some(x=>x&&x.length)?260:0}
 const aEase=k=>k<0?0:k>1?1:k*k*(3-2*k),aBack=k=>{k=Math.min(1,Math.max(0,k));const c=1.7;return 1+(c+1)*Math.pow(k-1,3)+c*Math.pow(k-1,2)};
 function artPose(st,now,speed){ // the figure's shape at this moment
   const t=(now+st.ph)/1000,P={lean:0,sy:1,sx:1,chest:0,sway:0,drift:0,glow:0,pose:0,ring:0};
   if(!STILL){P.chest=.014*Math.sin(t*2.2);P.sy=1+.007*Math.sin(t*2.2);P.sway=1.7;P.drift=1.3*Math.sin(t*.8)}
-  if(st.cast>=0){const D=1050/speed,k=(now-st.cast)/D;
+  if(st.cast>=0&&st.frames){const T=(now-st.cast)*speed,C=CAST_T;
+    if(T>=C[8])st.cast=-1;else{const seg=(a,b)=>Math.min(1,Math.max(0,(T-C[a])/(C[b]-C[a])));
+      P.seq=T<C[1]?[[-1,1-seg(0,1)],[0,seg(0,1)]]:T<C[2]?[[0,1]]:T<C[3]?[[0,1-seg(2,3)],[1,seg(2,3)]]:T<C[4]?[[1,1]]:T<C[5]?[[1,1-seg(4,5)],[2,seg(4,5)]]:T<C[6]?[[2,1]]:T<C[7]?[[2,1-seg(6,7)],[-1,seg(6,7)]]:[[-1,1]];
+      P.pulse=T>C[3]&&T<C[5]?.025*Math.sin((T-C[3])/30):0;P.kick=T>C[5]&&T<C[6]?Math.exp(-(T-C[5])/120):0;
+      P.ring=Math.min(1,T/120)*(T>C[6]?1-seg(6,7):1);P.glow=T<C[5]?.25*seg(0,4):0}}
+  else if(st.cast>=0){const D=1050/speed,k=(now-st.cast)/D;
     if(k>=1)st.cast=-1;else{const m=STILL?0:1;
       if(k<.22){const e=aEase(k/.22);P.lean=-11*e*m;P.sy*=1-.045*e*m;P.glow=.35*e;P.ring=e}
       else if(k<.38){const e=aEase((k-.22)/.16);P.lean=(-11+35*e)*m;P.sy*=(.955+.105*e*m);P.glow=.35+.65*e;P.ring=1}
@@ -51,14 +63,15 @@ function artPose(st,now,speed){ // the figure's shape at this moment
   return P}
 function artDraw(cv,now){
   const box=cv.parentNode,id=box.dataset.id,s=+box.dataset.s,A=RL_ART[id];if(!A)return;
-  const img=artImg(A.f[s]);if(!img)return;const pimg=A.c&&A.c[s]?artImg(A.c[s]):null;
+  const img=artImg(A.f[s]);if(!img)return;const FR=A.c&&A.c[s]&&A.c[s].length?A.c[s]:null;if(FR)FR.forEach(f=>artImg(f.src));
   const dpr=Math.min(2,window.devicePixelRatio||1),cw=Math.round(cv.clientWidth*dpr),ch=Math.round(cv.clientHeight*dpr);if(!cw||!ch)return;
   if(cv.width!==cw||cv.height!==ch){cv.width=cw;cv.height=ch}
-  let st=ART_ST.get(cv);if(!st){st={ph:Math.random()*9000,cast:-1,hit:-1,dash:-1,wasCast:false,wasHit:false,buf:document.createElement('canvas')};ART_ST.set(cv,st)}
   const spr=cv.closest('.rlb-spr'),unit=cv.closest('.rlb-u'),b=typeof rlUI==='function'&&rlUI().b,speed=b&&b.speed||1,dir=unit&&unit.classList.contains('e')?-1:1;
-  const isCast=!!(spr&&spr.classList.contains('cast')),isHit=!!(unit&&unit.classList.contains('hit')),isDash=!!(spr&&spr.classList.contains('dash'));
-  if(isCast&&!st.wasCast)st.cast=now;if(isHit&&!st.wasHit)st.hit=now;if(isDash&&!st.dashOn)st.dash=now;
-  st.wasCast=isCast;st.wasHit=isHit;st.dashOn=isDash;
+  let st=ART_ST.get(cv);if(!st){st={ph:Math.random()*9000,cast:-1,hit:-1,dash:-1,buf:document.createElement('canvas')};ART_ST.set(cv,st);
+    // the battle re-adds these classes within one frame, so watch each change
+    const watch=(el,cls,key)=>{if(!el)return;new MutationObserver(rs=>{for(const r of rs)if(!(r.oldValue||'').split(' ').includes(cls)&&el.classList.contains(cls)){st[key]=performance.now();break}}).observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true})};
+    watch(spr,'cast','cast');watch(unit,'hit','hit');watch(spr,'dash','dash')}
+  st.dashOn=!!(spr&&spr.classList.contains('dash'));st.frames=!!(FR&&FR.every(f=>artImg(f.src)));
   const P=artPose(st,now,speed),E=RL_EL[RL_H[id].el],t=(now+st.ph)/1000;
   const sc=cw/AW,buf=st.buf;if(buf.width!==cw||buf.height!==ch){buf.width=cw;buf.height=ch}
   const g=buf.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cw,ch);g.setTransform(sc,0,0,sc,-AX0*sc,-AY0*sc);
@@ -67,7 +80,8 @@ function artDraw(cv,now){
       cape=v<.55?Math.sin(Math.PI*v/.55):0,off=dir*P.lean*Math.pow(v,1.3)+P.sway*Math.sin(t*1.7+v*4)*cape+P.drift*v*v,
       sx=1+P.chest*Math.exp(-Math.pow((v-.68)/.12,2)),w=W*sx;
       g.drawImage(im,0,i*ih/STRIPS,iw,ih/STRIPS+.6,120-w/2+off,y0,w,y1-y0+.7)}};
-  if(pimg&&P.pose>0){if(P.pose<1)strips(img,1-P.pose);strips(pimg,P.pose)}else strips(img,1);g.globalAlpha=1;
+  const Hs=s===2?238:224,frame=(f,al)=>{const im=artImg(f.src),k=Hs/f.h*(1+(P.pulse||0));g.save();g.globalAlpha=al;g.translate(120-dir*7*(P.kick||0),228);g.scale(dir*k,k);g.drawImage(im,-f.ax,-f.ay);g.restore()};
+  if(P.seq)P.seq.forEach(([i,al])=>{if(al<=0)return;if(i<0)strips(img,al);else frame(FR[i],al)});else strips(img,1);g.globalAlpha=1;
   const c=cv.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cw,ch);
   if(P.ring>0){c.setTransform(sc,0,0,sc,-AX0*sc,-AY0*sc);c.save();c.translate(120,229);c.scale(1,.24);{const rg=c.createRadialGradient(0,0,0,0,0,80);rg.addColorStop(0,E.l);rg.addColorStop(.5,E.c);rg.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.45*P.ring;c.fillStyle=rg;c.beginPath();c.arc(0,0,80,0,7);c.fill()}c.globalAlpha=P.ring;c.strokeStyle=E.l;c.shadowColor=E.c;c.shadowBlur=14;
     const r=46+20*Math.min(1,P.ring*1.3);c.lineWidth=4.5;c.beginPath();c.arc(0,0,r,0,7);c.stroke();c.lineWidth=1.6;c.setLineDash([10,7]);c.rotate(t*2.4);c.beginPath();c.arc(0,0,r*.74,0,7);c.stroke();c.setLineDash([]);
@@ -77,6 +91,6 @@ function artDraw(cv,now){
 function artLoop(){if(artRaf)return;const step=now=>{const cvs=document.querySelectorAll('.rl-artcv');if(!cvs.length){artRaf=0;return}cvs.forEach(cv=>{try{artDraw(cv,now)}catch(e){}});artRaf=requestAnimationFrame(step)};artRaf=requestAnimationFrame(step)}
 (function(){const st=document.createElement('style');st.textContent=`
 .rl-artbox{position:relative;width:100%;height:100%}
-.rl-artcv{position:absolute;left:-12.5%;top:-16.667%;width:125%;height:116.667%;pointer-events:none}
+.rl-artcv{position:absolute;left:-25%;top:-33.333%;width:175%;height:137.5%;pointer-events:none}
 .rlb-u.a .rlb-spr:has(.rl-artbox){animation:none}
 .rlb-spr.cast:has(.rl-artbox){animation:none!important}`;document.head.appendChild(st)})();
