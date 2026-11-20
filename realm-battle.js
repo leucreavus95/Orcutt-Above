@@ -83,6 +83,7 @@ function vfxLoop(now){
     else if(p.shape==='leaf'){c.save();c.translate(p.x,p.y);c.rotate(p.rot);c.beginPath();c.ellipse(0,0,p.s,p.s*.45,0,0,6.283);c.fill();c.restore()}
     else if(p.shape==='ring'){c.lineWidth=Math.max(1,p.s*.25);c.beginPath();c.arc(p.x,p.y,p.s,0,6.283);c.stroke()}
     else if(p.shape==='star'){c.save();c.translate(p.x,p.y);c.rotate(p.rot);c.beginPath();for(let i=0;i<8;i++){const r=i%2?p.s*.35:p.s;c.lineTo(Math.cos(i*Math.PI/4)*r,Math.sin(i*Math.PI/4)*r)}c.fill();c.restore()}
+    else if(p.shape==='dia'){c.save();c.translate(p.x,p.y);c.rotate(p.rot);c.beginPath();c.moveTo(p.s,0);c.lineTo(0,p.s*.38);c.lineTo(-p.s,0);c.lineTo(0,-p.s*.38);c.closePath();c.fill();c.restore()}
     else if(p.shape==='plus'){c.fillRect(p.x-p.s,p.y-p.s*.3,p.s*2,p.s*.6);c.fillRect(p.x-p.s*.3,p.y-p.s,p.s*.6,p.s*2)}
     else if(p.shape==='shock'){c.lineWidth=Math.max(1,6*a);c.beginPath();c.arc(p.x,p.y,p.s,0,6.283);c.stroke()}
     else if(p.shape==='arrowU'||p.shape==='arrowD'){const d=p.shape==='arrowU'?-1:1;c.beginPath();c.moveTo(p.x,p.y+d*p.s);c.lineTo(p.x-p.s*.8,p.y);c.lineTo(p.x-p.s*.3,p.y);c.lineTo(p.x-p.s*.3,p.y-d*p.s);c.lineTo(p.x+p.s*.3,p.y-d*p.s);c.lineTo(p.x+p.s*.3,p.y);c.lineTo(p.x+p.s*.8,p.y);c.closePath();c.fill()}
@@ -158,11 +159,13 @@ async function rlbPlay(ev){
       rlbFloat(e.u,s.n+(e.p<1?' · half power':''),'name');
       if(ult&&!STILL){const d=document.getElementById('rlb-dim');if(d){d.classList.remove('on');void d.offsetWidth;d.classList.add('on')}rlbBanner(s.n,col);await rlbDelay(380)}
       if(foe&&s.m>0&&rlbMelee(u)&&s.tg==='e1'&&spr){const tp=rlbPt(e.t[0]);if(tp&&src){spr.style.setProperty('--dx',(tp.x-src.x+(u.side?tp.w*.55:-tp.w*.55))+'px');spr.style.setProperty('--dy',(tp.y-src.y)*.6+'px');spr.classList.add('dash');await rlbDelay(230);vfxBurst(tp.x,tp.y,u.el,22,1.2);rlbShake(false);setTimeout(()=>spr.classList.remove('dash'),120)}}
-      else if(foe&&s.m>0){if(spr){spr.classList.remove('cast');void spr.offsetWidth;spr.classList.add('cast')}if(src)vfxCharge(src.x,src.y,u.el,.28/b.speed);await rlbDelay(240);
-        if(s.tg==='eA'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);await vfxAoe(u.el,pts)}
+      else if(foe&&s.m>0){const AS=u.kind==='hero'&&typeof rlArtSpell==='function'?rlArtSpell(u):null;if(spr){spr.classList.remove('cast');void spr.offsetWidth;spr.classList.add('cast')}if(src&&!AS)vfxCharge(src.x,src.y,u.el,.28/b.speed);await rlbDelay(240+(u.kind==='hero'&&typeof rlArtLead==='function'?rlArtLead(u.id):0));
+        if(AS)await rlArtFire(AS,e,s,ult);
+        else if(s.tg==='eA'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);await vfxAoe(u.el,pts)}
         else{const tp=rlbPt(e.t[0]);if(tp&&src){const n=Math.min(3,s.h||1);for(let i=0;i<n;i++){const p=vfxShot(src.x+(u.side?-20:20),src.y-10,tp.x,tp.y,u.el,ult);if(i===n-1)await p;else await rlbDelay(90)}}}}
-      else{if(spr){spr.classList.remove('cast');void spr.offsetWidth;spr.classList.add('cast')}if(src)vfxCharge(src.x,src.y,u.el,.28/b.speed);await rlbDelay(260);
-        e.t.forEach(t=>{const tp=rlbPt(t);if(!tp)return;const heal=s.fx.some(f=>f[0]==='heal'||f[0]==='healT'||f[0]==='revive');if(heal)vfxHeal(tp.x,tp.y);else vfxAura(tp.x,tp.y,col,true);const te=document.getElementById('rlu-'+t);if(te){te.classList.add('blessed');setTimeout(()=>te.classList.remove('blessed'),650)}});await rlbDelay(260)}
+      else{const AS=u.kind==='hero'&&typeof rlArtSpell==='function'?rlArtSpell(u):null,ASup=AS&&AS.support&&rlArtSupport;if(spr){spr.classList.remove('cast');void spr.offsetWidth;spr.classList.add('cast')}if(src&&!ASup)vfxCharge(src.x,src.y,u.el,.28/b.speed);await rlbDelay(260+(u.kind==='hero'&&typeof rlArtLead==='function'?rlArtLead(u.id):0));
+        if(ASup)rlArtSupport(AS,e,s);
+        e.t.forEach(t=>{const tp=rlbPt(t);if(!tp)return;if(ASup){const te=document.getElementById('rlu-'+t);if(te){te.classList.add('blessed');setTimeout(()=>te.classList.remove('blessed'),650)}return}const heal=s.fx.some(f=>f[0]==='heal'||f[0]==='healT'||f[0]==='revive');if(heal)vfxHeal(tp.x,tp.y);else vfxAura(tp.x,tp.y,col,true);const te=document.getElementById('rlu-'+t);if(te){te.classList.add('blessed');setTimeout(()=>te.classList.remove('blessed'),650)}});await rlbDelay(260)}
       await rlbDelay(60)}
     else if(e.k==='hit'){const el=document.getElementById('rlu-'+e.u);if(el){el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit')}
       if(e.dot){const p=rlbPt(e.u);if(p)vfxBurst(p.x,p.y,'fire',8,.6)}
