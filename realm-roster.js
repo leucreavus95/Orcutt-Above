@@ -35,6 +35,11 @@ const RL_ROSTER=[
    hero:{n:'Orrin',r:4,role:'sup',spd:112,it:'staff',o:'robe',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'spd',v:10},
      ev:['Orrin','Orrin Starweave','Orrin, the Astral Weaver'],
      sk:[rlSk('Starbolt',{m:3.5,fx:[['atbDown',20,50]]}),rlSk('Orbit Lock',{cd:3,m:2.8,fx:[['seal',1,45]]}),rlSk('Cosmic Rift',{cd:5,tg:'eA',m:2.4,fx:[['slow',2,60],['mark',2,40]]})]}}
+,
+  {id:'sylva',col:{c:'#5cc489',l:'#fff4cc',d:'#123a24'},vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],
+   hero:{n:'Sylvara',r:4,role:'atk',spd:113,it:'staff',o:'cloak',hg:'hood',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cr',v:10},
+     ev:['Sylvara','Sylvara Leafwing','Sylvara, the Star Archer'],
+     sk:[rlSk('Swift Shot',{m:3.6,fx:[['mark',1,35]]}),rlSk('Twin Volley',{cd:3,m:1.6,h:3,fx:[['defBreak',1,30]]}),rlSk('Starfall Rain',{cd:5,tg:'eA',m:2.3,fx:[['slow',1,50]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

@@ -68,6 +68,14 @@ const RL_ART={
         spell:[{vp:['#ffffff','#f1e4ff','#b98cff','#3b2385'],hand:[60,118],bySkill:[{shot:'art/fx-as-bolt1.webp'},{shot:'art/fx-as-arc1.webp'},{shot:'art/fx-as-shards1.webp',aoe:'fan'}]},
                {vp:['#ffffff','#f1e4ff','#b98cff','#3b2385'],hand:[80,128],bySkill:[{shot:'art/fx-as-beam2.webp'},{shot:'art/fx-as-ring2.webp'},{burst:'art/fx-as-swirl2.webp',aoe:'sweep'}]},
                {vp:['#ffffff','#f1e4ff','#b98cff','#3b2385'],hand:[80,130],bySkill:[{shot:'art/fx-as-rain3.webp'},{shot:'art/fx-as-portal3.webp'},{shot:'art/fx-as-bolt1.webp',sigil:'art/fx-as-portal3.webp',aoe:'rain'}]}]},
+  // Sylvara, the astral archer: one casting picture per skill, painted arrow effects per skill
+  sylva:{f:[{src:'art/sylva-1.webp',ax:132,ay:437,h:459,w:251,ih:447},{src:'art/sylva-2.webp',ax:176,ay:522,h:533,w:335,ih:532},{src:'art/sylva-3.webp',ax:166,ay:609,h:580,w:325,ih:618}],pose:'skill',
+        c:[[{src:'art/sylva-1c1.webp',ax:269,ay:542,h:588,w:629,ih:591},{src:'art/sylva-1c2.webp',ax:269,ay:584,h:588,w:704,ih:701},{src:'art/sylva-1c3.webp',ax:228,ay:504,h:588,w:694,ih:584}],
+           [{src:'art/sylva-2c1.webp',ax:274,ay:662,h:630,w:703,ih:699},{src:'art/sylva-2c2.webp',ax:277,ay:616,h:630,w:708,ih:675},{src:'art/sylva-2c3.webp',ax:269,ay:641,h:630,w:696,ih:701}],
+           [{src:'art/sylva-3c1.webp',ax:233,ay:587,h:630,w:679,ih:666},{src:'art/sylva-3c2.webp',ax:337,ay:624,h:630,w:707,ih:686},{src:'art/sylva-3c3.webp',ax:233,ay:616,h:630,w:676,ih:671}]],
+        spell:[{vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],hand:[90,128],bySkill:[{shot:'art/fx-ar-leaf1.webp'},{shot:'art/fx-ar-twin1.webp'},{shot:'art/fx-ar-twin1.webp',aoe:'fan'}]},
+               {vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],hand:[95,135],bySkill:[{shot:'art/fx-ar-leaf2.webp'},{shot:'art/fx-ar-triple2.webp'},{shot:'art/fx-ar-gold2.webp',aoe:'fan'}]},
+               {vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],hand:[95,135],bySkill:[{shot:'art/fx-ar-burst3.webp'},{shot:'art/fx-ar-star3.webp'},{shot:'art/fx-ar-star3.webp',burst:'art/fx-ar-burst3.webp',aoe:'fan'}]}]},
 };
 (function(){
   const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.src=f.src})};preload();
