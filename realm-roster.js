@@ -57,6 +57,11 @@ RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
   }
   const keep=new Set(RL_ROSTER.map(r=>r.id));
   for(let i=RL_HEROES.length-1;i>=0;i--)if(!keep.has(RL_HEROES[i].id))RL_HEROES.splice(i,1);
-  RL_STARTERS.splice(0,RL_STARTERS.length,...RL_ROSTER.map(r=>r.id).filter(id=>RL_H[id].r<5)); // 5★ heroes are summon-onlyRL_FREE.splice(0,RL_FREE.length);
+  RL_STARTERS.splice(0,RL_STARTERS.length,...RL_ROSTER.map(r=>r.id).filter(id=>RL_H[id].r<5)); RL_FREE.splice(0,RL_FREE.length); // 5★ heroes are summon-only
 })();
 rlElChip=function(){return''}; // no element badges anywhere
+
+// saves made while the old free heroes were still handed out: take them out of the team and collection
+(function(){const keep=new Set(RL_ROSTER.map(r=>r.id)),o=rlMigrate;rlMigrate=function(p){const q=o(p);if(!q)return q;
+  if(q.heroes)for(const id in q.heroes)if(!keep.has(id))delete q.heroes[id];
+  if(Array.isArray(q.team))q.team=q.team.filter(id=>keep.has(id));return q}})();
