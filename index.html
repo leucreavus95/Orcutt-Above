@@ -482,6 +482,32 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;background-im
   .hud{padding:10px 14px}.hud-stat small{display:none}.swrap{padding:16px 14px 110px}
   .welcome{padding:20px}.welcome h1{font-size:40px}.wstats div{min-width:64px}
 }
+.arc-frame{margin:-4px -4px 2px;border-radius:12px;overflow:hidden;border:3px solid #2a2433;box-shadow:inset 0 0 0 2px rgba(255,255,255,.15),0 4px 0 #1a1622;aspect-ratio:320/140;background:#000}.arc-frame svg{display:block;width:100%;height:100%}.arc-card:hover .arc-frame{transform:translateY(-2px);transition:transform .15s}
+.arc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.arc-card{aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:12px}
+.arc-card .arc-frame{position:relative;width:100%;flex:none;margin:0}
+.arc-card h3{margin:2px 0 0;font-size:20px;line-height:1.1}
+.arc-s{margin:0;font-size:14px;line-height:1.3;min-height:2.6em}
+.arc-best{margin:0;display:flex;gap:14px;justify-content:center;font-size:13px;color:var(--muted,#aaa)}.arc-best b{color:inherit;color:#fff}
+.arc-go{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}.arc-go p{margin:0;font-size:12px}
+.arc-info{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:2px solid #2a2433;background:rgba(255,255,255,.92);color:#2a2433;font:700 14px/1 Georgia,serif;cursor:pointer;display:grid;place-items:center;padding:0}
+.arc-info:hover{background:#ffd60a}
+.arc-soon{border-style:dashed;justify-content:center}
+.tithumb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
+.tithumb::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,var(--tc,#9aa3b5) 0,transparent 62%);opacity:.28}
+.ti-ribbon{position:relative;width:70%;height:10px;margin-top:-4px;background:var(--tc);clip-path:polygon(0 0,100% 0,92% 50%,100% 100%,0 100%,8% 50%);opacity:.85}.ti-medal{width:72px!important;height:72px!important}
+.tithumb.common{--tc:#9aa3b5}.tithumb.rare{--tc:#3da5ff}.tithumb.epic{--tc:#b970ff}.tithumb.legendary{--tc:#ffb020}
+.ti-medal{position:relative;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--tc) 70%,#fff),var(--tc) 55%,color-mix(in srgb,var(--tc) 50%,#000));box-shadow:0 0 0 3px rgba(0,0,0,.35),0 0 0 5px color-mix(in srgb,var(--tc) 60%,transparent),0 6px 16px rgba(0,0,0,.4)}
+.tithumb.legendary .ti-medal{animation:tiGlow 2.2s ease-in-out infinite}.tithumb.epic .ti-medal::after,.tithumb.legendary .ti-medal::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);background-size:250% 100%;animation:tiShine 2.6s linear infinite}
+@keyframes tiShine{from{background-position:150% 0}to{background-position:-100% 0}}@keyframes tiGlow{50%{box-shadow:0 0 0 3px rgba(0,0,0,.35),0 0 0 5px #ffb020,0 0 26px #ffb020}}
+.tiplate{position:relative;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;line-height:1;padding:4px 10px;color:#e8ecf3;background:linear-gradient(180deg,#4a5163,#2c3140);border:1px solid #6b7389;border-radius:4px;white-space:nowrap;align-self:flex-start}
+.tiplate.big{font-size:13px;letter-spacing:.04em;padding:9px 10px;box-sizing:border-box;align-self:center;white-space:normal;text-align:center;max-width:92%;line-height:1.15;position:relative;z-index:1}
+.tiplate.rare{background:linear-gradient(180deg,#2f7fd9,#1a4d94);border-color:#7cc0ff;clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 50%,calc(100% - 6px) 100%,6px 100%,0 50%);border:none;padding-left:13px;padding-right:13px}
+.tiplate.epic{background:linear-gradient(120deg,#5b2a9e,#9a4dff 50%,#5b2a9e);background-size:200% 100%;animation:tiPan 3s linear infinite;border-color:#d4a8ff;box-shadow:0 0 12px rgba(185,112,255,.55)}
+.tiplate.legendary{color:#3a2200;background:linear-gradient(120deg,#c9851a,#ffe08a 45%,#ffb020 55%,#c9851a);background-size:200% 100%;animation:tiPan 2.4s linear infinite;border-color:#fff1c2;box-shadow:0 0 14px rgba(255,176,32,.7)}
+@keyframes tiPan{to{background-position:-200% 0}}
+.tiplate .ti-ic{flex:none}
+@media (prefers-reduced-motion:reduce){.tiplate,.ti-medal,.ti-medal::after{animation:none!important}}
 </style>
 </head>
 <body>
@@ -1256,7 +1282,7 @@ function avatarSVG(eq,sprite){
 <g class="av-head">${ear(-1)}${ear(1)}<path d="${fp}" fill="${skin}"/><path d="${fp}" fill="url(#${u}ct)"/><path d="${fp}" fill="url(#${u}jw)"/><path d="${fp}" fill="url(#${u}hl)"/><g clip-path="url(#${u}fc)"><path d="M${100-W} 112 Q${100-W+8} 120 ${100-W+14} 124 M${100+W} 112 Q${100+W-8} 120 ${100+W-14} 124" stroke="${skDD}" stroke-opacity=".18" stroke-width="4" fill="none" stroke-linecap="round"/>${(eq.hair|0)===7?'':`<rect x="60" y="74" width="80" height="8" fill="${skDD}" opacity=".14"/>`}</g>${det}${front}${shine}<g class="av-eyes">${eye(86.5,-1)}${eye(113.5,1)}</g>${brow(86.5,-1)}${brow(113.5,1)}${nose}<path d="M98.6 122.6 Q100 124 101.4 122.6" stroke="${skDD}" stroke-opacity=".3" stroke-width="1" fill="none"/>${mouth}<path d="M95 ${mY+7.5} Q100 ${mY+9} 105 ${mY+7.5}" stroke="${skDD}" stroke-opacity=".2" stroke-width="1.2" fill="none"/>${onBody?'':accSVG(ac)}${headSVG(hd)}</g>${sprite?'':`<g class="av-pet">${petSVG(it(eq.pet,'pet-none'))}</g>`}</svg>`;
 }
 const frameCls=eq=>'frame f-'+((ITEM[eq.frame]||ITEM['fr-basic']).d.k);
-function titleTag(eq){const t=ITEM[eq.title]||ITEM['ti-rookie'];return`<span class="ttag ${t.rarity}">${esc(t.name)}</span>`}
+function titleTag(eq){const t=ITEM[eq.title]||ITEM['ti-rookie'];return`${tiPlate(t)}`}
 function rankBadge(p){const r=rankOf(p);return`<span class="rank"><i style="background:${r.c}"></i>${r.n}</span>`}
 function playerCard(s){
   return`<div class="${frameCls(s.equip)}"><div class="pcard live">${avatarSVG(s.equip)}<div class="meta"><div class="row" style="justify-content:space-between">${titleTag(s.equip)}<span class="lv">LV ${levelOf(s.xp).L}</span></div><h3>${esc(s.name)}</h3><div class="row" style="justify-content:space-between">${rankBadge(s.points)}<span class="num muted">${s.points} pts</span></div></div></div></div>`;
@@ -1536,9 +1562,46 @@ function sCard(s){
       ${g.on?`<p class="muted">Arena coins today: <span class="num">${s.gDay===today()?s.gCoins:0}</span> of ${g.cap}. Record: ${s.wins||0} wins, ${s.correct||0} right out of ${s.answered||0}.</p>`:''}</div>
     <div class="panel"><h3 style="margin-bottom:6px">Recent</h3><div class="feed">${mine.map(l=>`<div><span>${esc(l.name)} <span class="muted">· ${ago(l.t)}</span></span><b class="num ${l.pts<0?'bad':'good'}">${signed(l.pts)}</b></div>`).join('')||'<p class="muted">No points yet. They show up here as your teacher gives them.</p>'}</div></div></div></div>`;
 }
+/* ---------- title emblems: every title gets an icon and a rarity nameplate ---------- */
+const TI_ICON={
+ rookie:'<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.3 6L12 16.4 6.6 19.4l1.3-6L3.4 9.3l6-.7z"/>',
+ grinder:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+ sharp:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+ owl:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+ clutch:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M10 2h4"/>',
+ mathlete:'<path d="M5 5h14M12 5v14M5 12h14" opacity=".35"/><path d="M6 6l4 4M10 6l-4 4M14 17h5M16.5 14.5v5M14 8h5"/>',
+ boss:'<path d="M4 18h16l-1-9-4 4-3-7-3 7-4-4z"/><path d="M4 21h16"/>',
+ untouch:'<path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/>',
+ goat:'<path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 13v4M8 21h8M9 17h6"/>',
+ early:'<circle cx="12" cy="15" r="4"/><path d="M12 5v3M4.5 9.5l2 2M19.5 9.5l-2 2M2 19h20"/>',
+ book:'<path d="M3 5c3-1 6-1 9 1 3-2 6-2 9-1v14c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6v14"/>',
+ team:'<circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3.5 2.7-6 6-6s6 2.5 6 6M10 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/>',
+ hype:'<path d="M3 10v4h3l7 5V5L6 10z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/>',
+ nodays:'<path d="M12 2c1 4 6 5 6 11a6 6 0 0 1-12 0c0-3 2-4 2-7 2 1 3 3 3 5 1-2 1-6 1-9z"/>',
+ fresh:'<path d="M12 21V11M12 11c0-4 3-7 8-7 0 5-3 8-8 7zM12 14c0-3-2-5-6-5 0 4 2 6 6 5z"/>',
+ brain:'<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h0V4zM15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3V4z"/>',
+ calc:'<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8v3H8zM8 13h1M12 13h1M16 13h0M8 17h1M12 17h1M16 13v4"/>',
+ solver:'<path d="M10 3h4v3a2 2 0 1 0 4 0h3v5h-3a2 2 0 1 0 0 4h3v6h-6v-3a2 2 0 1 0-4 0v3H3v-6h3a2 2 0 1 0 0-4H3V6h7z"/>',
+ comeback:'<path d="M4 14l5-5 4 4 7-7"/><path d="M14 6h6v6"/>',
+ main:'<path d="M12 2l2.4 6.6L21 9l-5 4.5L17.5 21 12 17.3 6.5 21 8 13.5 3 9l6.6-.4z"/><circle cx="12" cy="12" r="2.2"/>',
+ built:'<path d="M3 9h3v6H3zM18 9h3v6h-3zM6 7h3v10H6zM15 7h3v10h-3zM9 11h6v2H9z"/>',
+ honor:'<circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/><path d="M12 6v6M9 9h6"/>',
+ captain:'<path d="M5 3v18M5 4h12l-3 4 3 4H5"/>',
+ mvp:'<path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4l-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/><path d="M8 18l-1 4 5-2 5 2-1-4"/>',
+ human:'<circle cx="12" cy="7" r="4"/><path d="M5 22v-2a7 7 0 0 1 14 0v2"/><path d="M10 7h4M12 5v4" />',
+ hall:'<path d="M3 21h18M5 21V10M9 21V10M15 21V10M19 21V10M2 10l10-7 10 7z"/>',
+ genius:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>',
+ above:'<path d="M12 3l9 8h-5v4H8v-4H3z"/><path d="M8 19h8M10 22h4"/>',
+ legend:'<path d="M3 8l4 3 5-7 5 7 4-3-2 11H5z"/><circle cx="12" cy="14" r="2"/>',
+ one:'<path d="M12 2l7 10-7 10-7-10z"/><path d="M12 7v10M10 9l2-2"/>'};
+const TI_ICON_N={"Homework hero": "<path d=\"M6 3h9l3 3v15H6z\"/><path d=\"M9 11l2 2 4-4M9 17h6\"/>", "Quiz whiz": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6M12 17h0\"/>", "Gold star": "<path d=\"M12 3l2.6 5.6 6 .7-4.5 4.1 1.3 6L12 16.4 6.6 19.4l1.3-6L3.4 9.3l6-.7z\"/><path d=\"M12 8v5\"/>", "Locked in": "<rect x=\"5\" y=\"10\" width=\"14\" height=\"11\" rx=\"2\"/><path d=\"M8 10V7a4 4 0 0 1 8 0v3M12 14v3\"/>", "Chill": "<path d=\"M3 14h14a4 4 0 0 0 0-8H3zM3 14v2a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4v-2\"/><path d=\"M7 2v2M11 2v2\"/>", "Daydreamer": "<path d=\"M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19 10a4 4 0 0 1-1 8z\"/>", "Art kid": "<path d=\"M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2s-1-1.5-1-2.5 1-1.5 2.5-1.5H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8z\"/><circle cx=\"7.5\" cy=\"11\" r=\"1\"/><circle cx=\"10\" cy=\"7\" r=\"1\"/><circle cx=\"15\" cy=\"7\" r=\"1\"/>", "Band kid": "<path d=\"M9 18V5l11-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"17\" cy=\"16\" r=\"3\"/>", "Theater kid": "<path d=\"M3 4h9v7a4.5 4.5 0 0 1-9 0zM12 8h9v7a4.5 4.5 0 0 1-9 0\"/><path d=\"M6 8h0M9 8h0M5.5 12a2 2 0 0 0 3 0M15 12h0M18 12h0M15 17a2 2 0 0 1 3 0\"/>", "Science fan": "<path d=\"M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3\"/><path d=\"M7.5 15h9\"/>", "History buff": "<path d=\"M4 6h13a3 3 0 0 1 0 6H7a3 3 0 0 0 0 6h13\"/><path d=\"M4 6v12\"/>", "Word nerd": "<path d=\"M4 20L10 4h1l6 16M6.5 14h8\"/><path d=\"M18 6l2 2-2 2\"/>", "Gamer": "<path d=\"M6 8h12a4 4 0 0 1 4 4l-1 5a2 2 0 0 1-3.5 1L15 16H9l-2.5 2A2 2 0 0 1 3 17l-1-5a4 4 0 0 1 4-4z\"/><path d=\"M7 11v3M5.5 12.5h3M16 11h0M18 13h0\"/>", "Athlete": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 3v18M3 12h18M5.6 5.6c3 3 3 9.8 0 12.8M18.4 5.6c-3 3-3 9.8 0 12.8\"/>", "Helping hand": "<path d=\"M3 13l4-1 5 3h4a2 2 0 0 1 0 4H9M3 20l4 0M15 8a3 3 0 1 0-6 0c0 2 3 4 3 4s3-2 3-4z\"/>", "Kindness captain": "<path d=\"M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z\"/>", "Unbothered": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 10h3M13 10h3M9 15h6\"/>", "Rising star": "<path d=\"M12 9l1.6 3.5 3.9.4-2.9 2.6.8 3.8L12 17.4l-3.4 1.9.8-3.8-2.9-2.6 3.9-.4z\"/><path d=\"M12 2v4M8 4l1.5 2.5M16 4l-1.5 2.5\"/>", "Speedrunner": "<path d=\"M13 3l-1 8h6L9 21l1-7H5z\"/><path d=\"M2 8h4M1 12h3\"/>", "Overachiever": "<path d=\"M4 20h4v-6H4zM10 20h4V9h-4zM16 20h4V4h-4z\"/>", "Underdog": "<path d=\"M5 10l2-6 3 4h4l3-4 2 6v5a7 7 0 0 1-14 0z\"/><path d=\"M9 13h0M15 13h0M11 17h2\"/>", "Ace": "<rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M12 8l3 5h-6zM9 17h6\"/>", "Math wizard": "<path d=\"M12 2l4 9H8z\"/><path d=\"M5 11h14M9 14l-2 7M15 14l2 7M10 17h4\"/>", "Grammar police": "<path d=\"M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z\"/><path d=\"M9 10h6M9 13h4\"/>", "Debate champ": "<path d=\"M3 5h11v8H8l-4 3v-3H3zM14 9h7v8h-1v3l-4-3h-3\"/>", "Robot builder": "<rect x=\"5\" y=\"8\" width=\"14\" height=\"11\" rx=\"2\"/><path d=\"M12 4v4M9 13h0M15 13h0M9 16h6M2 12v3M22 12v3\"/><circle cx=\"12\" cy=\"3\" r=\"1\"/>", "Future CEO": "<rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18\"/>", "Future astronaut": "<path d=\"M12 2c4 3 5 8 4 12h-8c-1-4 0-9 4-12z\"/><circle cx=\"12\" cy=\"9\" r=\"2\"/><path d=\"M8 14l-3 4h4M16 14l3 4h-4M10 18l2 4 2-4\"/>", "Pixel artist": "<path d=\"M4 4h4v4H4zM10 4h4v4h-4zM16 10h4v4h-4zM4 10h4v4H4zM10 16h4v4h-4zM16 16h4v4h-4z\"/>", "Certified smart": "<circle cx=\"12\" cy=\"9\" r=\"6\"/><path d=\"M9 9l2 2 4-4M8.5 14L7 22l5-3 5 3-1.5-8\"/>", "Legend in progress": "<path d=\"M3 8l4 3 5-7 5 7 4-3-2 11H5z\"/><path d=\"M8 15h3\" />", "Prodigy": "<path d=\"M12 3l9 4-9 4-9-4z\"/><path d=\"M6 9v5c3 2 9 2 12 0V9M21 7v6\"/>", "Mastermind": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2\"/><circle cx=\"12\" cy=\"12\" r=\"7\"/>", "Unstoppable": "<path d=\"M2 12h12M10 6l6 6-6 6\"/><path d=\"M17 4l5 8-5 8\"/>", "Top of the class": "<path d=\"M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z\"/><path d=\"M12 6v4M10 8h4\"/>", "Mythic": "<path d=\"M12 2l3 6 6 .9-4.5 4.3 1 6.3L12 16.8 6.5 19.5l1-6.3L3 8.9 9 8z\"/><path d=\"M12 2v6M3 8.9l6-.9M21 8.9L15 8\"/>"};
+const tiKey=id=>id.replace(/^ti-/,'');
+function tiEmblem(i,size){const k=tiKey(i.id),p=TI_ICON[k]||TI_ICON_N[i.name]||TI_ICON.rookie;return`<svg class="ti-ic" viewBox="0 0 24 24" width="${size||20}" height="${size||20}" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`}
+function tiPlate(i,big){return`<span class="tiplate ${i.rarity}${big?' big':''}"><span>${esc(i.name)}</span></span>`}
+function tiThumb(i){return`<div class="thumb tithumb ${i.rarity}">${tiPlate(i,true)}</div>`}
 function itemThumb(s,i){
   if(i.slot==='frame')return`<div class="thumb"><span class="frame f-${i.d.k}"><span></span></span></div>`;
-  if(i.slot==='title')return`<div class="thumb"><span class="ttag ${i.rarity}">${esc(i.name)}</span></div>`;
+  if(i.slot==='title')return tiThumb(i);
   return`<div class="thumb">${avatarSVG({...s.equip,[i.slot]:i.id})}</div>`;
 }
 function sLocker(s){
@@ -1598,7 +1661,7 @@ function shopSheet(m){
     :lock?`<p class="muted">Reach level ${i.lvl} to buy this. You're level ${L}.</p>`
     :`<div class="ledger"><span>Price</span><b class="coin num">${p}</b><span>You have</span><b class="coin num">${s.coins}</b><span>After buying</span><b class="coin num ${short?'bad':''}">${short?'—':s.coins-p}</b></div>${short?`<p class="bad">You need ${p-s.coins} more coins.</p>`:''}`;
   return`<div class="shopv ${i.rarity}"><div class="shopv-card">${preview}</div>
-    <div class="shopv-info"><span class="rar ${i.rarity}">${i.rarity} ${slotName}</span><h2>${esc(i.name)}</h2><p class="muted">${SLOTHINT[i.slot]||''}${i.slot==='title'?`: <span class="ttag ${i.rarity}">${esc(i.name)}</span>`:''}</p>
+    <div class="shopv-info"><span class="rar ${i.rarity}">${i.rarity} ${slotName}</span><h2>${esc(i.name)}</h2><p class="muted">${SLOTHINT[i.slot]||''}${i.slot==='title'?`: ${tiPlate(i)}`:''}</p>
       ${money}<div class="row">${act}<button class="btn" data-a="close">${own?'Close':'Not now'}</button></div></div></div>`;
 }
 function countCoins(from,to){
@@ -1784,13 +1847,56 @@ function stageDraw(dt){
    To add a game: write a function like flapGame(canvas, student, done) that returns a stop function
    and calls done(score) when the round ends, then add one line to ARCADE. */
 const ARCADE=[
- {id:'flap',name:'Paper Route',run:flapGame,unit:'gaps',hint:'Tap, click or press Space to flap. One play is one life.',d:'Keep your flyer in the air and thread the gaps between the pencils. Each gap is one point. Equip a sidekick and it does the flying.'},
- {id:'horde',name:'Homework Horde',run:hordeGame,tall:true,unit:'erased',hint:'Move with WASD. Aim with the mouse and click (or hold) to toss, or toss with the arrow keys. On a touchscreen, drag on the left to move and touch where you want to throw.',d:'Overdue homework has come to life. Dodge the swarm, aim, and toss pencils and paper airplanes to clear it out. Collect gold stars to level up and build your loadout from 18 upgrades. It gets harder every minute: swarms, sprinters, spitters, heavy textbooks and a bigger boss every minute. How long can you last?'},
- {id:'dash',name:'Graph Dash',run:dashGame,unit:'blocks',hint:'Click, tap, or press Space or Up to jump. Hold to keep jumping. Tap mid-air on a glowing ring to jump again.',d:'Your cube races across graph paper on its own. Jump over pencil spikes, land on blocks, hit the yellow pads and rings. The course is the same every time, so you can learn it. The score is how many blocks you get.'},
- {id:'pong',name:'Desk Rally',run:pongGame,tall:true,unit:'points',hint:'Move your mouse (or W/S, arrow keys) to slide your pink eraser. On a phone, drag. Hit the paper wad near the end of your eraser for sharper angles, and move while you hit to add spin.',d:'Flick a crumpled paper wad across two pushed-together desks with your eraser, over the ruler and past your rival across the aisle. Every point you win makes your rival quicker and sharper, and every return speeds the wad up. Miss three and the match is over.'},
- {id:'moto',name:'Recess Rider',run:motoGame,tall:true,unit:'points',hint:'Hold ↑ or W to ride and ↓ or S to brake. Use ← → (or A D) to lean: lean back for wheelies and backflips, forward for frontflips. On a phone, use the on-screen buttons.',d:'A stunt bike course across the school grounds: ruler ramps, book stairs, pits and school-bus jumps. Land flips for bonus points and +2 seconds, and reach checkpoints for +10 seconds. Land on your head three times and you are out.'},
- {id:'td',name:'Desk Defense',run:tdGame,tall:true,unit:'waves',hint:'Pick a tool from the bar (or press 1 to 5), then click a square next to the path. Click a placed tool to upgrade (U) or sell (S). Space starts the next wave, F toggles 2× speed.',d:'Homework is marching toward the classroom door. Place pencil cups, eraser lobbers, glue, highlighters and chalk along the path, earn coins from each one you stop, and upgrade your setup between waves. Every 5th wave brings a boss. How many waves can you hold?'},
- {id:'snake',name:'Doodle Snake',run:snakeGame,tall:true,unit:'apples',hint:'Steer with the arrow keys or WASD, or swipe on a touchscreen.',d:'Steer your snake around the graph paper and eat apples to grow longer. Don\'t hit the edge or your own tail. Grab a golden apple before it disappears for 3 at once. It gets faster as you grow.'}];
+ {id:'flap',s:'Fly your paper plane through the pencil gaps.',name:'Paper Route',run:flapGame,unit:'gaps',hint:'Tap, click or press Space to flap. One play is one life.',d:'Keep your flyer in the air and thread the gaps between the pencils. Each gap is one point. Equip a sidekick and it does the flying.'},
+ {id:'horde',s:'Toss erasers at the living homework horde.',name:'Homework Horde',run:hordeGame,tall:true,unit:'erased',hint:'Move with WASD. Aim with the mouse and click (or hold) to toss, or toss with the arrow keys. On a touchscreen, drag on the left to move and touch where you want to throw.',d:'Overdue homework has come to life. Dodge the swarm, aim, and toss pencils and paper airplanes to clear it out. Collect gold stars to level up and build your loadout from 18 upgrades. It gets harder every minute: swarms, sprinters, spitters, heavy textbooks and a bigger boss every minute. How long can you last?'},
+ {id:'dash',s:'Jump your cube across the graph paper.',name:'Graph Dash',run:dashGame,unit:'blocks',hint:'Click, tap, or press Space or Up to jump. Hold to keep jumping. Tap mid-air on a glowing ring to jump again.',d:'Your cube races across graph paper on its own. Jump over pencil spikes, land on blocks, hit the yellow pads and rings. The course is the same every time, so you can learn it. The score is how many blocks you get.'},
+ {id:'pong',s:'Eraser vs. eraser paper-wad rally.',name:'Desk Rally',run:pongGame,tall:true,unit:'points',hint:'Move your mouse (or W/S, arrow keys) to slide your pink eraser. On a phone, drag. Hit the paper wad near the end of your eraser for sharper angles, and move while you hit to add spin.',d:'Flick a crumpled paper wad across two pushed-together desks with your eraser, over the ruler and past your rival across the aisle. Every point you win makes your rival quicker and sharper, and every return speeds the wad up. Miss three and the match is over.'},
+ {id:'moto',s:'Ride, flip and land a stunt bike.',name:'Recess Rider',run:motoGame,tall:true,unit:'points',hint:'Hold ↑ or W to ride and ↓ or S to brake. Use ← → (or A D) to lean: lean back for wheelies and backflips, forward for frontflips. On a phone, use the on-screen buttons.',d:'A stunt bike course across the school grounds: ruler ramps, book stairs, pits and school-bus jumps. Land flips for bonus points and +2 seconds, and reach checkpoints for +10 seconds. Land on your head three times and you are out.'},
+ {id:'td',s:'Guard the door from marching homework.',name:'Desk Defense',run:tdGame,tall:true,unit:'waves',hint:'Pick a tool from the bar (or press 1 to 5), then click a square next to the path. Click a placed tool to upgrade (U) or sell (S). Space starts the next wave, F toggles 2× speed.',d:'Homework is marching toward the classroom door. Place pencil cups, eraser lobbers, glue, highlighters and chalk along the path, earn coins from each one you stop, and upgrade your setup between waves. Every 5th wave brings a boss. How many waves can you hold?'},
+ {id:'snake',s:'Eat apples and grow without crashing.',name:'Doodle Snake',run:snakeGame,tall:true,unit:'apples',hint:'Steer with the arrow keys or WASD, or swipe on a touchscreen.',d:'Steer your snake around the graph paper and eat apples to grow longer. Don\'t hit the edge or your own tail. Grab a golden apple before it disappears for 3 at once. It gets faster as you grow.'}];
+/* ---------- arcade card pictures: a little scene from each game ---------- */
+const ARC_ART={
+ flap:`<rect width="320" height="140" fill="#bfe3ff"/><circle cx="270" cy="30" r="16" fill="#fff6c9"/><ellipse cx="70" cy="34" rx="34" ry="10" fill="#fff" opacity=".9"/><ellipse cx="190" cy="22" rx="26" ry="8" fill="#fff" opacity=".8"/>
+  <g><rect x="150" y="0" width="34" height="44" fill="#ffd23f"/><path d="M150 44 L167 62 L184 44Z" fill="#f4c88a"/><path d="M162 56 L167 62 L172 56Z" fill="#333"/><rect x="150" y="0" width="34" height="8" fill="#ff8fa3"/></g>
+  <g><rect x="150" y="96" width="34" height="44" fill="#ffd23f"/><path d="M150 96 L167 78 L184 96Z" fill="#f4c88a"/><path d="M162 84 L167 78 L172 84Z" fill="#333"/></g>
+  <g><rect x="250" y="0" width="34" height="28" fill="#4fc3f7"/><path d="M250 28 L267 46 L284 28Z" fill="#f4c88a"/><rect x="250" y="112" width="34" height="28" fill="#4fc3f7"/><path d="M250 112 L267 94 L284 112Z" fill="#f4c88a"/></g>
+  <g transform="translate(78 70) rotate(-14)"><path d="M-26 0 L26 -4 L-6 10Z" fill="#fff" stroke="#90a4ae" stroke-width="2"/><path d="M-26 0 L26 -4 L-10 -10Z" fill="#eceff1" stroke="#90a4ae" stroke-width="2"/></g>
+  <path d="M30 76 q10 -4 20 0 q10 4 20 0" stroke="#fff" stroke-width="3" fill="none" opacity=".8"/>`,
+ horde:`<rect width="320" height="140" fill="#2f5d3a"/><path d="M0 0 H320 V140 H0Z" fill="url(#arcHatch)" opacity=".25"/><rect x="0" y="0" width="320" height="12" fill="#8d6e63"/><rect x="0" y="128" width="320" height="12" fill="#8d6e63"/>
+  <g fill="#fffdf5" stroke="#cfd8dc" stroke-width="1.5">${[[210,40,-8],[256,70,10],[226,98,-4],[280,30,6]].map(([x,y,r])=>`<g transform="translate(${x} ${y}) rotate(${r})"><rect x="-16" y="-20" width="32" height="40" rx="2"/><path d="M-10 -10 H10 M-10 -3 H10 M-10 4 H6" stroke="#90caf9" stroke-width="2"/><circle cx="-6" cy="-14" r="2.4" fill="#e53935" stroke="none"/><circle cx="6" cy="-14" r="2.4" fill="#e53935" stroke="none"/></g>`).join('')}</g>
+  <circle cx="70" cy="74" r="18" fill="#ffcc80"/><circle cx="64" cy="70" r="2.5" fill="#333"/><circle cx="76" cy="70" r="2.5" fill="#333"/><path d="M64 80 q6 5 12 0" stroke="#333" stroke-width="2" fill="none"/><rect x="56" y="88" width="28" height="26" rx="6" fill="#42a5f5"/>
+  <g><rect x="128" y="62" width="30" height="12" rx="3" fill="#f48fb1"/><rect x="150" y="62" width="10" height="12" rx="2" fill="#90a4ae"/></g><path d="M96 68 L124 68" stroke="#fff" stroke-width="2" stroke-dasharray="4 4"/>`,
+ dash:`<rect width="320" height="140" fill="#fbfbf7"/>${Array.from({length:17},(_,i)=>`<path d="M${i*20} 0 V140" stroke="#cfe3f5" stroke-width="1"/>`).join('')}${Array.from({length:8},(_,i)=>`<path d="M0 ${i*20} H320" stroke="#cfe3f5" stroke-width="1"/>`).join('')}
+  <rect x="0" y="108" width="320" height="32" fill="#7c4dff"/><path d="M0 108 H320" stroke="#311b92" stroke-width="3"/>
+  <path d="M150 108 L166 82 L182 108Z" fill="#ff5252" stroke="#b71c1c" stroke-width="2"/><path d="M182 108 L198 82 L214 108Z" fill="#ff5252" stroke="#b71c1c" stroke-width="2"/><rect x="250" y="76" width="32" height="32" fill="#7c4dff" stroke="#311b92" stroke-width="3"/>
+  <circle cx="232" cy="46" r="10" fill="none" stroke="#ffd600" stroke-width="4"/><path d="M60 92 q40 -70 90 -40" stroke="#00bfa5" stroke-width="3" fill="none" stroke-dasharray="6 5"/>
+  <g transform="translate(150 50) rotate(25)"><rect x="-14" y="-14" width="28" height="28" fill="#00e5ff" stroke="#006064" stroke-width="3"/><rect x="-6" y="-6" width="5" height="5" fill="#006064"/><rect x="3" y="-6" width="5" height="5" fill="#006064"/></g>`,
+ pong:`<rect width="320" height="140" fill="#c49a6c"/>${Array.from({length:6},(_,i)=>`<path d="M0 ${12+i*24} Q160 ${4+i*24} 320 ${14+i*24}" stroke="#b0875b" stroke-width="2" fill="none"/>`).join('')}
+  <rect x="152" y="0" width="16" height="140" fill="#f7e27a" opacity=".85"/>${Array.from({length:14},(_,i)=>`<path d="M152 ${i*10} h6" stroke="#5d4037" stroke-width="1.5"/>`).join('')}
+  <rect x="18" y="36" width="20" height="60" rx="5" fill="#f48fb1" stroke="#ad1457" stroke-width="2"/><rect x="18" y="36" width="20" height="16" rx="4" fill="#90a4ae"/>
+  <rect x="282" y="52" width="20" height="60" rx="5" fill="#80deea" stroke="#00838f" stroke-width="2"/><rect x="282" y="96" width="20" height="16" rx="4" fill="#90a4ae"/>
+  <path d="M60 90 Q120 40 200 60" stroke="#fff" stroke-width="3" fill="none" stroke-dasharray="2 8" stroke-linecap="round" opacity=".9"/>
+  <g transform="translate(206 60)"><circle r="13" fill="#fafafa" stroke="#9e9e9e" stroke-width="2"/><path d="M-8 -4 L2 -9 L9 0 L1 8 L-7 4Z" fill="none" stroke="#bdbdbd" stroke-width="1.5"/></g>`,
+ moto:`<rect width="320" height="140" fill="#9fd8ff"/><circle cx="280" cy="28" r="14" fill="#fff6c9"/>
+  <path d="M0 140 L0 104 L110 104 L190 60 L190 140Z" fill="#8d6e63"/><path d="M0 104 L110 104 L190 60" stroke="#5d4037" stroke-width="4" fill="none"/>
+  <rect x="210" y="96" width="110" height="44" fill="#8d6e63"/><path d="M210 96 H320" stroke="#5d4037" stroke-width="4"/>
+  ${[0,1,2].map(i=>`<rect x="${226+i*30}" y="${74-i*12}" width="26" height="${22+i*12}" fill="${['#ef5350','#42a5f5','#66bb6a'][i]}" stroke="#263238" stroke-width="2"/>`).join('')}
+  <g transform="translate(150 52) rotate(-24)"><circle cx="-22" cy="12" r="12" fill="none" stroke="#263238" stroke-width="5"/><circle cx="22" cy="12" r="12" fill="none" stroke="#263238" stroke-width="5"/><path d="M-22 12 L-4 -2 L14 -2 L22 12 M-4 -2 L4 12" stroke="#e53935" stroke-width="5" fill="none" stroke-linejoin="round"/><path d="M14 -2 L18 -12" stroke="#263238" stroke-width="4"/>
+   <circle cx="0" cy="-22" r="8" fill="#ffca28"/><path d="M0 -14 L2 0 M2 -8 L14 -10" stroke="#3949ab" stroke-width="5" stroke-linecap="round"/></g>
+  <path d="M96 78 q-14 0 -24 6 M100 90 q-18 0 -30 6" stroke="#fff" stroke-width="3" fill="none" opacity=".8"/>`,
+ td:`<rect width="320" height="140" fill="#d7ccc8"/>${Array.from({length:9},(_,i)=>`<path d="M${i*40} 0 V140" stroke="#bcaaa4"/>`).join('')}${Array.from({length:4},(_,i)=>`<path d="M0 ${i*40} H320" stroke="#bcaaa4"/>`).join('')}
+  <path d="M0 60 H120 V100 H220 V40 H320" stroke="#a1887f" stroke-width="28" fill="none" stroke-linejoin="round"/><path d="M0 60 H120 V100 H220 V40 H320" stroke="#efebe9" stroke-width="2" fill="none" stroke-dasharray="6 6"/>
+  ${[[30,60,'#ffeb3b'],[80,60,'#81d4fa'],[170,100,'#ffab91']].map(([x,y,c])=>`<g transform="translate(${x} ${y})"><rect x="-10" y="-8" width="20" height="16" rx="3" fill="${c}" stroke="#5d4037" stroke-width="1.5"/><circle cx="-4" cy="-1" r="1.8" fill="#333"/><circle cx="4" cy="-1" r="1.8" fill="#333"/></g>`).join('')}
+  <g><rect x="132" y="12" width="26" height="26" rx="4" fill="#f48fb1" stroke="#ad1457" stroke-width="2"/><rect x="132" y="12" width="26" height="9" rx="3" fill="#90a4ae"/></g>
+  <g><rect x="244" y="64" width="12" height="40" rx="2" fill="#ffca28" stroke="#5d4037" stroke-width="1.5"/><path d="M244 104 L250 116 L256 104Z" fill="#f4c88a"/></g>
+  <g><circle cx="196" cy="20" r="12" fill="#4fc3f7" stroke="#01579b" stroke-width="2"/><path d="M190 20 h12 M196 14 v12" stroke="#fff" stroke-width="2"/></g>
+  <path d="M158 30 L174 92" stroke="#ff7043" stroke-width="2" stroke-dasharray="3 4"/>`,
+ snake:`<rect width="320" height="140" fill="#fffef7"/>${Array.from({length:21},(_,i)=>`<path d="M${i*16} 0 V140" stroke="#d8ecf7"/>`).join('')}${Array.from({length:9},(_,i)=>`<path d="M0 ${i*16} H320" stroke="#d8ecf7"/>`).join('')}
+  <path d="M40 104 H120 V56 H200 V88 H232" stroke="#43a047" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M40 104 H120 V56 H200 V88 H232" stroke="#66bb6a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 10"/>
+  <circle cx="236" cy="88" r="11" fill="#43a047"/><circle cx="240" cy="84" r="3" fill="#fff"/><circle cx="241" cy="84" r="1.5" fill="#111"/><path d="M246 90 l8 2 M246 90 l8 -2" stroke="#e53935" stroke-width="2"/>
+  <g transform="translate(276 88)"><circle r="10" fill="#e53935"/><path d="M0 -10 q2 -6 6 -7" stroke="#5d4037" stroke-width="2" fill="none"/><ellipse cx="5" cy="-13" rx="4" ry="2" fill="#7cb342"/><circle cx="-3" cy="-3" r="2.5" fill="#fff" opacity=".6"/></g>`
+};
+function arcArt(id){const a=ARC_ART[id];if(!a)return'';return`<svg class="arc-art" viewBox="0 0 320 140" aria-hidden="true"><defs><pattern id="arcHatch" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 8 L8 0" stroke="#fff" stroke-width="1"/></pattern></defs>${a}</svg>`}
 const AR={cv:null,stop:null,flap:null};
 function arcLeft(s){const a=state.settings.arcade;if(s.aDay!==today()){s.aDay=today();s.aPlays=0}return a.daily>0?Math.max(0,a.daily-s.aPlays):Infinity}
 const arcBest=(s,id)=>(s.arc&&s.arc[id]&&s.arc[id].best)||0;
@@ -1806,16 +1912,17 @@ function arcTop(id,classId,n){return state.students.filter(x=>(!classId||x.class
 function arcButtons(s,g,again){
   const a=state.settings.arcade,left=arcLeft(s),can=s.coins>=a.cost&&left>0,dis=can?'':'disabled',cost=`<span class="coin num">${a.cost}</span>`,sv=g.saves?hordeSave(s):null;
   const why=can?'':`<p class="muted">${left<=0?'You have used today\'s plays. Come back tomorrow.':`You need ${a.cost-s.coins} more coins.`}</p>`;
-  return`<div class="row" style="${again?'justify-content:center':''}"><button class="btn pri" data-a="arcPlay" data-v="${g.id}" ${dis}>${again?'Play again':'Play'} · ${cost}</button></div>${why}`;
+  return`<div class="row" style="justify-content:center"><button class="btn pri" data-a="arcPlay" data-v="${g.id}" ${dis}>${again?'Play again':'Play'} · ${cost}</button></div>${why}`;
 }
 /* ---------- live duels ---------- */
 const duelFee=()=>{const f=+((state.settings.arcade||{}).duelFee??5);return f>0?Math.floor(f):0};
 const feeTxt=()=>duelFee()?`Entry ${duelFee()} coins, and you get 1 back for every point you score.`:'Free to play.';
 const nameOf=sid=>{const x=S(sid);return x?x.name:'A classmate'};
 const first=sid=>nameOf(sid).split(' ')[0];
-function duelCardBits(s){
+function duelCardBits(s,compact){
   if(typeof duelReady!=='function'||!duelReady())return'';
   const n=duelOnline().filter(x=>!x.busy).length,r=s.duel||{w:0,l:0};
+  if(compact)return`<button class="btn sm duelbtn" data-a="duelOpen">Challenge a classmate${n?` <span class="dot-on">${n}</span>`:''}</button>`;
   return`<button class="btn duelbtn" data-a="duelOpen">⚔ Challenge a classmate${n?` <span class="dot-on">${n} online</span>`:''}</button><p class="muted small" style="margin:0">Live 1-on-1, first to 5. ${feeTxt()} Your record: <b class="num">${r.w||0}</b> W · <b class="num">${r.l||0}</b> L</p>`;
 }
 function miniAv(sid){const x=S(sid);return x?`<span class="miniav">${avatarSVG({...x.equip,head:x.equip.head},true).replace('viewBox="0 0 200 220"','viewBox="46 30 108 108"')}</span>`:'<span class="miniav"></span>'}
@@ -1896,10 +2003,11 @@ function sArcade(s){
   if(ui.arc&&ui.arc.phase==='play'){const gm=ARCADE.find(g=>g.id===ui.arc.id);return`<div class="arena"><div class="row" style="justify-content:space-between"><h3>${esc(gm.name)}</h3><button class="btn sm" data-a="arcQuit">${gm.saves?'Save and quit':'Give up'}</button></div><div id="arcstage" class="stage arc ${gm.tall?'tall':''}"></div><p class="muted" style="text-align:center">${esc(gm.hint)}</p></div>`}
   if(ui.arc&&ui.arc.phase==='over'){const gm=ARCADE.find(g=>g.id===ui.arc.id);return`<div class="arena" style="text-align:center"><h3 class="muted">${esc(gm.name)}</h3><p class="big num reveal">${ui.arc.score}</p><p class="muted">${esc(gm.unit)}${ui.arc.info?' · '+esc(ui.arc.info):''}</p><p class="${ui.arc.nb?'good':'muted'}">${ui.arc.nb?'New personal best':'Your best: '+arcBest(s,gm.id)}</p>${arcButtons(s,gm,true)}<div class="row" style="justify-content:center"><button class="btn" data-a="arcQuit">Back to the arcade</button></div>${lim?`<p class="muted">${lim}</p>`:''}</div>`}
   return`<div class="spread"><div><h2>Arcade</h2><p class="muted">Spend coins for one play. One play is one life. ${lim}</p></div><span class="pill"><span class="coin num">${s.coins}</span></span></div>
-  <div class="bgrid three">${games.map(g=>{const top=arcTop(g.id,s.classId,5);return`<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>${esc(g.name)}</h3><span class="muted">Your best: <b class="num">${arcBest(s,g.id)}</b></span></div><p class="muted">${esc(g.d)}</p>
-     <div class="feed">${top.map((x,i)=>`<div><span><b class="num">${i+1}</b> &nbsp;${esc(x.name)}</span><b class="num">${arcBest(x,g.id)}</b></div>`).join('')||'<p class="muted">No scores in your class yet. Set the first one.</p>'}</div>
-     ${arcButtons(s,g)}${g.id==='pong'?duelCardBits(s):''}</div>`}).join('')}
-   <div class="panel stack" style="border-style:dashed"><h3 class="muted">More games coming</h3><p class="muted">New cabinets get added here over time.</p></div></div>`;
+  <div class="arc-grid">${games.map(g=>{const top=arcTop(g.id,s.classId,1)[0];return`<div class="panel arc-card"><div class="arc-frame">${arcArt(g.id)}<button class="arc-info" data-a="arcInfo" data-v="${g.id}" aria-label="About ${esc(g.name)} and class scores">i</button></div>
+     <h3>${esc(g.name)}</h3><p class="muted arc-s">${esc(g.s||'')}</p>
+     <p class="arc-best"><span>Best <b class="num">${arcBest(s,g.id)}</b></span>${top&&arcBest(top,g.id)?`<span>Class <b class="num">${arcBest(top,g.id)}</b></span>`:''}</p>
+     <div class="arc-go">${arcButtons(s,g)}${g.id==='pong'?duelCardBits(s,true):''}</div></div>`}).join('')}
+   <div class="panel arc-card arc-soon"><h3 class="muted">More games coming</h3><p class="muted">New cabinets get added over time.</p></div></div>`;
 }
 function tArcade(){
   const a=state.settings.arcade;
@@ -2904,6 +3012,7 @@ function renderModal(){
   const m=ui.modal,el=document.getElementById('modal');if(!m){el.innerHTML='';return}
   let h='';
   if(m.type==='duel'||m.type==='invite'){el.innerHTML=`<div class="scrim" data-a="scrim"><div class="modal duelm" role="dialog" aria-modal="true">${m.type==='duel'?duelListSheet():inviteSheet()}</div></div>`;return}
+  if(m.type==='arcinfo'){const g=ARCADE.find(x=>x.id===m.id),st=S(ui.sId),top=arcTop(g.id,st.classId,5);el.innerHTML=`<div class="scrim" data-a="scrim"><div class="modal" role="dialog" aria-modal="true" aria-label="${esc(g.name)}"><div class="row" style="justify-content:space-between"><h3>${esc(g.name)}</h3><button class="btn sm" data-a="close">Close</button></div><div class="arc-frame" style="margin:0">${arcArt(g.id)}</div><p>${esc(g.d)}</p><p class="muted small">${esc(g.hint)}</p>${g.id==='pong'?`<p class="muted small">Live 1-on-1 duels: first to 5. ${feeTxt()}</p>`:''}<h3 style="margin-top:6px">Class top 5</h3><div class="feed">${top.map((x,i)=>`<div><span><b class="num">${i+1}</b> &nbsp;${esc(x.name)}</span><b class="num">${arcBest(x,g.id)}</b></div>`).join('')||'<p class="muted">No scores in your class yet. Set the first one.</p>'}</div></div></div>`;return}
   if(m.type==='shop'){el.innerHTML=`<div class="scrim" data-a="scrim"><div class="modal shopm" role="dialog" aria-modal="true" aria-label="Shop item">${shopSheet(m)}</div></div>`;return}
   if(m.type==='award'){
     const names=m.ids.length===1?esc(S(m.ids[0]).name):m.label||`${m.ids.length} students`;
@@ -3016,6 +3125,7 @@ const A={
   bossEnd(d){const b=bossOf(d.v);if(!b)return;const go=()=>{state.bosses=state.bosses.filter(x=>x!==b);save()};if(b.active)confirmBox('Call off '+BOSSES[b.k].n+'?','The boss disappears and nobody gets the reward.','Call it off',go);else{go();render()}},
   answer(d){answer(+d.v)},
   gquit(){leaveGame();render()},
+  arcInfo(d){ui.modal={type:'arcinfo',id:d.v};renderModal()},
   arcPlay(d){const s=S(ui.sId),a=state.settings.arcade,gm=ARCADE.find(x=>x.id===d.v);if(!s||!gm||a.off[gm.id]||s.coins<a.cost||arcLeft(s)<=0)return;
     arcStop();s.coins-=a.cost;s.aPlays=(s.aPlays||0)+1;s.arc=s.arc||{};const r=s.arc[gm.id]=s.arc[gm.id]||{best:0,plays:0};if(r.save)delete r.save;r.plays++;save();ui.arc={id:gm.id,phase:'play',m:d.m};render()},
   arcQuit(){arcStop();ui.arc=null;render()},
