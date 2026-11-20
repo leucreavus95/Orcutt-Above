@@ -322,7 +322,7 @@ function duelChannel(mid){
   on(m,s=>{if(!s.exists()&&ch.ev&&ch.ev.k!=='end')ch.gone=true});
   m.child('gone/'+me).onDisconnect().set(true);
   let lastT=0,lastV=-1;
-  ch.pad=v=>{const t=performance.now();if(t-lastT<60||Math.abs(v-lastV)<.003)return;lastT=t;lastV=v;m.child('p/'+me).set(Math.round(v*1000)/1000).catch(()=>{})};
+  ch.pad=v=>{const t=performance.now();if(t-lastT<35||Math.abs(v-lastV)<.003)return;lastT=t;lastV=v;m.child('p/'+me).set(Math.round(v*1000)/1000).catch(()=>{})};
   ch.emit=e=>{e.n=(ch.ev?ch.ev.n:0)+1;ch.ev=e;m.child('ev').set(e).catch(()=>{})};
   ch.leave=()=>m.child('gone/'+me).set(true).catch(()=>{});
   ch.close=(removeLater)=>{ch.offs.forEach(f=>f());ch.offs=[];try{m.child('gone/'+me).onDisconnect().cancel()}catch(e){}if(removeLater)setTimeout(()=>m.remove().catch(()=>{}),4000)};
