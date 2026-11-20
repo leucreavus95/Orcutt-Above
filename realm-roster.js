@@ -15,6 +15,11 @@ const RL_ROSTER=[
    hero:{n:'Thornwick',r:5,role:'def',spd:96,it:'shield',o:'armor',hg:'helm',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:15},
      ev:['Thornwick','Thornwick Wardbark','Elderhart, the Antlered Warden'],
      sk:[rlSk('Thornroot',{m:3.8,sc:'def',fx:[['slow',1,35]]}),rlSk('Barkward',{cd:4,tg:'aA',fx:[['shield',20,2],['defUp',2]]}),rlSk('Wildbloom',{cd:5,tg:'eA',m:2.3,sc:'def',fx:[['stun',1,25]]})]}}
+,
+  {id:'scarab',col:{c:'#e0a63a',l:'#fff1c8',d:'#5a3a10'},vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],
+   hero:{n:'Kheprin',r:4,role:'atk',spd:110,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:15},
+     ev:['Kheprin','Kheprin Dunehide','Kheprin, the Sun Scarab'],
+     sk:[rlSk('Dune Slash',{m:3.7,fx:[['defBreak',1,30]]}),rlSk("Scarab's Toll",{cd:3,m:2.1,h:2,fx:[['atkBreak',1,40]]}),rlSk('Sunstorm',{cd:5,tg:'eA',m:2.5,fx:[['slow',2,50]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

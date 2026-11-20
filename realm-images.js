@@ -36,6 +36,14 @@ const RL_ART={
            [{src:'art/thornwick-2c1.webp',ax:323,ay:603,h:560,w:613,ih:626},{src:'art/thornwick-2c2.webp',ax:338,ay:619,h:560,w:608,ih:636},{src:'art/thornwick-2c3.webp',ax:244,ay:542,h:560,w:659,ih:584}],
            [{src:'art/thornwick-3c1.webp',ax:251,ay:634,h:514,w:573,ih:645},{src:'art/thornwick-3c2.webp',ax:317,ay:630,h:514,w:648,ih:645},{src:'art/thornwick-3c3.webp',ax:298,ay:622,h:514,w:658,ih:645}]],
         spell:[0,1,2].map(()=>({kind:'roots',aoe:'bloom',support:'barkshield',vp:['#ffffff','#e3ffc9','#9ee35f','#3f7a23'],wood:['#8a6238','#5a3c1f'],hand:[70,150]}))},
+  // Kheprin, the desert scarab: one casting picture per skill, and painted effects per skill
+  scarab:{f:[{src:'art/scarab-1.webp',ax:144,ay:380,h:486,w:226,ih:396},{src:'art/scarab-2.webp',ax:210,ay:483,h:486,w:325,ih:488},{src:'art/scarab-3.webp',ax:191,ay:575,h:516,w:370,ih:582}],pose:'skill',
+        c:[[{src:'art/scarab-1c1.webp',ax:286,ay:423,h:528,w:643,ih:462},{src:'art/scarab-1c2.webp',ax:264,ay:466,h:528,w:609,ih:505},{src:'art/scarab-1c3.webp',ax:210,ay:477,h:528,w:613,ih:508}],
+           [{src:'art/scarab-2c1.webp',ax:379,ay:497,h:579,w:700,ih:540},{src:'art/scarab-2c2.webp',ax:400,ay:531,h:579,w:701,ih:574},{src:'art/scarab-2c3.webp',ax:406,ay:517,h:579,w:703,ih:560}],
+           [{src:'art/scarab-3c1.webp',ax:377,ay:571,h:704,w:703,ih:615},{src:'art/scarab-3c2.webp',ax:372,ay:636,h:704,w:703,ih:679},{src:'art/scarab-3c3.webp',ax:381,ay:652,h:704,w:703,ih:694}]],
+        spell:[{vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],hand:[60,112],bySkill:[{shot:'art/fx-sc-arc1.webp'},{shot:'art/fx-sc-coins.webp'},{burst:'art/fx-sc-burst1.webp',aoe:'erupt'}]},
+               {vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],hand:[70,124],bySkill:[{shot:'art/fx-sc-arc2.webp'},{shot:'art/fx-sc-spear.webp'},{burst:'art/fx-sc-wave2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],hand:[70,128],bySkill:[{shot:'art/fx-sc-sun.webp'},{shot:'art/fx-sc-swirl.webp'},{shot:'art/fx-sc-sparks.webp',aoe:'fan'}]}]},
 };
 (function(){
   const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.src=f.src})};preload();
@@ -348,4 +356,24 @@ function paintSupport(S,e){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.aura||p.
   vfxArtShot=function(h,tp,S,big){return S.paint?paintShot(h.x,h.y,tp.x,tp.y,S,paintScale(h),big,-18):oShot(h,tp,S,big)};
   rlArtSupport=function(S,e,sk){return S.paint&&(S.paint.aura||S.paint.sigil)?paintSupport(S,e):oSup(S,e,sk)};
   Object.values(RL_ART).forEach(A=>(A.spell||[]).forEach(S=>S&&S.paint&&['shot','burst','sigil','aura'].forEach(k=>S.paint[k]&&artImg(S.paint[k]))));
+})();
+
+/* per-skill painted effects, and two more area styles: 'erupt' (bursts up under each enemy)
+   and 'sweep' (one wave rolls across the whole enemy line) */
+function paintErupt(pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst||p.shot);
+  return Promise.all(pts.map((q,i)=>new Promise(res=>{let t=-i*.08/sp,hit=false;const life=.7/sp,foot=q.y+q.h*.45;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}const g=Math.min(1,k/.25),a=k<.6?1:1-(k-.6)/.4;
+      if(!hit&&k>.15){hit=true;for(let j=0;j<16;j++)vfxP({x:q.x+vR(-q.w/3,q.w/3),y:foot,vx:vR(-120,120),vy:vR(-320,-120),ay:700,life:vR(.4,.7),s:vR(2,5),c:rlRand(P),shape:'sq',vr:8,glow:false});res()}
+      if(img){const w=q.w*1.3,H=w*img.naturalHeight/img.naturalWidth*(1-Math.pow(1-g,3));c.save();c.globalAlpha=a;c.drawImage(img,q.x-w/2,foot-H,w,H);c.restore()}}})})))}
+function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst||p.shot),x0=Math.min(...pts.map(q=>q.x-q.w)),x1=Math.max(...pts.map(q=>q.x+q.w)),yb=Math.max(...pts.map(q=>q.y+q.h*.45)),Hh=Math.max(...pts.map(q=>q.h))*1.25,dur=.6/sp;
+  return new Promise(res=>{let t=0;const hit=new Set();VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/dur),x=x0+(x1-x0)*k,a=k<.8?1:1-(k-.8)/.2;
+    if(img){const w=Hh*img.naturalWidth/img.naturalHeight;c.save();c.globalAlpha=a;c.drawImage(img,x-w/2,yb-Hh,w,Hh);c.restore()}
+    if(Math.random()<.9)vfxP({x:x+vR(-20,20),y:yb-vR(0,Hh*.6),vx:vR(40,160),vy:vR(-120,20),ay:300,life:vR(.3,.6),s:vR(2,5),c:rlRand(P),shape:'sq',vr:6,glow:false});
+    pts.forEach((q,i)=>{if(!hit.has(i)&&x>=q.x){hit.add(i);paintBurst(q.x,q.y,Object.assign({},S,{paint:{shot:p.burst||p.shot}}),1.2,false)}});
+    if(hit.size>=pts.length&&!this.r){this.r=1;res()}if(k>=1){this.done=true;if(!this.r)res()}}})})}
+(function(){const prev=rlArtFire,prevSup=rlArtSupport;
+  rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0];S=Object.assign({},S,{paint:p,bySkill:null});
+      if(sk.tg==='eA'&&(p.aoe==='erupt'||p.aoe==='sweep')){const h=rlArtHand(S);const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;return p.aoe==='erupt'?paintErupt(pts,S):paintSweep(h,pts,S)}}
+    return prev(S,e,sk,ult)};
+  Object.values(RL_ART).forEach(A=>(A.spell||[]).forEach(S=>S&&S.bySkill&&S.bySkill.forEach(p=>['shot','burst','sigil','aura'].forEach(k=>p[k]&&artImg(p[k])))));
 })();
