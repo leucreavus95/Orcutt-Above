@@ -29,6 +29,13 @@ const RL_ART={
         spell:[{kind:'needle',aoe:'starfall',support:'winds',vp:['#ffffff','#dffff5','#7fe8c8','#1f8c78'],hand:[61,106]},
                {kind:'needle',aoe:'starfall',support:'winds',vp:['#ffffff','#fff1c8','#ffcf5a','#3fae98'],hand:[55,125]},
                {kind:'needle',aoe:'starfall',support:'winds',vp:['#ffffff','#e9defc','#b28cff','#2b1d44'],hand:[70,139]}]},
+  // Thornwick: each casting picture belongs to one skill (attack, shield, special),
+  // so he takes the pose of the skill he is using instead of playing a sequence.
+  thornwick:{f:[{src:'art/thornwick-1.webp',ax:140,ay:409,h:490,w:254,ih:422},{src:'art/thornwick-2.webp',ax:199,ay:588,h:490,w:361,ih:595},{src:'art/thornwick-3.webp',ax:201,ay:598,h:520,w:375,ih:604}],pose:'skill',
+        c:[[{src:'art/thornwick-1c1.webp',ax:348,ay:556,h:598,w:652,ih:574},{src:'art/thornwick-1c2.webp',ax:240,ay:526,h:598,w:459,ih:539},{src:'art/thornwick-1c3.webp',ax:218,ay:508,h:598,w:613,ih:521}],
+           [{src:'art/thornwick-2c1.webp',ax:323,ay:603,h:560,w:613,ih:626},{src:'art/thornwick-2c2.webp',ax:338,ay:619,h:560,w:608,ih:636},{src:'art/thornwick-2c3.webp',ax:244,ay:542,h:560,w:659,ih:584}],
+           [{src:'art/thornwick-3c1.webp',ax:251,ay:634,h:514,w:573,ih:645},{src:'art/thornwick-3c2.webp',ax:317,ay:630,h:514,w:648,ih:645},{src:'art/thornwick-3c3.webp',ax:298,ay:622,h:514,w:658,ih:645}]],
+        spell:[0,1,2].map(()=>({kind:'roots',aoe:'bloom',support:'barkshield',vp:['#ffffff','#e3ffc9','#9ee35f','#3f7a23'],wood:['#8a6238','#5a3c1f'],hand:[70,150]}))},
 };
 (function(){
   const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.src=f.src})};preload();
@@ -65,7 +72,11 @@ const aEase=k=>k<0?0:k>1?1:k*k*(3-2*k),aBack=k=>{k=Math.min(1,Math.max(0,k));con
 function artPose(st,now,speed){ // the figure's shape at this moment
   const t=(now+st.ph)/1000,P={lean:0,sy:1,sx:1,chest:0,sway:0,drift:0,glow:0,pose:0,ring:0};
   if(!STILL){P.chest=.014*Math.sin(t*2.2);P.sy=1+.007*Math.sin(t*2.2);P.sway=1.7;P.drift=1.3*Math.sin(t*.8)}
-  if(st.cast>=0&&st.frames){const T=(now-st.cast)*speed,C=CAST_T;
+  if(st.cast>=0&&st.frames&&st.mode==='skill'){const T=(now-st.cast)*speed,i=Math.max(0,Math.min(2,st.sk|0));
+    if(T>=1150)st.cast=-1;else{const fi=Math.min(1,T/90),fo=T>1000?Math.min(1,(T-1000)/150):0;
+      P.seq=fo>0?[[i,1-fo],[-1,fo]]:fi<1?[[-1,1-fi],[i,fi]]:[[i,1]];P.pulse=T>200&&T<700?.02*Math.sin((T-200)/40):0;P.kick=T>480&&T<900?Math.exp(-(T-480)/140):0;
+      P.ring=Math.min(1,T/120)*(1-fo);P.glow=0}}
+  else if(st.cast>=0&&st.frames){const T=(now-st.cast)*speed,C=CAST_T;
     if(T>=C[8])st.cast=-1;else{const seg=(a,b)=>Math.min(1,Math.max(0,(T-C[a])/(C[b]-C[a])));
       P.seq=T<C[1]?[[-1,1-seg(0,1)],[0,seg(0,1)]]:T<C[2]?[[0,1]]:T<C[3]?[[0,1-seg(2,3)],[1,seg(2,3)]]:T<C[4]?[[1,1]]:T<C[5]?[[1,1-seg(4,5)],[2,seg(4,5)]]:T<C[6]?[[2,1]]:T<C[7]?[[2,1-seg(6,7)],[-1,seg(6,7)]]:[[-1,1]];
       P.pulse=T>C[3]&&T<C[5]?.025*Math.sin((T-C[3])/30):0;P.kick=T>C[5]&&T<C[6]?Math.exp(-(T-C[5])/120):0;
@@ -89,8 +100,8 @@ function artDraw(cv,now){
   let st=ART_ST.get(cv);if(!st){st={ph:Math.random()*9000,cast:-1,hit:-1,dash:-1,buf:document.createElement('canvas')};ART_ST.set(cv,st);
     // the battle re-adds these classes within one frame, so watch each change
     const watch=(el,cls,key)=>{if(!el)return;new MutationObserver(rs=>{for(const r of rs)if(!(r.oldValue||'').split(' ').includes(cls)&&el.classList.contains(cls)){st[key]=performance.now();break}}).observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true})};
-    watch(spr,'cast','cast');watch(unit,'hit','hit');watch(spr,'dash','dash')}
-  st.dashOn=!!(spr&&spr.classList.contains('dash'));st.frames=!!(FR&&FR.every(f=>artImg(f.src)));
+    watch(spr,'cast','cast');new MutationObserver(()=>{if(spr&&spr.dataset.sk!=null)st.sk=+spr.dataset.sk}).observe(spr,{attributes:true,attributeFilter:['data-sk']});if(spr&&spr.dataset.sk!=null)st.sk=+spr.dataset.sk;watch(unit,'hit','hit');watch(spr,'dash','dash')}
+  st.dashOn=!!(spr&&spr.classList.contains('dash'));st.mode=A.pose||'seq';st.frames=!!(FR&&FR.every(f=>artImg(f.src)));
   const P=artPose(st,now,speed),E=RL_EL[RL_H[id].el],t=(now+st.ph)/1000;
   const sc=cw/AW,buf=st.buf;if(buf.width!==cw||buf.height!==ch){buf.width=cw;buf.height=ch}
   const g=buf.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cw,ch);g.setTransform(sc,0,0,sc,-AX0*sc,-AY0*sc);
@@ -122,6 +133,8 @@ function rlArtSpell(u){const A=RL_ART[u.id];if(!A||!A.spell)return null;const st
 function rlArtHand(S){const f=rlbPt(S.uid,'foot');if(!f)return null;const d=S.side?-1:1,k=f.w/240;return{x:f.x+d*S.hand[0]*k,y:f.y-(12+S.hand[1])*k,d,k}}
 async function rlArtFire(S,e,sk,ult){const h=rlArtHand(S);if(!h)return;const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;
   if(sk.tg==='eA'&&S.aoe==='starfall')return vfxStarfall(h,pts,S);
+  if(sk.tg==='eA'&&S.aoe==='bloom')return vfxBloom(h,e.t,S);
+  if(S.kind==='roots')return Promise.all(e.t.map((t,i)=>new Promise(r=>setTimeout(()=>vfxRoots(h,S.uid,t,S).then(r),i*90/vSp()))));
   const n=sk.tg==='eA'?1:Math.min(3,sk.h||1),sp=vSp(),jobs=[];
   for(const tp of pts)for(let i=0;i<n;i++)jobs.push(new Promise(r=>setTimeout(()=>vfxArtShot(h,tp,S,ult).then(r),(i*110+pts.indexOf(tp)*60)/sp)));
   await Promise.all(jobs)}
@@ -197,10 +210,53 @@ function vfxStarfall(h,pts,S){const P=S.vp,sp=vSp(),K=Math.max(1,h.k*2.2),sky=pt
           for(let j=0;j<16;j++){const an=-Math.PI*vR(.1,.9),v=vR(120,300)*K;vfxP({x:q.x,y:q.y,vx:Math.cos(an)*v,vy:Math.sin(an)*v,ay:600,life:vR(.35,.7),s:vR(2,4)*K,c:rlRand(P),shape:'star',vr:8})}}});
       c.restore();if(hit>=sky.length&&fade<=0){this.done=true}if(hit>=sky.length&&!this.r){this.r=1;res()}}})})}
 // skill 2: wind ribbons wrap each ally, with a compass ring at their feet
-function rlArtSupport(S,e,sk){const P=S.vp,sp=vSp();e.t.forEach((uid,n)=>{const q=rlbPt(uid,'foot');if(!q)return;const K=q.w/240,cx=q.x,base=q.y,top=q.y-q.h*.85;let t=-n*.06/sp;
+function rlArtSupport(S,e,sk){if(S.support==='barkshield')return rlArtSupportBark(S,e);const P=S.vp,sp=vSp();e.t.forEach((uid,n)=>{const q=rlbPt(uid,'foot');if(!q)return;const K=q.w/240,cx=q.x,base=q.y,top=q.y-q.h*.85;let t=-n*.06/sp;
   VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const life=.85/sp,k=t/life;if(k>=1){this.done=true;return}const a=Math.sin(Math.PI*Math.min(1,k));
     c.save();c.globalCompositeOperation='lighter';
     c.globalAlpha=.7*a;c.strokeStyle=P[2];c.lineWidth=2*K;c.save();c.translate(cx,base);c.scale(1,.28);c.beginPath();c.arc(0,0,62*K,0,6.283);c.stroke();c.rotate(-t*3);c.fillStyle=P[1];for(let i=0;i<4;i++){c.rotate(Math.PI/2);c.beginPath();c.moveTo(0,-74*K);c.lineTo(6*K,-56*K);c.lineTo(-6*K,-56*K);c.closePath();c.fill()}c.restore();
     for(let r=0;r<2;r++){c.globalAlpha=.85*a;c.strokeStyle=r?P[1]:P[2];c.lineWidth=(r?3:5)*K;c.beginPath();
       for(let i=0;i<=40;i++){const v=i/40,y=base-(base-top)*v*Math.min(1,k*1.6),ang=v*9+t*9*(r?1:-1)+r*Math.PI;const x=cx+Math.cos(ang)*48*K*(1-v*.35);i?c.lineTo(x,y+Math.sin(ang)*8*K):c.moveTo(x,y+Math.sin(ang)*8*K)}c.stroke()}
     c.restore();if(Math.random()<.5)vfxP({x:cx+vR(-40,40)*K,y:base-vR(0,1)*(base-top),vx:vR(-30,30),vy:vR(-140,-60),life:vR(.3,.6),s:vR(3,6)*K,c:rlRand(P),shape:'leaf',vr:vR(-8,8)})}})})}
+
+/* ---------- Thornwick's magic ---------- */
+// skill 1: a glowing crack races along the ground, then thorned roots burst up around the target
+function vfxRoots(h,uid,tid,S){const P=S.vp,W=S.wood,sp=vSp(),a=rlbPt(uid,'foot'),b=rlbPt(tid,'foot');if(!a||!b)return Promise.resolve();
+  const K=Math.max(1,b.w/150),run=.26/sp,grow=.18/sp,hold=.22/sp,back=.2/sp,path=[];
+  const N=18;for(let i=0;i<=N;i++){const k=i/N;path.push([a.x+(b.x-a.x)*k+(i&&i<N?vR(-6,6):0),a.y+(b.y-a.y)*k+(i&&i<N?vR(-5,5):0)])}
+  const spikes=Array.from({length:6},(_,i)=>({dx:(i-2.5)*14*K+vR(-5,5),h:vR(55,95)*K,w:vR(9,14)*K,lean:(i-2.5)*.12+vR(-.1,.1)}));
+  return new Promise(res=>{let t=0,hit=false;VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/run);
+    c.save();c.globalCompositeOperation='lighter';c.globalAlpha=Math.max(0,1-Math.max(0,t-run-grow-hold)/.3);c.strokeStyle=P[2];c.lineWidth=4;c.lineCap='round';c.beginPath();
+    const n=Math.max(1,Math.round(k*N));path.slice(0,n+1).forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();c.strokeStyle=P[1];c.lineWidth=1.5;c.stroke();c.restore();
+    if(k<1&&Math.random()<.8){const[x,y]=path[n];vfxP({x,y,vx:vR(-60,60),vy:vR(-160,-60),ay:500,life:vR(.3,.5),s:vR(2,4),c:rlRand(W),shape:'sq',vr:8,glow:false})}
+    const t2=t-run;if(t2>0){const g=t2<grow?1-Math.pow(1-t2/grow,3):t2<grow+hold?1:Math.max(0,1-(t2-grow-hold)/back);
+      if(!hit){hit=true;for(let i=0;i<18;i++)vfxP({x:b.x+vR(-40,40)*K,y:b.y,vx:vR(-120,120),vy:vR(-320,-120),ay:700,life:vR(.4,.7),s:vR(3,6),c:rlRand(W),shape:'sq',vr:10,glow:false});for(let i=0;i<10;i++)vfxP({x:b.x+vR(-30,30)*K,y:b.y-vR(10,60)*K,vx:vR(-80,80),vy:vR(-160,-40),life:vR(.4,.8),s:vR(4,7)*K,c:rlRand(P),shape:'leaf',vr:vR(-8,8)});res()}
+      for(const s of spikes){const H=s.h*g,x0=b.x+s.dx,y0=b.y+4;c.save();c.translate(x0,y0);c.rotate(s.lean);
+        const gr=c.createLinearGradient(0,0,0,-H);gr.addColorStop(0,W[1]);gr.addColorStop(.7,W[0]);gr.addColorStop(1,P[2]);c.fillStyle=gr;c.beginPath();c.moveTo(-s.w/2,0);c.quadraticCurveTo(-s.w*.4,-H*.5,0,-H);c.quadraticCurveTo(s.w*.4,-H*.5,s.w/2,0);c.closePath();c.fill();
+        c.fillStyle=W[1];for(let j=1;j<4;j++){const y=-H*j/4.2,sd=j%2?1:-1;c.beginPath();c.moveTo(sd*s.w*.3*(1-j/4),y);c.lineTo(sd*s.w*.9,y-6*K);c.lineTo(sd*s.w*.2*(1-j/4),y-4*K);c.fill()}
+        c.globalCompositeOperation='lighter';c.fillStyle=P[1];c.globalAlpha=.8;c.beginPath();c.arc(0,-H,3*K,0,6.283);c.fill();c.restore()}
+      if(t2>grow+hold+back)this.done=true}}})})}
+// skill 3: a ribbon of glowing pollen sweeps the field, then a great flower blooms under every enemy
+function vfxBloom(h,ids,S){const P=S.vp,sp=vSp(),pts=ids.map(t=>rlbPt(t,'foot')).filter(Boolean);if(!pts.length)return Promise.resolve();
+  const K=Math.max(1,pts[0].w/150),sweep=.4/sp,open=.28/sp,hold=.2/sp;
+  const far=pts.reduce((m,q)=>q.x>m.x?q:m,pts[0]);
+  return new Promise(res=>{let t=0,hit=false;VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/sweep);
+    if(k<1){for(let i=0;i<4;i++){const u=Math.max(0,k-i*.03),x=h.x+(far.x+60-h.x)*u,y=h.y+(far.y-30-h.y)*u-Math.sin(u*Math.PI)*120*K;vfxP({x:x+vR(-8,8),y:y+vR(-8,8),vx:vR(-40,40),vy:vR(-40,40),life:vR(.3,.7),s:vR(2,4)*K,c:rlRand(P),shape:i%2?'star':'c',vr:6})}}
+    const t2=t-sweep;if(t2>0){const g=Math.min(1,t2/open),e=1-Math.pow(1-g,3),fade=Math.max(0,1-Math.max(0,t2-open-hold)/.25);
+      for(const q of pts){c.save();c.translate(q.x,q.y-6*K);c.scale(1,.5);c.rotate(t2*1.4);c.globalAlpha=fade;
+        for(let ring=0;ring<2;ring++){const n=ring?6:8,R=(ring?52:80)*K*e;for(let i=0;i<n;i++){c.save();c.rotate(i/n*6.283+(ring?.4:0));const gr=c.createLinearGradient(0,0,0,-R);gr.addColorStop(0,P[3]);gr.addColorStop(.45,ring?'#fff3c6':P[2]);gr.addColorStop(1,ring?'#ffffff':'#f4ffd8');c.fillStyle=gr;c.strokeStyle=S.wood[1];c.lineWidth=2;c.beginPath();c.ellipse(0,-R*.55,R*.24,R*.55,0,0,6.283);c.fill();c.stroke();c.restore()}}
+        c.globalCompositeOperation='lighter';const cg=c.createRadialGradient(0,0,0,0,0,18*K);cg.addColorStop(0,'#fff8c4');cg.addColorStop(.5,'#ffd24a');cg.addColorStop(1,'rgba(255,200,60,0)');c.fillStyle=cg;c.beginPath();c.arc(0,0,26*K*e,0,6.283);c.fill();c.restore()}
+      if(g>=1&&!hit){hit=true;for(const q of pts){vfxP({x:q.x,y:q.y-20*K,life:.4,s:8*K,grow:200*K,c:P[2],shape:'shock'});for(let i=0;i<22;i++){const a=-Math.PI*vR(.05,.95),v=vR(120,320)*K;vfxP({x:q.x,y:q.y-10*K,vx:Math.cos(a)*v,vy:Math.sin(a)*v,ay:380,drag:.97,life:vR(.5,.9),s:vR(4,8)*K,c:rlRand(P),shape:'leaf',vr:vR(-10,10)})}}res()}
+      if(fade<=0)this.done=true}}})})}
+// skill 2: leaves gather in front of each ally and lock into a glowing leaf-shield
+function rlArtSupportBark(S,e){const P=S.vp,W=S.wood,sp=vSp();e.t.forEach((uid,n)=>{const q=rlbPt(uid);if(!q)return;const K=q.w/240,d=1,cx=q.x+q.w*.22*d,cy=q.y;let t=-n*.07/sp;
+  const leaves=Array.from({length:12},()=>({a:vR(0,6.283),r:vR(90,150)*K,o:vR(-.4,.4)}));
+  VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const gather=.3/sp,hold=.55/sp,out=.25/sp;if(t>gather+hold+out){this.done=true;return}
+    c.save();c.globalCompositeOperation='lighter';
+    if(t<gather){const k=t/gather;for(const L of leaves){const r=L.r*(1-k),x=cx+Math.cos(L.a+k*2)*r,y=cy+Math.sin(L.a+k*2)*r*.8;c.save();c.translate(x,y);c.rotate(L.a+k*4);c.fillStyle=P[2];c.globalAlpha=.9;c.beginPath();c.ellipse(0,0,9*K,4*K,0,0,6.283);c.fill();c.restore()}}
+    else{const k=Math.min(1,(t-gather)/(.12/sp)),fade=t>gather+hold?1-(t-gather-hold)/out:1,pop=1+.18*Math.sin(Math.min(1,k)*Math.PI),Hh=q.h*.42*pop,Ww=q.w*.2*pop;
+      c.globalAlpha=.75*fade;const gr=c.createLinearGradient(cx,cy-Hh,cx,cy+Hh);gr.addColorStop(0,P[1]);gr.addColorStop(.5,P[2]);gr.addColorStop(1,P[3]);c.fillStyle=gr;
+      c.beginPath();c.moveTo(cx,cy-Hh);c.quadraticCurveTo(cx+Ww*1.6,cy,cx,cy+Hh);c.quadraticCurveTo(cx-Ww*1.6,cy,cx,cy-Hh);c.fill();
+      c.globalAlpha=fade;c.strokeStyle=W[0];c.lineWidth=3*K+1;c.stroke();c.strokeStyle=P[0];c.lineWidth=1.5;c.beginPath();c.moveTo(cx,cy-Hh*.9);c.lineTo(cx,cy+Hh*.9);
+      for(let i=-2;i<=2;i++){const y=cy+i*Hh*.3;c.moveTo(cx,y);c.lineTo(cx+Ww*.8,y-Hh*.15);c.moveTo(cx,y);c.lineTo(cx-Ww*.8,y-Hh*.15)}c.stroke();
+      const sh=(t*2.2)%1;c.globalAlpha=.6*fade*(1-sh);c.strokeStyle=P[1];c.lineWidth=2;c.beginPath();c.ellipse(cx,cy,Ww*(1+sh*1.5),Hh*(1+sh*.5),0,0,6.283);c.stroke()}
+    c.restore()}})})}
