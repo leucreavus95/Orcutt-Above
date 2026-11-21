@@ -10,6 +10,15 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Milo (spear farmhand, chibi). Frames per form are [Spear Thrust, Winding Sweep, Skycharge]:
+  // thrust and skycharge are lunges (each in its own pose), the sweep swings across the enemy line.
+  lance:{zoom:.55,eyeY:95,f:[{src:'art/lance-1.webp',ax:206,ay:587,h:583,w:486,ih:588,ht:1,cx:240,fy:140},{src:'art/lance-2.webp',ax:211,ay:587,h:583,w:488,ih:588,ht:1,cx:245,fy:140},{src:'art/lance-3.webp',ax:211,ay:587,h:583,w:520,ih:588,ht:1,cx:245,fy:140}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'spear',
+        c:[[{src:'art/lance-1c1.webp',ax:123,ay:338,h:337,w:408,ih:338,ht:2},{src:'art/lance-1c2.webp',ax:149,ay:342,h:337,w:412,ih:342,ht:2},{src:'art/lance-1c3.webp',ax:185,ay:333,h:337,w:425,ih:339,ht:2}],
+           [{src:'art/lance-2c1.webp',ax:134,ay:342,h:337,w:421,ih:342,ht:1},{src:'art/lance-2c2.webp',ax:156,ay:343,h:337,w:425,ih:343,ht:1},{src:'art/lance-2c3.webp',ax:185,ay:334,h:337,w:438,ih:340,ht:2}],
+           [{src:'art/lance-3c1.webp',ax:136,ay:342,h:337,w:455,ih:342,ht:1},{src:'art/lance-3c2.webp',ax:159,ay:343,h:337,w:438,ih:343,ht:3},{src:'art/lance-3c3.webp',ax:185,ay:337,h:337,w:448,ih:343,ht:2}]],
+        spell:[{vp:['#ffffff','#eef2e6','#b8c4a8','#4a5a3a'],hand:[150,140],bySkill:[null,{burst:'art/fx-lance-sweep1.webp',aoe:'sweep'},null]},
+               {vp:['#ffffff','#eef2e6','#b8c4a8','#4a5a3a'],hand:[150,140],bySkill:[null,{burst:'art/fx-lance-sweep2.webp',aoe:'sweep'},null]},
+               {vp:['#ffffff','#eef2e6','#b8c4a8','#4a5a3a'],hand:[150,140],bySkill:[null,{burst:'art/fx-lance-sweep3.webp',aoe:'sweep'},null]}]},
   // Wren (ranger, chibi). Frames per form are [Charged Arrow, Triple-Shot, Arrow Rain].
   bow:{zoom:.55,eyeY:95,f:[{src:'art/bow-1.webp',ax:222,ay:551,h:545,w:471,ih:550,ht:3,cx:215,fy:140},{src:'art/bow-2.webp',ax:218,ay:559,h:545,w:496,ih:560,ht:4,cx:215,fy:140},{src:'art/bow-3.webp',ax:271,ay:582,h:545,w:598,ih:583,ht:3,cx:300,fy:150}],pose:'skill',
         c:[[{src:'art/bow-1c1.webp',ax:156,ay:370,h:354,w:470,ih:370,ht:2},{src:'art/bow-1c2.webp',ax:156,ay:360,h:354,w:470,ih:359,ht:3},{src:'art/bow-1c3.webp',ax:214,ay:369,h:354,w:453,ih:374,ht:3}],
@@ -135,7 +144,7 @@ function artPose(st,now,speed){ // the figure's shape at this moment
     if(T>=1150)st.cast=-1;else{const fi=Math.min(1,T/90),fo=T>1000?Math.min(1,(T-1000)/150):0;
       P.seq=fo>0?[[i,1-fo],[-1,fo]]:fi<1?[[-1,1-fi],[i,fi]]:[[i,1]];P.pulse=T>200&&T<700?.02*Math.sin((T-200)/40):0;P.kick=T>480&&T<900?Math.exp(-(T-480)/140):0;
       P.ring=Math.min(1,T/120)*(1-fo);P.glow=0}}
-  else if(st.dashOn&&st.frames&&st.dashPose!=null){P.seq=[[st.dashPose,1]];P.lean=0}
+  else if(st.dashOn&&st.frames&&st.dashPose!=null){P.seq=[[Array.isArray(st.dashPose)?st.dashPose[st.sk||0]:st.dashPose,1]];P.lean=0}
   else if(st.cast>=0&&st.frames){const T=(now-st.cast)*speed,C=CAST_T;
     if(T>=C[8])st.cast=-1;else{const seg=(a,b)=>Math.min(1,Math.max(0,(T-C[a])/(C[b]-C[a])));
       P.seq=T<C[1]?[[-1,1-seg(0,1)],[0,seg(0,1)]]:T<C[2]?[[0,1]]:T<C[3]?[[0,1-seg(2,3)],[1,seg(2,3)]]:T<C[4]?[[1,1]]:T<C[5]?[[1,1-seg(4,5)],[2,seg(4,5)]]:T<C[6]?[[2,1]]:T<C[7]?[[2,1-seg(6,7)],[-1,seg(6,7)]]:[[-1,1]];

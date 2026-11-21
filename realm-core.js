@@ -231,6 +231,7 @@ function rlAct(B,u,i,tid,power){
         let def=rlEff(t,'def')*(1-(s.ign||0));d*=1000/(1140+3.5*RL_SQ*def);
         if(adv>0)d*=1.3;if(adv<0)d*=.75;
         if(s.exec&&t.hp<t.maxHp*.5)d*=1+s.exec; // Finisher
+        if(s.opener&&t.hp>=t.maxHp)d*=1+s.opener; // Opening strike
         if(s.vsDaze&&rlHas(t,'daze'))d*=1+s.vsDaze;
         if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;
         if(u.tempo)d*=1+.1*u.tempo+(s.crescendo?s.crescendo*u.tempo:0); // Tempo: +10% per beat; Crescendo spends it big
