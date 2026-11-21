@@ -229,6 +229,7 @@ function rlAct(B,u,i,tid,power){
     for(const t of tg){if(!t.alive)continue;
       const adv=rlAdv(u.el,t.el);
       for(let h=0;h<(s.h||1);h++){if(!t.alive)break;
+        if(rlHas(u,'blind')&&Math.random()<.4){ev.push({k:'miss',u:t.uid});continue} // Blinded
         let base=s.sc==='def'?rlEff(u,'def'):s.sc==='hp'?u.maxHp*2:rlEff(u,'atk');
         let d=base*s.m*bonus*pw;
         let def=rlEff(t,'def')*(1-(s.ign||0));d*=1000/(1140+3.5*RL_SQ*def);

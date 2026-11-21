@@ -102,7 +102,15 @@ const RL_ROSTER=[
      ev:['Pip','Pip Capwise','Pip, the Sporeguard'],
      sk:[rlSk('Pebble Flick',{m:3.2,fx:[['atkBreak',1,25]]}),
          rlSk('Spore Puff',{cd:3,m:2.4,fx:[['drowsy',2,70]]}),
-         rlSk('Spore Burst',{cd:4,tg:'eA',m:1.5,fx:[['drowsy',2,45],['team','healT',8]]})]}}
+         rlSk('Spore Burst',{cd:4,tg:'eA',m:1.5,fx:[['drowsy',2,45],['team','healT',8]]})]}},
+  // Digby, the mole digger (chibi art). Uncommon. A tunneler: his shovel cracks armor, a dirt clod to the
+  // face Blinds (attacks may miss), and he burrows under an enemy to burst up beneath them.
+  {id:'mole',col:{c:'#e0a13a',l:'#fff1d6',d:'#3a2614'},vp:['#fff1d6','#e0b07a','#9a6a3a','#4a2e18'],
+   hero:{n:'Digby',r:2,role:'def',spd:100,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:10},
+     ev:['Digby','Digby Deepdelve','Digby, the Tunnel Captain'],
+     sk:[rlSk('Shovel Jab',{m:3.3,sc:'def',fx:[['defBreak',1,30]]}),
+         rlSk('Dirt-Clod Toss',{cd:3,m:2.4,sc:'def',fx:[['blind',2,70]]}),
+         rlSk('Burrow Burst',{cd:4,m:3.6,sc:'def',ign:.5,fx:[['stun',1,35],['self','defUp',2]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

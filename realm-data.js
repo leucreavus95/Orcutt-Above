@@ -38,6 +38,7 @@ const RL_FX={
   burn:{n:'Burn',c:'#ff6a3d',g:'≈',d:'Takes 6% max HP each turn'},
   seal:{n:'Seal',c:'#a46bff',g:'⊘',d:'Can only use its first skill'},
   mark:{n:'Mark',c:'#ff7eb6',g:'◎',d:'Takes 25% more damage'},
+  blind:{n:'Blinded',c:'#9a6a3a',g:'◌',d:'Dirt in the eyes: its attacks have a 40% chance to miss'},
   drowsy:{n:'Drowsy',c:'#d9b98a',g:'z',d:'35% chance to doze off and lose its turn'},
   chill:{n:'Chill',c:'#7cc4ff',g:'❄',d:'Stacks up to 3: at 3 Chill it freezes solid and skips a turn'},
   rime:{n:'Rune Ward',buff:1,c:'#7cc4ff',g:'❖',d:'Enemies that hit it get Chilled'},

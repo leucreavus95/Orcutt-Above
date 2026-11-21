@@ -10,6 +10,16 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Digby (mole digger, chibi). Frames per form are [Shovel Jab, Dirt-Clod Toss, Burrow Burst]:
+  // the jab and the burrow are lunges (each in its own pose); the burrow erupts dirt under the target.
+  mole:{zoom:.3,eyeY:110,f:[{src:'art/mole-1.webp',ax:199,ay:471,h:466,w:483,ih:473,ht:2,cx:285,fy:190},{src:'art/mole-2.webp',ax:203,ay:479,h:466,w:488,ih:481,ht:2,cx:290,fy:190},{src:'art/mole-3.webp',ax:201,ay:477,h:466,w:481,ih:479,ht:2,cx:285,fy:190}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'dirt',
+        impactSk:[null,null,true],
+        c:[[{src:'art/mole-1c1.webp',ax:136,ay:330,h:327,w:365,ih:332,ht:2},{src:'art/mole-1c2.webp',ax:137,ay:333,h:327,w:392,ih:334,ht:3},{src:'art/mole-1c3.webp',ax:173,ay:223,h:327,w:366,ih:226,ht:3}],
+           [{src:'art/mole-2c1.webp',ax:138,ay:334,h:327,w:373,ih:336,ht:2},{src:'art/mole-2c2.webp',ax:141,ay:335,h:327,w:400,ih:336,ht:3},{src:'art/mole-2c3.webp',ax:195,ay:224,h:327,w:387,ih:227,ht:3}],
+           [{src:'art/mole-3c1.webp',ax:142,ay:339,h:327,w:384,ih:340,ht:1},{src:'art/mole-3c2.webp',ax:147,ay:338,h:327,w:418,ih:339,ht:2},{src:'art/mole-3c3.webp',ax:200,ay:236,h:327,w:399,ih:239,ht:3}]],
+        spell:[{vp:['#fff1d6','#e0b07a','#9a6a3a','#4a2e18'],hand:[170,150],bySkill:[null,{shot:'art/fx-mole-clod1.webp',sz:.7},null]},
+               {vp:['#fff1d6','#e0b07a','#9a6a3a','#4a2e18'],hand:[170,150],bySkill:[null,{shot:'art/fx-mole-clod2.webp',sz:.7},null]},
+               {vp:['#fff1d6','#e0b07a','#9a6a3a','#4a2e18'],hand:[170,150],bySkill:[null,{shot:'art/fx-mole-clod3.webp',sz:.7},null]}]},
   // Pip (mushroom scout, chibi). Frames per form are [Pebble Flick, Spore Puff, Spore Burst].
   shroom:{zoom:.26,eyeY:125,f:[{src:'art/shroom-1.webp',ax:215,ay:530,h:525,w:477,ih:531,ht:2,cx:270,fy:280},{src:'art/shroom-2.webp',ax:213,ay:533,h:525,w:471,ih:534,ht:2,cx:270,fy:280},{src:'art/shroom-3.webp',ax:236,ay:538,h:525,w:498,ih:539,ht:2,cx:290,fy:285}],pose:'skill',
         c:[[{src:'art/shroom-1c1.webp',ax:133,ay:359,h:345,w:389,ih:360,ht:2},{src:'art/shroom-1c2.webp',ax:132,ay:351,h:345,w:386,ih:351,ht:3},{src:'art/shroom-1c3.webp',ax:111,ay:327,h:345,w:390,ih:327,ht:2}],
@@ -460,7 +470,11 @@ function vfxSpearSweep(pts,S){if(!pts.length)return Promise.resolve();const P=S.
         vfxP({x:q.x,y:q.y,life:.3,s:6,grow:150,c:'#f4ead0',shape:'shock'});res()}}})})))}
 
 /* ---------- Ren (fire fox): a fire crescent where his blade lands, and a ring of fire for Flame Ward ---------- */
-function rlArtMelee(u,tp,big){const A=RL_ART[u.id];if(A&&A.impact){const st=crStage(u.lv||crLv(u.id));paintErupt([tp],{vp:RL_VP[u.id],paint:{burst:A.impact[st]}});rlbShake(true);return true}
+function rlArtMelee(u,tp,big,si){const A=RL_ART[u.id];
+  if(A&&A.impactSk&&A.impactSk[si]){const P=RL_VP[u.id],foot=tp.y+tp.h*.42;let t=0;const life=.7/vSp();
+    VFX.items.push({step(dt,c){t+=dt;const k=t/life;if(k>=1){this.done=true;return}const g=Math.min(1,k/.2),a=k<.6?1:1-(k-.6)/.4;c.save();c.globalAlpha=a;
+      for(let i=0;i<7;i++){const ox=(i-3)*tp.w*.13,r=tp.w*(.12+.05*Math.sin(i*1.7))*g;c.fillStyle=i%2?P[2]:P[3];c.beginPath();c.ellipse(tp.x+ox,foot-r*.35,r,r*.7,0,Math.PI,0);c.fill()}
+      c.restore()}});for(let i=0;i<26;i++)vfxP({x:tp.x+vR(-tp.w/3,tp.w/3),y:tp.y+tp.h*.4,vx:vR(-160,160),vy:vR(-380,-140),ay:800,life:vR(.4,.8),s:vR(3,7),c:rlRand(P),shape:'sq',vr:8,glow:false});rlbShake(true);return true}if(A&&A.impact){const st=crStage(u.lv||crLv(u.id));paintErupt([tp],{vp:RL_VP[u.id],paint:{burst:A.impact[st]}});rlbShake(true);return true}
   if(!A||!A.slash)return false;const st=crStage(u.lv||crLv(u.id)),sp=vSp(),d=u.side?-1:1,R=tp.h*.55*(1+.12*st),P=RL_VP[u.id]||RL_VP.fox;let t=0;const life=.42/sp;
   VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/life),sw=-1.9+3.2*Math.min(1,k/.45),a=k<.45?1:1-(k-.45)/.55;c.save();c.translate(tp.x,tp.y);c.scale(d,1);c.globalCompositeOperation='lighter';
     for(let i=0;i<3;i++){const w=[26,15,6][i]*(1+.3*st),col=[P[3],P[2],P[0]][i];c.globalAlpha=a*[.55,.8,1][i];c.strokeStyle=col;c.lineWidth=w;c.lineCap='round';c.beginPath();c.arc(-R*.25,0,R,-1.9,Math.max(-1.89,sw));c.stroke()}
