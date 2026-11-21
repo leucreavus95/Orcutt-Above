@@ -233,6 +233,7 @@ function rlAct(B,u,i,tid,power){
         if(s.exec&&t.hp<t.maxHp*.5)d*=1+s.exec; // Finisher
         if(s.vsDaze&&rlHas(t,'daze'))d*=1+s.vsDaze;
         if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;
+        if(u.tempo)d*=1+.1*u.tempo+(s.crescendo?s.crescendo*u.tempo:0); // Tempo: +10% per beat; Crescendo spends it big
         if(rlHas(t,'mark'))d*=1.25;if(s.vsBurn&&rlHas(t,'burn'))d*=1+s.vsBurn;
         const cr=rlEff(u,'cr')+(adv>0?15:adv<0?-15:0),crit=Math.random()*100<cr;if(crit)d*=1+u.stats.cd/100;
         d*=.95+Math.random()*.1;
@@ -258,6 +259,8 @@ function rlAct(B,u,i,tid,power){
       if(f[0]==='self'||f[0]==='team')continue;for(const t of tg)if(t.alive)rlApplyFx(B,u,t,f,pw*bonus,ev,false)}
   }
   for(const f of s.fx){if(f[0]==='self')rlApplyFx(B,u,u,f.slice(1),pw*bonus,ev,false);if(f[0]==='team')for(const t of B.side[u.side])if(t.alive)rlApplyFx(B,u,t,f.slice(1),pw*bonus,ev,false)}
+  // Tempo: Rio's beats build up with each skill; Rhythm Burst spends them
+  if(s.crescendo&&u.tempo){u.tempo=0;ev.push({k:'tempo',u:u.uid,v:0})}else if(s.tempo){const b=u.tempo||0;u.tempo=Math.min(3,b+s.tempo);if(u.tempo!==b)ev.push({k:'tempo',u:u.uid,v:u.tempo})}
   // Dusk Dash: landing the final blow lets her move again right away
   if(s.again&&u.alive&&tg.some(t=>!t.alive)){u.atb=100;ev.push({k:'again',u:u.uid})}
   if(!B._counter)rlTick(u,ev);

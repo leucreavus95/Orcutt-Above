@@ -184,6 +184,7 @@ async function rlbPlay(ev){
     else if(e.k==='skip'){rlbFloat(e.u,'Stunned','debuff');await rlbDelay(340)}
     else if(e.k==='counter'){rlbFloat(e.u,'Counter!','buff');await rlbDelay(160)}
     else if(e.k==='again'){rlbFloat(e.u,'Again!','buff');await rlbDelay(160)}
+    else if(e.k==='tempo'){rlbFloat(e.u,e.v?('♪'.repeat(e.v)+' Tempo '+e.v):'Crescendo!',e.v?'buff':'crit');await rlbDelay(e.v?120:220)}
     else if(e.k==='frozen'){rlbFloat(e.u,'Frozen!','crit');const p=rlbPt(e.u);if(p){vfxP({x:p.x,y:p.y,life:.5,s:10,grow:240,c:'#bfe4ff',shape:'shock'});for(let i=0;i<22;i++){const a=Math.random()*6.283,v=vR(60,200);vfxP({x:p.x,y:p.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,drag:.9,life:vR(.4,.8),s:vR(3,6),c:rlRand(['#ffffff','#bfe4ff','#7cc4ff']),shape:'dia',vr:4})}}rlbShake(true);await rlbDelay(260)}
     else if(e.k==='guarded'){rlbFloat(e.g,'Guard!','buff');const a=rlbPt(e.u),g=rlbPt(e.g);if(a&&g){for(let i=0;i<14;i++){const k=i/14;vfxP({x:a.x+(g.x-a.x)*k,y:a.y+(g.y-a.y)*k-Math.sin(k*Math.PI)*40,vy:vR(-40,-10),life:vR(.3,.6),s:vR(2,4),c:rlRand(RL_VP.turtle||RL_VP.light)})}}await rlbDelay(120)}
     else if(e.k==='det'){rlbFloat(e.u,'Detonate!','crit');const p=rlbPt(e.u);if(p){vfxBurst(p.x,p.y,'fox',40,1.6);vfxP({x:p.x,y:p.y,life:.45,s:10,grow:320,c:'#ffb347',shape:'shock'})}rlbShake(true);await rlbDelay(260)}

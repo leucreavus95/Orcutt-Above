@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Rio (drummer duelist, chibi). Frames per form are [Rapid Lunge, Sonic Note Volley, Rhythm Burst].
+  drum:{zoom:.62,eyeY:92,f:[{src:'art/drum-1.webp',ax:211,ay:551,h:545,w:486,ih:552,ht:3,cx:225,fy:110},{src:'art/drum-2.webp',ax:211,ay:552,h:545,w:576,ih:553,ht:2,cx:225,fy:110},{src:'art/drum-3.webp',ax:331,ay:552,h:545,w:680,ih:553,ht:2,cx:345,fy:110}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'note',
+        c:[[{src:'art/drum-1c1.webp',ax:134,ay:378,h:377,w:397,ih:382,ht:1},{src:'art/drum-1c2.webp',ax:134,ay:382,h:377,w:375,ih:386,ht:2},{src:'art/drum-1c3.webp',ax:134,ay:388,h:377,w:385,ih:392,ht:18}],
+           [{src:'art/drum-2c1.webp',ax:144,ay:384,h:377,w:449,ih:387,ht:3},{src:'art/drum-2c2.webp',ax:147,ay:385,h:377,w:433,ih:389,ht:2},{src:'art/drum-2c3.webp',ax:148,ay:417,h:377,w:449,ih:422,ht:47}],
+           [{src:'art/drum-3c1.webp',ax:170,ay:382,h:377,w:473,ih:387,ht:2},{src:'art/drum-3c2.webp',ax:163,ay:401,h:377,w:473,ih:405,ht:3},{src:'art/drum-3c3.webp',ax:165,ay:440,h:377,w:473,ih:454,ht:3}]],
+        spell:[{vp:['#ffffff','#ffe2e6','#ff8fa3','#8e1c3a'],hand:[150,150],bySkill:[null,{shot:'art/fx-drum-note1.webp'},{burst:'art/fx-drum-wave1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#ffe2e6','#ff8fa3','#8e1c3a'],hand:[150,150],bySkill:[null,{shot:'art/fx-drum-note2.webp'},{burst:'art/fx-drum-wave2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#ffe2e6','#ff8fa3','#8e1c3a'],hand:[150,150],bySkill:[null,{shot:'art/fx-drum-note3.webp'},{burst:'art/fx-drum-wave3.webp',aoe:'sweep'}]}]},
   // Arlo (frost knight, chibi). Frames per form are [Frost Cleave, Ice-Lance Burst, Rune Ward].
   ice:{zoom:.55,eyeY:95,f:[{src:'art/ice-1.webp',ax:192,ay:572,h:569,w:484,ih:573,ht:0,cx:205,fy:135},{src:'art/ice-2.webp',ax:196,ay:572,h:569,w:511,ih:573,ht:1,cx:215,fy:135},{src:'art/ice-3.webp',ax:260,ay:573,h:569,w:635,ih:573,ht:1,cx:285,fy:135}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'ice',
         c:[[{src:'art/ice-1c1.webp',ax:99,ay:355,h:308,w:397,ih:355,ht:29},{src:'art/ice-1c2.webp',ax:141,ay:314,h:308,w:464,ih:315,ht:3},{src:'art/ice-1c3.webp',ax:31,ay:421,h:308,w:382,ih:425,ht:3}],

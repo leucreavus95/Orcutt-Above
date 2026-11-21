@@ -69,7 +69,16 @@ const RL_ROSTER=[
      ev:['Arlo','Arlo Frostguard','Arlo, the Glacier Knight'],
      sk:[rlSk('Frost Cleave',{m:3.6,fx:[['chill',3,70]]}),
          rlSk('Ice-Lance Burst',{cd:3,m:1.25,h:3,vsChill:.2,fx:[['chill',3,50]]}),
-         rlSk('Rune Ward',{cd:4,tg:'aA',fx:[['shield',16,2],['defUp',2],['rime',2]]})]}}
+         rlSk('Rune Ward',{cd:4,tg:'aA',fx:[['shield',16,2],['defUp',2],['rime',2]]})]}},
+  // Rio, the drummer duelist (chibi art). Epic. Builds Tempo: every skill he uses adds a beat (max 3),
+  // and each beat makes his attacks hit harder. His lunge strikes twice on the beat, his notes set the team's
+  // rhythm, and his burst spends the Tempo for a crescendo across the whole line.
+  {id:'drum',col:{c:'#c0304a',l:'#ffe2e6',d:'#3a0c18'},vp:['#ffffff','#ffe2e6','#ff8fa3','#8e1c3a'],
+   hero:{n:'Rio',r:4,role:'atk',spd:120,it:'staff',o:'coat',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'spd',v:12},
+     ev:['Rio','Rio Quickstep','Rio, the Grand Maestro'],
+     sk:[rlSk('Rapid Lunge',{m:1.9,h:2,tempo:1}),
+         rlSk('Sonic Note Volley',{cd:3,m:1.2,h:3,tempo:1,fx:[['atbDown',15,60],['team','atb',15]]}),
+         rlSk('Rhythm Burst',{cd:4,tg:'eA',m:1.6,crescendo:.35,fx:[['stun',1,15]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){
