@@ -87,10 +87,10 @@ const RL_ROSTER=[
      sk:[rlSk('Charged Arrow',{m:3.8,critMark:true}),
          rlSk('Triple-Shot',{cd:3,tg:'eA',m:1.5,bounce:3,fx:[['mark',2,50]]}),
          rlSk('Arrow Rain',{cd:4,tg:'eA',m:1.8,fx:[['slow',2,50],['defBreak',1,25]]})]}},
-  // Milo, the spear farmhand (chibi art). Rare. A vanguard: his thrust pierces armor, his sweep keeps the
+  // Milo, the spear farmhand (chibi art). Common. A vanguard: his thrust pierces armor, his sweep keeps the
   // line at bay, and his Skycharge hits hardest as an opening strike on an unhurt enemy.
   {id:'lance',col:{c:'#6f9a5a',l:'#eef2e6',d:'#22301a'},vp:['#ffffff','#eef2e6','#b8c4a8','#4a5a3a'],
-   hero:{n:'Milo',r:3,role:'atk',spd:112,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'spd',v:10},
+   hero:{n:'Milo',r:1,role:'atk',spd:112,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'spd',v:10},
      ev:['Milo','Milo Brightspear','Milo, the Skylance'],
      sk:[rlSk('Spear Thrust',{m:3.5,ign:.4}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.8,fx:[['atbDown',25,60]]}),

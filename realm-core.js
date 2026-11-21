@@ -102,6 +102,8 @@ function rlSummon(p,n){
     let x=Math.random()*tot,r=x<(+R[5]||0)?5:x<(+R[5]||0)+(+R[4]||0)?4:3;
     if(c.pity>0&&p.pity>=c.pity)r=5;
     if(n>=10&&i===n-1&&!out.some(o=>RL_H[o.id].r>=4)&&r<4)r=4;
+    // the 3★ slot also covers Common/Uncommon heroes: 40% of those pulls land on one when any exist
+    if(r===3&&RL_HEROES.some(h=>h.r<3)&&Math.random()<.4)r=Math.random()<.6||!RL_HEROES.some(h=>h.r===2)?(RL_HEROES.some(h=>h.r===1)?1:2):2;
     let pool=RL_HEROES.filter(h=>h.r===r);if(!pool.length){const rs=[...new Set(RL_HEROES.map(h=>h.r))].sort((a,b)=>Math.abs(a-r)-Math.abs(b-r)||b-a);pool=RL_HEROES.filter(h=>h.r===rs[0])}let id=(r===5&&Math.random()<.5)?feat:rlRand(pool).id;
     if(r===5)p.pity=0;
     const isNew=rlAddHero(p,id);let note='new';
