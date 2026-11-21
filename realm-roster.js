@@ -45,6 +45,11 @@ const RL_ROSTER=[
    hero:{n:'Kairo',r:5,role:'atk',spd:106,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:15},
      ev:['Kairo','Kairo Tidecaller','Kairo, the Deep Sovereign'],
      sk:[rlSk('Riptide',{m:3.8,fx:[['slow',1,40]]}),rlSk('Crashing Wave',{cd:3,m:3.2,fx:[['atbDown',30,60]]}),rlSk('Maelstrom',{cd:5,tg:'eA',m:2.6,fx:[['defBreak',2,45]]})]}}
+,
+  {id:'pike',col:{c:'#4a6fa5',l:'#f4ead0',d:'#1c2a40'},vp:['#ffffff','#f4ead0','#c9a26a','#5a4630'],
+   hero:{n:'Tobin',r:3,role:'atk',spd:104,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:10},
+     ev:['Tobin','Tobin Stoutheart','Tobin, Captain of the Watch'],
+     sk:[rlSk('Spear Jab',{m:3.6,fx:[['defBreak',1,25]]}),rlSk('Double Thrust',{cd:3,m:2.0,h:2,fx:[['slow',1,40]]}),rlSk('Sweeping Strike',{cd:4,tg:'eA',m:2.1,fx:[['atbDown',20,50]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){
@@ -57,6 +62,11 @@ RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
   }
   const keep=new Set(RL_ROSTER.map(r=>r.id));
   for(let i=RL_HEROES.length-1;i>=0;i--)if(!keep.has(RL_HEROES[i].id))RL_HEROES.splice(i,1);
-  RL_STARTERS.splice(0,RL_STARTERS.length,...RL_ROSTER.map(r=>r.id).filter(id=>RL_H[id].r<5)); // 5★ heroes are summon-onlyRL_FREE.splice(0,RL_FREE.length);
+  RL_STARTERS.splice(0,RL_STARTERS.length,...RL_ROSTER.map(r=>r.id).filter(id=>RL_H[id].r<5)); RL_FREE.splice(0,RL_FREE.length); // 5★ heroes are summon-only
 })();
 rlElChip=function(){return''}; // no element badges anywhere
+
+// saves made while the old free heroes were still handed out: take them out of the team and collection
+(function(){const keep=new Set(RL_ROSTER.map(r=>r.id)),o=rlMigrate;rlMigrate=function(p){const q=o(p);if(!q)return q;
+  if(q.heroes)for(const id in q.heroes)if(!keep.has(id))delete q.heroes[id];
+  if(Array.isArray(q.team))q.team=q.team.filter(id=>keep.has(id));return q}})();
