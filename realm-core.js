@@ -187,7 +187,9 @@ function rlDamage(B,u,amt,ev,o){
   // Guardian Current: the guardian takes 30% of direct hits aimed at a guarded ally
   const gd=!(o&&(o.dot||o.guarded))&&u.fx.find(f=>f.k==='guard');if(gd){const G=B.all().find(x=>x.uid===gd.src);if(G&&G.alive&&G!==u){const sh=Math.round(a*.3);if(sh>0){a-=sh;ev.push({k:'guarded',u:u.uid,g:G.uid});rlDamage(B,G,sh,ev,{guarded:true})}}}if(u.shield>0){const s=Math.min(u.shield,a);u.shield-=s;a-=s;if(u.shield<=0)u.fx=u.fx.filter(f=>f.k!=='shield')}
   u.hp=Math.max(0,u.hp-a);ev.push({k:'hit',u:u.uid,v:Math.round(amt),hp:u.hp,crit:o&&o.crit,adv:o&&o.adv,dot:o&&o.dot});
-  if(u.hp<=0&&u.alive){u.alive=false;u.atb=0;u.fx=[];u.shield=0;ev.push({k:'die',u:u.uid})}
+  if(u.hp<=0&&u.alive){const H=u.kind==='hero'&&typeof RL_H!=='undefined'&&RL_H[u.id];
+    if(H&&H.rebirth&&!u.reborn){u.reborn=true;u.hp=Math.round(u.maxHp*H.rebirth);u.fx=u.fx.filter(x=>RL_FX[x.k]&&RL_FX[x.k].buff);ev.push({k:'reborn',u:u.uid});return a}
+    u.alive=false;u.atb=0;u.fx=[];u.shield=0;ev.push({k:'die',u:u.uid})}
   return a}
 function rlApplyFx(B,src,tgt,f,power,ev,isEnemy){
   const k=f[0],F=RL_FX[k];

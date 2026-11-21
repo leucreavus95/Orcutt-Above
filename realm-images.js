@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Solenne (phoenix archer, chibi). LEGENDARY. Frames per form are [Sunflare Arrow, Feather Volley, Phoenix Rain].
+  phx:{zoom:.42,eyeY:95,f:[{src:'art/phx-1.webp',ax:217,ay:514,h:509,w:492,ih:512,ht:2,cx:200,fy:140},{src:'art/phx-2.webp',ax:189,ay:545,h:509,w:479,ih:543,ht:5,cx:200,fy:170},{src:'art/phx-3.webp',ax:237,ay:593,h:509,w:526,ih:591,ht:4,cx:240,fy:200}],pose:'skill',
+        c:[[{src:'art/phx-1c1.webp',ax:116,ay:292,h:294,w:375,ih:293,ht:2},{src:'art/phx-1c2.webp',ax:122,ay:299,h:294,w:397,ih:300,ht:2},{src:'art/phx-1c3.webp',ax:95,ay:298,h:294,w:402,ih:299,ht:18}],
+           [{src:'art/phx-2c1.webp',ax:134,ay:310,h:294,w:408,ih:311,ht:2},{src:'art/phx-2c2.webp',ax:129,ay:306,h:294,w:410,ih:307,ht:3},{src:'art/phx-2c3.webp',ax:104,ay:312,h:294,w:431,ih:313,ht:24}],
+           [{src:'art/phx-3c1.webp',ax:169,ay:358,h:294,w:482,ih:358,ht:3},{src:'art/phx-3c2.webp',ax:154,ay:341,h:294,w:490,ih:342,ht:3},{src:'art/phx-3c3.webp',ax:126,ay:346,h:294,w:488,ih:346,ht:16}]],
+        spell:[{vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow1.webp'},{shot:'art/fx-phx-feather1.webp',aoe:'fan'},{burst:'art/fx-phx-rain1.webp',aoe:'erupt',sz:.62}]},
+               {vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow2.webp'},{shot:'art/fx-phx-feather2.webp',aoe:'fan'},{burst:'art/fx-phx-rain2.webp',aoe:'erupt',sz:.62}]},
+               {vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow3.webp'},{shot:'art/fx-phx-feather3.webp',aoe:'fan'},{burst:'art/fx-phx-rain3.webp',aoe:'erupt',sz:.62}]}]},
   // Aster (astral sorcerer, chibi). LEGENDARY. Frames per form are [Astral Lance, Sigil-Bolt Volley, Rift Sweep].
   star:{zoom:.46,eyeY:95,f:[{src:'art/star-1.webp',ax:203,ay:560,h:555,w:416,ih:560,ht:2,cx:215,fy:175},{src:'art/star-2.webp',ax:235,ay:633,h:555,w:453,ih:633,ht:1,cx:255,fy:250},{src:'art/star-3.webp',ax:264,ay:696,h:555,w:553,ih:696,ht:3,cx:320,fy:320}],pose:'skill',
         c:[[{src:'art/star-1c1.webp',ax:139,ay:338,h:291,w:421,ih:339,ht:3},{src:'art/star-1c2.webp',ax:140,ay:332,h:275,w:422,ih:334,ht:1},{src:'art/star-1c3.webp',ax:119,ay:311,h:254,w:418,ih:314,ht:12}],
@@ -478,7 +486,7 @@ function paintErupt(pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst||p
   return Promise.all(pts.map((q,i)=>new Promise(res=>{let t=-i*.08/sp,hit=false;const life=.7/sp,foot=q.y+q.h*.45;
     VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}const g=Math.min(1,k/.25),a=k<.6?1:1-(k-.6)/.4;
       if(!hit&&k>.15){hit=true;for(let j=0;j<16;j++)vfxP({x:q.x+vR(-q.w/3,q.w/3),y:foot,vx:vR(-120,120),vy:vR(-320,-120),ay:700,life:vR(.4,.7),s:vR(2,5),c:rlRand(P),shape:'sq',vr:8,glow:false});res()}
-      if(img){const w=q.w*1.3,H=w*img.naturalHeight/img.naturalWidth*(1-Math.pow(1-g,3));c.save();c.globalAlpha=a;c.drawImage(img,q.x-w/2,foot-H,w,H);c.restore()}}})})))}
+      if(img){const w=q.w*1.3*(p.sz||1),H=w*img.naturalHeight/img.naturalWidth*(1-Math.pow(1-g,3));c.save();c.globalAlpha=a;c.drawImage(img,q.x-w/2,foot-H,w,H);c.restore()}}})})))}
 function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst||p.shot),x0=Math.min(...pts.map(q=>q.x-q.w)),x1=Math.max(...pts.map(q=>q.x+q.w)),yb=Math.max(...pts.map(q=>q.y+q.h*.45)),Hh=Math.max(...pts.map(q=>q.h))*1.25,dur=.6/sp;
   return new Promise(res=>{let t=0;const hit=new Set();VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/dur),x=x0+(x1-x0)*k,a=k<.8?1:1-(k-.8)/.2;
     if(img){const w=Hh*img.naturalWidth/img.naturalHeight;c.save();c.globalAlpha=a;c.drawImage(img,x-w/2,yb-Hh,w,Hh);c.restore()}

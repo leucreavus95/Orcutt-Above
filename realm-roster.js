@@ -145,7 +145,16 @@ const RL_ROSTER=[
      ev:['Aster','Aster Voidweave','Aster, the Star Sovereign'],
      sk:[rlSk('Astral Lance',{m:3.8,ign:.3,fx:[['sigil',3,75]]}),
          rlSk('Sigil-Bolt Volley',{cd:3,tg:'eA',m:1.3,bounce:3,fx:[['sigil',3,60]]}),
-         rlSk('Rift Sweep',{cd:5,tg:'eA',m:2.2,rift:.45,fx:[['team','cdDown',1]]})]}}
+         rlSk('Rift Sweep',{cd:5,tg:'eA',m:2.2,rift:.45,fx:[['team','cdDown',1]]})]}},
+  // Solenne, the phoenix archer (chibi art). LEGENDARY. Fire that never quite goes out: her arrow scorches,
+  // her feather volley burns the whole line, and Phoenix Rain scorches everyone; the first time she falls
+  // each battle she is reborn from the ashes (Rebirth).
+  {id:'phx',col:{c:'#ff6a2a',l:'#fff1c0',d:'#3a0e06'},vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],
+   hero:{n:'Solenne',r:5,role:'atk',spd:119,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'spd',v:15},rebirth:.4,
+     ev:['Solenne','Solenne Emberwing','Solenne, the Undying Sun'],
+     sk:[rlSk('Sunflare Arrow',{m:3.9,vsBurn:.4,fx:[['burn',2,60]]}),
+         rlSk('Feather Volley',{cd:3,tg:'eA',m:1.6,fx:[['burn',2,50]]}),
+         rlSk('Phoenix Rain',{cd:5,tg:'eA',m:2.4,vsBurn:.5,fx:[['burn',2,70],['self','healT',25]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

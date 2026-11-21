@@ -48,6 +48,7 @@ function rlSkillText(h,s,lvl,st){
     else if(F)parts.push(`${k==='stun'?'Stun':F.n} (${a[2]}% chance, ${turns(a[1])})`)});
   return parts.join('. ')+'.';
 }
+function rlRebirthText(h){return h.rebirth?`Passive, Rebirth: the first time ${h.n} falls in a battle, she rises again with ${Math.round(h.rebirth*100)}% HP.`:''}
 function rlLeadText(h){if(!h.ld)return'';return`Leader: +${h.ld.v}% ${RL_STAT[h.ld.s].n} for every ally while this creature leads the team.`}
 
 /* ---------- entry ---------- */
@@ -199,7 +200,7 @@ function rlHeroDetail(s,p,id){
     <div class="row"><button class="btn" data-a="rlTome" ${p.tomes&&m.lv<mx?'':'disabled'}>Use study tome (${p.tomes})</button>${m.st<6?`<button class="btn ${m.lv>=mx?'pri':''}" data-a="rlPromote" ${m.lv>=mx&&p.ess.any>=pc.ess&&p.gold>=pc.gold?'':'disabled'}>Promote to ${m.st+1}★ · ${pc.ess} essence (have ${p.ess.any||0}) + ${rlNum(pc.gold)} gold</button>`:''}<button class="btn ${inTeam?'danger':'pri'}" data-a="rlTeamToggle" data-v="${id}">${inTeam?'Remove from team':'Add to team'}</button>${inTeam&&p.team[0]!==id?`<button class="btn" data-a="rlLead" data-v="${id}">Make leader</button>`:''}</div>
     ${m.lv>=mx&&m.st<6?`<p class="muted">Max level reached. Promote to raise the cap to ${rlMaxLv(m.st+1)} and boost all stats by 10%.</p>`:''}</div>
    <div class="rl-hd-cols"><div class="panel"><h3 style="margin-bottom:8px">Stats</h3><div class="rl-stats">${rlStatRows(st,base)}</div>${st.sets.length?`<p class="muted" style="margin-top:8px">Active sets: ${st.sets.map(k=>`<b style="color:${RL_SETS[k].c}">${RL_SETS[k].n}</b> (${RL_SETS[k].d})`).join(', ')}</p>`:''}</div>
-   <div class="panel"><h3 style="margin-bottom:8px">Skills</h3><div class="stack" style="gap:10px">${h.sk.map((k,i)=>`<div class="rl-skill"><div class="row" style="justify-content:space-between"><b>${esc(k.n)}</b><span class="muted">${k.pas?'Passive':k.cd?`Cooldown ${Math.max(1,k.cd-(m.sk[i]>=3?1:0))}`:'Basic'} · Lv ${m.sk[i]}/${rlSkMax(id,i)}</span></div><p class="muted">${esc(rlSkillText(h,k,m.sk[i],st))}${i>0&&!k.pas?' <span class="rl-mathtag">Answer a question for full power</span>':''}</p></div>`).join('')}${h.ld?`<div class="rl-skill lead"><b>Leader skill</b><p class="muted">${esc(rlLeadText(h))}</p></div>`:''}<p class="muted">Summoning ${esc(h.n)} again levels up a skill.</p></div></div></div>
+   <div class="panel"><h3 style="margin-bottom:8px">Skills</h3><div class="stack" style="gap:10px">${h.sk.map((k,i)=>`<div class="rl-skill"><div class="row" style="justify-content:space-between"><b>${esc(k.n)}</b><span class="muted">${k.pas?'Passive':k.cd?`Cooldown ${Math.max(1,k.cd-(m.sk[i]>=3?1:0))}`:'Basic'} · Lv ${m.sk[i]}/${rlSkMax(id,i)}</span></div><p class="muted">${esc(rlSkillText(h,k,m.sk[i],st))}${i>0&&!k.pas?' <span class="rl-mathtag">Answer a question for full power</span>':''}</p></div>`).join('')}${h.rebirth?`<div class="rl-skill lead"><b>Rebirth</b><p class="muted">${esc(rlRebirthText(h))}</p></div>`:''}${h.ld?`<div class="rl-skill lead"><b>Leader skill</b><p class="muted">${esc(rlLeadText(h))}</p></div>`:''}<p class="muted">Summoning ${esc(h.n)} again levels up a skill.</p></div></div></div>
    <div class="panel"><h3 style="margin-bottom:8px">Gear</h3><div class="rl-gslots">${gear}</div></div></div></div>`;
 }
 
