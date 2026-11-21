@@ -202,7 +202,8 @@ function rlApplyFx(B,src,tgt,f,power,ev,isEnemy){
   if(power<1||!tgt.alive)return;
   if(Math.random()*100>=f[2])return;
   if(rlHas(tgt,'immune')||rlResist(src,tgt)){ev.push({k:'resist',u:tgt.uid});return}
-  if(k==='burn'){if(tgt.fx.filter(x=>x.k==='burn').length<3)tgt.fx.push({k,t:f[1]})}
+  if(k==='chill'){tgt.fx.push({k,t:f[1]});if(tgt.fx.filter(x=>x.k==='chill').length>=3){tgt.fx=tgt.fx.filter(x=>x.k!=='chill'&&x.k!=='stun');tgt.fx.push({k:'stun',t:1});ev.push({k:'frozen',u:tgt.uid});return}}
+  else if(k==='burn'){if(tgt.fx.filter(x=>x.k==='burn').length<3)tgt.fx.push({k,t:f[1]})}
   else{tgt.fx=tgt.fx.filter(x=>x.k!==k);tgt.fx.push({k,t:f[1]})}
   ev.push({k:'fx',u:tgt.uid,f:k});
 }
@@ -231,6 +232,7 @@ function rlAct(B,u,i,tid,power){
         if(adv>0)d*=1.3;if(adv<0)d*=.75;
         if(s.exec&&t.hp<t.maxHp*.5)d*=1+s.exec; // Finisher
         if(s.vsDaze&&rlHas(t,'daze'))d*=1+s.vsDaze;
+        if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;
         if(rlHas(t,'mark'))d*=1.25;if(s.vsBurn&&rlHas(t,'burn'))d*=1+s.vsBurn;
         const cr=rlEff(u,'cr')+(adv>0?15:adv<0?-15:0),crit=Math.random()*100<cr;if(crit)d*=1+u.stats.cd/100;
         d*=.95+Math.random()*.1;
@@ -244,6 +246,8 @@ function rlAct(B,u,i,tid,power){
       if(s.ring&&t.alive&&preDaze&&!rlHas(t,'immune')){t.fx=t.fx.filter(x=>x.k!=='daze'&&x.k!=='stun');t.fx.push({k:'stun',t:1});ev.push({k:'fx',u:t.uid,f:'stun'})}
       // Foxfire: set off every Burn on the target at once (their remaining burn damage, capped)
       if(s.det&&t.alive){const bs=t.fx.filter(x=>x.k==='burn');if(bs.length){const left=bs.reduce((a,x)=>a+Math.max(1,x.t),0);t.fx=t.fx.filter(x=>x.k!=='burn');ev.push({k:'det',u:t.uid});rlDamage(B,t,Math.min(t.maxHp*.06*left,rlEff(u,'atk')*3.2)*pw,ev,{dot:true})}}
+      // Rune Ward: whoever strikes a warded unit gets Chilled
+      if(u.alive&&rlHas(t,'rime')&&!B._rime){B._rime=true;rlApplyFx(B,t,u,['chill',3,60],1,ev,true);B._rime=false}
       // Flame Ward: whoever strikes a warded unit may catch fire
       if(u.alive&&rlHas(t,'ward')&&!B._ward){B._ward=true;rlApplyFx(B,t,u,['burn',2,50],1,ev,true);B._ward=false}
       if(t.alive&&t.pas.pas==='counter'&&s.tg==='e1'&&!B._counter&&Math.random()*100<t.pas.v){B._counter=true;ev.push({k:'counter',u:t.uid});ev.push(...rlAct(B,t,0,u.uid,1));B._counter=false}

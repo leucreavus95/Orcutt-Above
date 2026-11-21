@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Arlo (frost knight, chibi). Frames per form are [Frost Cleave, Ice-Lance Burst, Rune Ward].
+  ice:{zoom:.55,eyeY:95,f:[{src:'art/ice-1.webp',ax:192,ay:572,h:569,w:484,ih:573,ht:0,cx:205,fy:135},{src:'art/ice-2.webp',ax:196,ay:572,h:569,w:511,ih:573,ht:1,cx:215,fy:135},{src:'art/ice-3.webp',ax:260,ay:573,h:569,w:635,ih:573,ht:1,cx:285,fy:135}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'ice',
+        c:[[{src:'art/ice-1c1.webp',ax:99,ay:355,h:308,w:397,ih:355,ht:29},{src:'art/ice-1c2.webp',ax:141,ay:314,h:308,w:464,ih:315,ht:3},{src:'art/ice-1c3.webp',ax:31,ay:421,h:308,w:382,ih:425,ht:3}],
+           [{src:'art/ice-2c1.webp',ax:111,ay:365,h:308,w:446,ih:367,ht:39},{src:'art/ice-2c2.webp',ax:154,ay:314,h:308,w:513,ih:314,ht:3},{src:'art/ice-2c3.webp',ax:44,ay:440,h:308,w:408,ih:444,ht:4}],
+           [{src:'art/ice-3c1.webp',ax:125,ay:399,h:308,w:483,ih:400,ht:72},{src:'art/ice-3c2.webp',ax:164,ay:368,h:308,w:552,ih:369,ht:56},{src:'art/ice-3c3.webp',ax:142,ay:449,h:308,w:489,ih:471,ht:7}]],
+        spell:[{vp:['#ffffff','#e2f2ff','#7cc4ff','#1f4f9a'],hand:[150,140],support:'ring',bySkill:[null,{shot:'art/fx-ice-lance1.webp'},null]},
+               {vp:['#ffffff','#e2f2ff','#7cc4ff','#1f4f9a'],hand:[150,140],support:'ring',bySkill:[null,{shot:'art/fx-ice-lance2.webp'},null]},
+               {vp:['#ffffff','#e2f2ff','#7cc4ff','#1f4f9a'],hand:[150,140],support:'ring',bySkill:[null,{shot:'art/fx-ice-lance2.webp'},null]}]},
   // Chime (porcelain bell-keeper, chibi). Frames per form are [Soundwave, Ringing Shards, Resonance Burst].
   bell:{zoom:.45,eyeY:100,f:[{src:'art/bell-1.webp',ax:213,ay:542,h:538,w:448,ih:542,ht:1,cx:190,fy:190},{src:'art/bell-2.webp',ax:218,ay:542,h:538,w:487,ih:542,ht:1,cx:195,fy:190},{src:'art/bell-3.webp',ax:292,ay:606,h:538,w:629,ih:607,ht:2,cx:270,fy:250}],pose:'skill',
         c:[[{src:'art/bell-1c1.webp',ax:98,ay:303,h:279,w:346,ih:304,ht:1},{src:'art/bell-1c2.webp',ax:93,ay:283,h:279,w:322,ih:284,ht:1},{src:'art/bell-1c3.webp',ax:148,ay:285,h:279,w:425,ih:310,ht:31}],

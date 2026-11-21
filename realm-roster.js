@@ -61,7 +61,15 @@ const RL_ROSTER=[
      ev:['Chime','Chime Stillbell','Chime, the Resonant Sage'],
      sk:[rlSk('Soundwave',{m:3.2,fx:[['daze',2,60]]}),
          rlSk('Ringing Shards',{cd:3,m:1.3,h:3,vsDaze:.6,fx:[['atkBreak',1,35]]}),
-         rlSk('Resonance Burst',{cd:4,tg:'eA',m:1.8,ring:true,fx:[['daze',2,50],['team','spdUp',2]]})]}}
+         rlSk('Resonance Burst',{cd:4,tg:'eA',m:1.8,ring:true,fx:[['daze',2,50],['team','spdUp',2]]})]}},
+  // Arlo, the frost knight (chibi art). Epic. Builds Chill: 3 Chill freezes an enemy solid (skips a turn).
+  // His cleave chills, his lances hit harder per Chill, and his rune ward shields the team and chills attackers.
+  {id:'ice',col:{c:'#5aa8f0',l:'#e2f2ff',d:'#13284a'},vp:['#ffffff','#e2f2ff','#7cc4ff','#1f4f9a'],
+   hero:{n:'Arlo',r:4,role:'atk',spd:108,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:15},
+     ev:['Arlo','Arlo Frostguard','Arlo, the Glacier Knight'],
+     sk:[rlSk('Frost Cleave',{m:3.6,fx:[['chill',3,70]]}),
+         rlSk('Ice-Lance Burst',{cd:3,m:1.25,h:3,vsChill:.2,fx:[['chill',3,50]]}),
+         rlSk('Rune Ward',{cd:4,tg:'aA',fx:[['shield',16,2],['defUp',2],['rime',2]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

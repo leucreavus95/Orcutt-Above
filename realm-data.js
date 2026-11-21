@@ -38,6 +38,8 @@ const RL_FX={
   burn:{n:'Burn',c:'#ff6a3d',g:'≈',d:'Takes 6% max HP each turn'},
   seal:{n:'Seal',c:'#a46bff',g:'⊘',d:'Can only use its first skill'},
   mark:{n:'Mark',c:'#ff7eb6',g:'◎',d:'Takes 25% more damage'},
+  chill:{n:'Chill',c:'#7cc4ff',g:'❄',d:'Stacks up to 3: at 3 Chill it freezes solid and skips a turn'},
+  rime:{n:'Rune Ward',buff:1,c:'#7cc4ff',g:'❖',d:'Enemies that hit it get Chilled'},
   daze:{n:'Dazed',c:'#7fe3ef',g:'♪',d:'Ringing ears: Chime\'s shards hit harder, and her Resonance Burst stuns it'},
   seed:{n:'Seeded',c:'#a8dc5a',g:'❦',d:'Loses 5% HP each turn; the healing goes to the enemy team'},
   bulwark:{n:'Bulwark',buff:1,c:'#d98a4a',g:'▣',d:'Takes 25% less damage from hits'},
