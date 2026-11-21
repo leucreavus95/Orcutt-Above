@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Aster (astral sorcerer, chibi). LEGENDARY. Frames per form are [Astral Lance, Sigil-Bolt Volley, Rift Sweep].
+  star:{zoom:.46,eyeY:95,f:[{src:'art/star-1.webp',ax:203,ay:560,h:555,w:416,ih:560,ht:2,cx:215,fy:175},{src:'art/star-2.webp',ax:235,ay:633,h:555,w:453,ih:633,ht:1,cx:255,fy:250},{src:'art/star-3.webp',ax:264,ay:696,h:555,w:553,ih:696,ht:3,cx:320,fy:320}],pose:'skill',
+        c:[[{src:'art/star-1c1.webp',ax:139,ay:338,h:291,w:421,ih:339,ht:3},{src:'art/star-1c2.webp',ax:140,ay:332,h:275,w:422,ih:334,ht:1},{src:'art/star-1c3.webp',ax:119,ay:311,h:254,w:418,ih:314,ht:12}],
+           [{src:'art/star-2c1.webp',ax:145,ay:371,h:295,w:439,ih:373,ht:3},{src:'art/star-2c2.webp',ax:143,ay:348,h:280,w:438,ih:350,ht:2},{src:'art/star-2c3.webp',ax:185,ay:330,h:258,w:439,ih:333,ht:3}],
+           [{src:'art/star-3c1.webp',ax:137,ay:415,h:308,w:500,ih:417,ht:2},{src:'art/star-3c2.webp',ax:135,ay:387,h:289,w:489,ih:388,ht:2},{src:'art/star-3c3.webp',ax:190,ay:381,h:281,w:512,ih:387,ht:3}]],
+        spell:[{vp:['#ffffff','#ece4ff','#a98bff','#2a1f5a'],hand:[165,150],bySkill:[{shot:'art/fx-star-lance1.webp'},{shot:'art/fx-star-bolt1.webp',sz:.6},{burst:'art/fx-star-rift1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#ece4ff','#a98bff','#2a1f5a'],hand:[165,150],bySkill:[{shot:'art/fx-star-lance2.webp'},{shot:'art/fx-star-bolt2.webp',sz:.6},{burst:'art/fx-star-rift2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#ece4ff','#a98bff','#2a1f5a'],hand:[165,150],bySkill:[{shot:'art/fx-star-lance3.webp'},{shot:'art/fx-star-bolt3.webp',sz:.6},{burst:'art/fx-star-rift3.webp',aoe:'sweep'}]}]},
   // Brontos (storm hammer knight, chibi). LEGENDARY. Frames per form are [Lightning Cleave, Chain-Bolt Volley, Tempest Drive]:
   // the cleave and the drive are lunges in their own swing poses (the lightning arcs are part of the art).
   thun:{zoom:.5,eyeY:85,f:[{src:'art/thun-1.webp',ax:203,ay:510,h:504,w:454,ih:511,ht:3,cx:235,fy:140},{src:'art/thun-2.webp',ax:246,ay:560,h:504,w:494,ih:561,ht:2,cx:278,fy:140},{src:'art/thun-3.webp',ax:260,ay:580,h:504,w:577,ih:581,ht:4,cx:300,fy:150}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],

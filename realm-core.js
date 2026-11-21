@@ -195,6 +195,7 @@ function rlApplyFx(B,src,tgt,f,power,ev,isEnemy){
   if(k==='healT'){rlHeal(tgt,tgt.maxHp*f[1]/100*power,ev);return}
   if(k==='cleanse'){if(tgt.fx.some(x=>!RL_FX[x.k].buff)){tgt.fx=tgt.fx.filter(x=>RL_FX[x.k].buff);ev.push({k:'cleanse',u:tgt.uid})}return}
   if(k==='strip'){const b=tgt.fx.filter(x=>RL_FX[x.k].buff).slice(0,f[1]);if(b.length){tgt.fx=tgt.fx.filter(x=>!b.includes(x));if(!rlHas(tgt,'shield'))tgt.shield=0;ev.push({k:'strip',u:tgt.uid})}return}
+  if(k==='cdDown'){if(tgt.alive&&tgt.cds){tgt.cds=tgt.cds.map(c=>Math.max(0,c-f[1]))}return}
   if(k==='atb'){if(tgt.alive){tgt.atb=Math.min(100,tgt.atb+f[1]);ev.push({k:'atb',u:tgt.uid,v:f[1]})}return}
   if(k==='revive'){return}
   if(k==='atbDown'){if(power<1)return;if(Math.random()*100<f[2]&&!rlResist(src,tgt)&&!rlHas(tgt,'immune')){tgt.atb=Math.max(0,tgt.atb-f[1]);ev.push({k:'atb',u:tgt.uid,v:-f[1]})}else ev.push({k:'resist',u:tgt.uid});return}
@@ -205,6 +206,7 @@ function rlApplyFx(B,src,tgt,f,power,ev,isEnemy){
   if(power<1||!tgt.alive)return;
   if(Math.random()*100>=f[2])return;
   if(rlHas(tgt,'immune')||rlResist(src,tgt)){ev.push({k:'resist',u:tgt.uid});return}
+  if(k==='sigil'){if(tgt.fx.filter(x=>x.k==='sigil').length<3)tgt.fx.push({k,t:f[1]});ev.push({k:'fx',u:tgt.uid,f:k});return}
   if(k==='chill'){tgt.fx.push({k,t:f[1]});if(tgt.fx.filter(x=>x.k==='chill').length>=3){tgt.fx=tgt.fx.filter(x=>x.k!=='chill'&&x.k!=='stun');tgt.fx.push({k:'stun',t:1});ev.push({k:'frozen',u:tgt.uid});return}}
   else if(k==='burn'){if(tgt.fx.filter(x=>x.k==='burn').length<3)tgt.fx.push({k,t:f[1]})}
   else{tgt.fx=tgt.fx.filter(x=>x.k!==k);tgt.fx.push({k,t:f[1]})}
@@ -239,6 +241,7 @@ function rlAct(B,u,i,tid,power){
         if(s.vsDaze&&rlHas(t,'daze'))d*=1+s.vsDaze;
         if(s.vsSoak&&rlHas(t,'soak'))d*=1+s.vsSoak;
         if(s.vsStatic&&rlHas(t,'static'))d*=1+s.vsStatic;
+        if(s.rift){const n=t.fx.filter(x=>x.k==='sigil').length;if(n){d*=1+s.rift*n;if(h===(s.h||1)-1){t.fx=t.fx.filter(x=>x.k!=='sigil');ev.push({k:'rift',u:t.uid,v:n})}}}
         if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;
         if(u.tempo)d*=1+.1*u.tempo+(s.crescendo?s.crescendo*u.tempo:0); // Tempo: +10% per beat; Crescendo spends it big
         if(rlHas(t,'mark'))d*=1.25;if(s.vsBurn&&rlHas(t,'burn'))d*=1+s.vsBurn;

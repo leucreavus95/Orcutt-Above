@@ -136,7 +136,16 @@ const RL_ROSTER=[
      ev:['Brontos','Brontos Stormhelm','Brontos, the Thunder Sovereign'],
      sk:[rlSk('Lightning Cleave',{m:3.8,splash:.3,fx:[['static',2,70]]}),
          rlSk('Chain-Bolt Volley',{cd:3,tg:'eA',m:1.4,bounce:4,vsStatic:.5,fx:[['static',2,40]]}),
-         rlSk('Tempest Drive',{cd:5,m:4.6,discharge:1.6,fx:[['self','spdUp',2]]})]}}
+         rlSk('Tempest Drive',{cd:5,m:4.6,discharge:1.6,fx:[['self','spdUp',2]]})]}},
+  // Aster, the astral sorcerer (chibi art). LEGENDARY. Brands enemies with Sigils: his lance pierces and
+  // brands the target, his sigil-bolts each brand a random enemy, and Rift Sweep detonates every Sigil
+  // (bonus damage per Sigil) while his orbiting star-sphere refreshes the team's cooldowns.
+  {id:'star',col:{c:'#7b5cff',l:'#ece4ff',d:'#15102e'},vp:['#ffffff','#ece4ff','#a98bff','#2a1f5a'],
+   hero:{n:'Aster',r:5,role:'atk',spd:115,it:'staff',o:'robe',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cd',v:20},
+     ev:['Aster','Aster Voidweave','Aster, the Star Sovereign'],
+     sk:[rlSk('Astral Lance',{m:3.8,ign:.3,fx:[['sigil',3,75]]}),
+         rlSk('Sigil-Bolt Volley',{cd:3,tg:'eA',m:1.3,bounce:3,fx:[['sigil',3,60]]}),
+         rlSk('Rift Sweep',{cd:5,tg:'eA',m:2.2,rift:.45,fx:[['team','cdDown',1]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){
