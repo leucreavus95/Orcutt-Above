@@ -228,7 +228,7 @@ async function lStudentSignIn(code,user,pin){
   return {sid,cid};
 }
 async function lSignOut(){
-  lStop();try{duelStop()}catch(e){}const u=LIVE.auth.currentUser;
+  lStop();try{duelStop()}catch(e){}try{tpStop()}catch(e){}const u=LIVE.auth.currentUser;
   try{if(u&&u.isAnonymous)await LIVE.db.doc('sessions/'+u.uid).delete()}catch(e){}
   LIVE.role=null;LIVE.sess=null;LIVE.owner=null;LIVE.email='';
   await LIVE.auth.signOut();
@@ -329,3 +329,21 @@ function duelChannel(mid){
   ch.now=duelNow;ch.me=me;
   return ch;
 }
+
+/* ============================================================
+   TEACHER: who is online right now, read from presence/{classId}
+   (students write their own presence when they sign in).
+   ============================================================ */
+const TP={subs:{},online:{},onChange:null};
+function tpSync(cids){
+  if(!LIVE.rt||LIVE.role!=='teacher')return;
+  const want=new Set(cids);
+  for(const cid in TP.subs)if(!want.has(cid)){TP.subs[cid]();delete TP.subs[cid];delete TP.online[cid]}
+  want.forEach(cid=>{if(TP.subs[cid])return;const ref=LIVE.rt.ref('presence/'+cid),fn=snap=>{TP.online[cid]=snap.val()||{};if(TP.onChange)try{TP.onChange()}catch(e){console.warn(e)}};
+    ref.on('value',fn,err=>console.warn('Presence listen failed',err&&err.message));TP.subs[cid]=()=>ref.off('value',fn)});
+}
+function tpStop(){for(const cid in TP.subs)try{TP.subs[cid]()}catch(e){};TP.subs={};TP.online={}}
+// One entry per student (a student may have two tabs open); busy = in a live match.
+function tpList(cid){const out={},P=TP.online[cid]||{};
+  for(const uid in P){const p=P[uid];if(!p||!p.sid)continue;const prev=out[p.sid];if(!prev)out[p.sid]={sid:p.sid,busy:!!p.busy,t:p.t||0};else{prev.busy=prev.busy||!!p.busy;prev.t=Math.min(prev.t||p.t,p.t||prev.t)}}
+  return Object.values(out)}

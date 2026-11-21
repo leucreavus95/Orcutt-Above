@@ -167,6 +167,8 @@ button.item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .duellist{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto}
 .duelrow{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
 .duelrow>div{display:flex;flex-direction:column;gap:2px}.duelrow span{font-size:13px}
+.tpbtn{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}.tpdot{width:9px;height:9px;border-radius:50%;background:#5b6070;flex:none}.tpbtn.on .tpdot{background:#38d39f;box-shadow:0 0 0 3px rgba(56,211,159,.22);animation:tppulse 2s ease-in-out infinite}@keyframes tppulse{50%{box-shadow:0 0 0 6px rgba(56,211,159,0)}}
+.tpgrp{display:flex;flex-direction:column;gap:8px}.tpgrp h4{margin:6px 0 0;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted,#9aa)}.tprow{grid-template-columns:48px 1fr}
 .duelwait{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:8px 0}.duelwait .miniav{width:84px;height:84px;border-radius:18px}
 .duelwait h3{margin:0}.duelwait .got{margin:0;font-family:Anton,Impact,sans-serif;font-size:18px;letter-spacing:.06em;text-transform:uppercase;color:#ff5fa2}
 .duelwait.invite .miniav{animation:buyPop .5s cubic-bezier(.2,1.5,.4,1) both;box-shadow:0 0 0 3px #ff5fa2,0 10px 30px -10px #ff5fa2}
@@ -1919,6 +1921,16 @@ function arcButtons(s,g,again){
 const duelFee=()=>{const f=+((state.settings.arcade||{}).duelFee??5);return f>0?Math.floor(f):0};
 const feeTxt=()=>duelFee()?`Entry ${duelFee()} coins, and you get 1 back for every point you score.`:'Free to play.';
 const nameOf=sid=>{const x=S(sid);return x?x.name:'A classmate'};
+// Teacher: students online now, per class (live sign-in only).
+function tpOnline(){if(typeof TP==='undefined')return[];const out=[];state.classes.forEach(c=>{const list=tpList(c.id).filter(x=>{const st=S(x.sid);return st&&st.classId===c.id});if(list.length)out.push({c,list:list.sort((a,b)=>nameOf(a.sid).localeCompare(nameOf(b.sid)))})});
+  out.sort((a,b)=>(b.c.id===ui.classId)-(a.c.id===ui.classId));return out}
+function tpBtn(){const n=tpOnline().reduce((a,g)=>a+g.list.length,0);return`<button class="btn sm tpbtn${n?' on':''}" id="tp-btn" data-a="onlineOpen" title="See who is online"><span class="tpdot"></span><span class="num">${n}</span> online</button>`}
+function tpChanged(){const b=document.getElementById('tp-btn');if(b)b.outerHTML=tpBtn();if(ui.modal&&ui.modal.type==='online')renderModal()}
+function tpSheet(){const G=tpOnline(),n=G.reduce((a,g)=>a+g.list.length,0),tm=t=>t?new Date(t).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):'';
+  return`<div class="row" style="justify-content:space-between"><h3>Online now · <span class="num">${n}</span></h3><button class="btn sm" data-a="close">Close</button></div>
+   ${n?`<div class="duellist">${G.map(g=>`<div class="tpgrp">${state.classes.length>1?`<h4>${esc(g.c.name)} · ${g.list.length}</h4>`:''}${g.list.map(x=>`<div class="duelrow tprow">${miniAv(x.sid)}<div><b>${esc(nameOf(x.sid))}</b><span class="${x.busy?'':'good'}" style="${x.busy?'color:#f5c542':''}">${x.busy?'In a live match':'Online'}${x.t?` <span class="muted">· since ${tm(x.t)}</span>`:''}</span></div></div>`).join('')}</div>`).join('')}</div>`
+   :`<p class="muted">No students are signed in right now.</p>`}
+   <p class="muted small" style="margin:0">Updates live. A student counts as online while the site is open on their device.</p>`}
 const first=sid=>nameOf(sid).split(' ')[0];
 function duelCardBits(s,compact){
   if(typeof duelReady!=='function'||!duelReady())return'';
@@ -3126,6 +3138,7 @@ function renderModal(){
   let h='';
   if(m.type==='duel'||m.type==='invite'){el.innerHTML=`<div class="scrim" data-a="scrim"><div class="modal duelm" role="dialog" aria-modal="true">${m.type==='duel'?duelListSheet():inviteSheet()}</div></div>`;return}
   if(m.type==='arcinfo'){const g=ARCADE.find(x=>x.id===m.id),st=S(ui.sId),top=arcTop(g.id,st.classId,5);el.innerHTML=`<div class="scrim" data-a="scrim"><div class="modal" role="dialog" aria-modal="true" aria-label="${esc(g.name)}"><div class="row" style="justify-content:space-between"><h3>${esc(g.name)}</h3><button class="btn sm" data-a="close">Close</button></div><div class="arc-frame" style="margin:0">${arcArt(g.id)}</div><p>${esc(g.d)}</p><p class="muted small">${esc(g.hint)}</p>${g.id==='pong'?`<p class="muted small">Live 1-on-1 duels: first to 5. ${feeTxt()}</p>`:''}<h3 style="margin-top:6px">Class top 5</h3><div class="feed">${top.map((x,i)=>`<div><span><b class="num">${i+1}</b> &nbsp;${esc(x.name)}</span><b class="num">${arcBest(x,g.id)}</b></div>`).join('')||'<p class="muted">No scores in your class yet. Set the first one.</p>'}</div></div></div>`;return}
+  if(m.type==='online'){el.innerHTML=`<div class="scrim" data-a="scrim"><div class="modal duelm" role="dialog" aria-modal="true" aria-label="Students online">${tpSheet()}</div></div>`;return}
   if(m.type==='shop'){el.innerHTML=`<div class="scrim" data-a="scrim"><div class="modal shopm" role="dialog" aria-modal="true" aria-label="Shop item">${shopSheet(m)}</div></div>`;return}
   if(m.type==='award'){
     const names=m.ids.length===1?esc(S(m.ids[0]).name):m.label||`${m.ids.length} students`;
@@ -3221,6 +3234,7 @@ const A={
   shopView(d){ui.modal={type:'shop',id:d.v,phase:'view'};renderModal()},
   shopWear(d){const s=S(ui.sId),i=ITEM[d.v];if(!i||!owns(s,i.id))return;s.equip[i.slot]=i.id;save();ui.modal=null;render();toast(['banner','frame','title'].includes(i.slot)?'Now using '+i.name:'Now wearing '+i.name)},
   shopHide(){ui.shopHide=!ui.shopHide;render()},
+  onlineOpen(){ui.modal={type:'online'};renderModal()},
   duelOpen(){if(!duelReady())return;ui.modal={type:'duel'};renderModal()},
   duelAsk(d){duelAsk(d.v,d.sid)},duelCancel(){duelCancel().then(()=>{ui.modal={type:'duel'};renderModal()})},
   duelBackList(){ui.modal={type:'duel'};renderModal()},
@@ -3326,7 +3340,8 @@ function liveRender(){
   if(!teacher&&!S(ui.sId)){liveOut();return}
   let h=`<header class="top"><div class="brand"><i></i>Orcutt Above</div>
     ${teacher?`<div class="seg" role="group" aria-label="View"><button data-a="mode" data-v="teacher" aria-pressed="${!stu}">Teacher</button><button data-a="mode" data-v="student" aria-pressed="${stu}">Student preview</button></div>`:'<span></span>'}
-    <div class="row" style="gap:12px;align-items:center"><div id="status" class="status${store.status==='saving'?' saving':store.status==='error'?' warn':''}">${statusText()}</div>${teacher?`<span class="muted who" title="Signed in">${esc(LIVE.email)}</span><button class="btn sm" data-a="liveOut">Sign out</button>`:''}</div></header>`;
+    <div class="row" style="gap:12px;align-items:center"><div id="status" class="status${store.status==='saving'?' saving':store.status==='error'?' warn':''}">${statusText()}</div>${teacher&&!stu?tpBtn():''}${teacher?`<span class="muted who" title="Signed in">${esc(LIVE.email)}</span><button class="btn sm" data-a="liveOut">Sign out</button>`:''}</div></header>`;
+  if(teacher&&typeof tpSync==='function'){TP.onChange=tpChanged;tpSync(state.classes.map(c=>c.id))}
   if(teacher&&!stu&&L.first&&!state.classes.length)h+=`<div class="proto">Welcome! Go to Students to add your first class and your students. Each student gets a username and PIN to sign in with your class code.</div>`;
   h+=stu?renderStudent():renderTeacher();
   $app().innerHTML=h;renderModal();stageMount();arcMount();if(typeof rlMount==='function')rlMount();
