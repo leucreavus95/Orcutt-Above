@@ -26,6 +26,14 @@ const RL_ART={
   // Kasim (jackal duelist, chibi). EPIC. Frames per form are [Sandshear, Twin Dune Cuts, Dust Devil].
   // Corvin (raven hex-scribe, chibi). LEGENDARY. Frames per form are [Quillshot, Binding Script, Blackwing Sigils].
   // Marla (marsh trapper, chibi). RARE. Frames per form are [Hooked Jab, Snare Toss, Bog Sweep].
+  // Burl (beaver bridgewright, chibi). COMMON. Frames per form are [Mallet Tap, Timber Toss, Quick Barricade].
+  beav:{f:[{src:'art/beav-1.webp',ax:289,ay:723,h:719,w:500,ih:723,ht:0},{src:'art/beav-2.webp',ax:278,ay:725,h:719,w:486,ih:726,ht:0},{src:'art/beav-3.webp',ax:277,ay:726,h:719,w:486,ih:727,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,
+        c:[[{src:'art/beav-1c1.webp',ax:163,ay:370,h:431,w:391,ih:374,ht:0},{src:'art/beav-1c2.webp',ax:156,ay:354,h:431,w:408,ih:359,ht:0},{src:'art/beav-1c3.webp',ax:211,ay:327,h:431,w:398,ih:332,ht:0}],
+           [{src:'art/beav-2c1.webp',ax:164,ay:369,h:431,w:398,ih:374,ht:0},{src:'art/beav-2c2.webp',ax:166,ay:372,h:431,w:410,ih:376,ht:0},{src:'art/beav-2c3.webp',ax:214,ay:331,h:431,w:407,ih:336,ht:0}],
+           [{src:'art/beav-3c1.webp',ax:168,ay:370,h:431,w:400,ih:376,ht:0},{src:'art/beav-3c2.webp',ax:176,ay:379,h:431,w:413,ih:383,ht:0},{src:'art/beav-3c3.webp',ax:225,ay:332,h:431,w:417,ih:337,ht:0}]],
+        spell:[{vp:['#ffffff','#f3e2c4','#c08a52','#4a2e18'],hand:[120,150],bySkill:[null,{shot:'art/fx-beav-log1.webp',sz:.5},null]},
+               {vp:['#ffffff','#f3e2c4','#c08a52','#4a2e18'],hand:[120,150],bySkill:[null,{shot:'art/fx-beav-log2.webp',sz:.5},null]},
+               {vp:['#ffffff','#f3e2c4','#c08a52','#4a2e18'],hand:[120,150],bySkill:[null,{shot:'art/fx-beav-log3.webp',sz:.5},null]}]},
   marsh:{f:[{src:'art/marsh-1.webp',ax:184,ay:780,h:775,w:498,ih:781,ht:0},{src:'art/marsh-2.webp',ax:199,ay:788,h:775,w:506,ih:789,ht:0},{src:'art/marsh-3.webp',ax:259,ay:799,h:775,w:557,ih:799,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,
         c:[[{src:'art/marsh-1c1.webp',ax:141,ay:378,h:465,w:407,ih:379,ht:0},{src:'art/marsh-1c2.webp',ax:125,ay:361,h:465,w:405,ih:361,ht:0},{src:'art/marsh-1c3.webp',ax:268,ay:358,h:465,w:400,ih:359,ht:0}],
            [{src:'art/marsh-2c1.webp',ax:151,ay:391,h:465,w:435,ih:392,ht:0},{src:'art/marsh-2c2.webp',ax:139,ay:369,h:465,w:437,ih:369,ht:0},{src:'art/marsh-2c3.webp',ax:248,ay:390,h:465,w:432,ih:391,ht:0}],

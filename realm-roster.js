@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Burl, the beaver bridgewright (chibi art). COMMON. A sturdy builder: Mallet Tap whacks one enemy
+  // (DEF-scaled), Timber Toss lobs a log that can stun, and Quick Barricade throws up a wooden wall that
+  // shields the whole team and raises their DEF.
+  {id:'beav',col:{c:'#a0683a',l:'#f3e2c4',d:'#3a2414'},vp:['#ffffff','#f3e2c4','#c08a52','#4a2e18'],
+   hero:{n:'Burl',r:1,role:'def',spd:95,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:10},
+     ev:['Burl','Burl Dambuilder','Burl, the Bridgewright'],
+     sk:[rlSk('Mallet Tap',{m:3.0,sc:'def'}),
+         rlSk('Timber Toss',{cd:3,m:2.2,sc:'def',fx:[['stun',1,30]]}),
+         rlSk('Quick Barricade',{cd:4,tg:'aA',fx:[['shield',14,2],['defUp',2]]})]}},
   // Marla, the marsh trapper (chibi art). RARE. Hooked Jab dashes in with her boat hook, Snare Toss
   // throws her noose: the Snared enemy can't gain buffs (any that land are blocked), loses one it already
   // has, and gets rope-burned each time it acts; Bog Sweep drags a wave of bog mud through every enemy,
