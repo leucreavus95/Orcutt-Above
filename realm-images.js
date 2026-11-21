@@ -21,6 +21,14 @@ const RL_ART={
   // Kael (frost owl, chibi). LEGENDARY. Frames per form are [Glacial Talon, Shardstorm, Permafrost Ring].
   // Thorne (stag shaman, chibi). LEGENDARY support. Frames per form are [Spirit Bolt, Totem Ward, Ancestral Tempest].
   // Voltan (lynx striker, chibi). LEGENDARY. Frames per form are [Thunderclap Fist, Chain Arc, Stormstep].
+  // Sage (village herbalist, chibi). COMMON healer. Frames per form are [Quick Remedy, Herbal Poultice, Renewing Draught].
+  herb:{f:[{src:'art/herb-1.webp',ax:181,ay:811,h:806,w:469,ih:811,ht:0},{src:'art/herb-2.webp',ax:200,ay:811,h:806,w:470,ih:812,ht:0},{src:'art/herb-3.webp',ax:206,ay:812,h:806,w:486,ih:812,ht:0}],pose:'skill',
+        c:[[{src:'art/herb-1c1.webp',ax:116,ay:395,h:532,w:400,ih:393,ht:0},{src:'art/herb-1c2.webp',ax:118,ay:438,h:532,w:316,ih:436,ht:0},{src:'art/herb-1c3.webp',ax:124,ay:476,h:532,w:333,ih:474,ht:0}],
+           [{src:'art/herb-2c1.webp',ax:139,ay:395,h:532,w:426,ih:393,ht:0},{src:'art/herb-2c2.webp',ax:127,ay:438,h:532,w:338,ih:436,ht:0},{src:'art/herb-2c3.webp',ax:127,ay:478,h:532,w:350,ih:476,ht:0}],
+           [{src:'art/herb-3c1.webp',ax:138,ay:395,h:532,w:446,ih:393,ht:0},{src:'art/herb-3c2.webp',ax:135,ay:437,h:532,w:353,ih:435,ht:0},{src:'art/herb-3c3.webp',ax:141,ay:477,h:532,w:382,ih:475,ht:0}]],
+        spell:[{vp:['#ffffff','#f4ffd6','#b8e07a','#5a7a2a'],hand:[110,150]},
+               {vp:['#ffffff','#f4ffd6','#b8e07a','#5a7a2a'],hand:[110,150]},
+               {vp:['#ffffff','#f4ffd6','#b8e07a','#5a7a2a'],hand:[110,150]}]},
   lynx:{f:[{src:'art/lynx-1.webp',ax:270,ay:859,h:854,w:504,ih:857,ht:0},{src:'art/lynx-2.webp',ax:266,ay:861,h:854,w:499,ih:859,ht:0},{src:'art/lynx-3.webp',ax:284,ay:866,h:854,w:530,ih:864,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],
         c:[[{src:'art/lynx-1c1.webp',ax:158,ay:363,h:495,w:393,ih:361,ht:0},{src:'art/lynx-1c2.webp',ax:164,ay:363,h:495,w:389,ih:364,ht:0},{src:'art/lynx-1c3.webp',ax:48,ay:308,h:495,w:368,ih:311,ht:0}],
            [{src:'art/lynx-2c1.webp',ax:177,ay:373,h:495,w:424,ih:371,ht:0},{src:'art/lynx-2c2.webp',ax:176,ay:373,h:495,w:430,ih:374,ht:0},{src:'art/lynx-2c3.webp',ax:62,ay:309,h:495,w:405,ih:311,ht:0}],

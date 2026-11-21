@@ -192,6 +192,14 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Sage, the village herbalist (chibi art). COMMON healer. Quick Remedy mends one ally, Herbal Poultice
+  // patches one ally up and draws out their debuffs, and Renewing Draught heals the whole team over time.
+  {id:'herb',col:{c:'#8fb85a',l:'#f4ffd6',d:'#2e3a1c'},vp:['#ffffff','#f4ffd6','#b8e07a','#5a7a2a'],
+   hero:{n:'Sage',r:1,role:'sup',spd:100,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:10},
+     ev:['Sage','Sage Herbwise','Sage, the Village Healer'],
+     sk:[rlSk('Quick Remedy',{tg:'a1',fx:[['heal',22]]}),
+         rlSk('Herbal Poultice',{cd:3,tg:'a1',fx:[['heal',18],['cleanse'],['regen',2]]}),
+         rlSk('Renewing Draught',{cd:4,tg:'aA',fx:[['heal',12],['regen',2]]})]}},
   // Voltan, the lynx striker (chibi art). LEGENDARY. A lightning brawler built on Static: Thunderclap Fist
   // charges one enemy with Static, Chain Arc jumps between enemies and hits charged ones harder, and
   // Stormstep blitzes one enemy, discharging all their Static, then leaves him fast and ready to go again.
