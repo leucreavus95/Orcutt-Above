@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Voltan, the lynx striker (chibi art). LEGENDARY. A lightning brawler built on Static: Thunderclap Fist
+  // charges one enemy with Static, Chain Arc jumps between enemies and hits charged ones harder, and
+  // Stormstep blitzes one enemy, discharging all their Static, then leaves him fast and ready to go again.
+  {id:'lynx',col:{c:'#4fb4ff',l:'#dff4ff',d:'#14204a'},vp:['#ffffff','#d6f6ff','#4fd0ff','#1a4a8a'],
+   hero:{n:'Voltan',r:5,role:'atk',spd:124,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'spd',v:15},
+     ev:['Voltan','Voltan Sparkpaw','Voltan, the Thunder Striker'],
+     sk:[rlSk('Thunderclap Fist',{m:3.7,fx:[['static',2,75]]}),
+         rlSk('Chain Arc',{cd:3,tg:'eA',m:1.4,bounce:4,vsStatic:.5,fx:[['static',2,45]]}),
+         rlSk('Stormstep',{cd:4,m:4.4,discharge:1.6,fx:[['self','spdUp',2],['self','atb',40]]})]}},
   // Thorne, the stag shaman (chibi art). LEGENDARY support. Spirit Bolt strikes one enemy and mends the
   // team a little; Totem Ward raises a spirit totem over every ally that clears their debuffs and blocks
   // any new ones for 2 turns; Ancestral Tempest sweeps all enemies and delays their turns.

@@ -20,6 +20,14 @@ const RL_ART={
   // Ignis (salamander arcanist, chibi). LEGENDARY. Frames per form are [Cinder Bolt, Scorching Arc, Ignition Burst].
   // Kael (frost owl, chibi). LEGENDARY. Frames per form are [Glacial Talon, Shardstorm, Permafrost Ring].
   // Thorne (stag shaman, chibi). LEGENDARY support. Frames per form are [Spirit Bolt, Totem Ward, Ancestral Tempest].
+  // Voltan (lynx striker, chibi). LEGENDARY. Frames per form are [Thunderclap Fist, Chain Arc, Stormstep].
+  lynx:{f:[{src:'art/lynx-1.webp',ax:270,ay:859,h:854,w:504,ih:857,ht:0},{src:'art/lynx-2.webp',ax:266,ay:861,h:854,w:499,ih:859,ht:0},{src:'art/lynx-3.webp',ax:284,ay:866,h:854,w:530,ih:864,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],
+        c:[[{src:'art/lynx-1c1.webp',ax:158,ay:363,h:495,w:393,ih:361,ht:0},{src:'art/lynx-1c2.webp',ax:164,ay:363,h:495,w:389,ih:364,ht:0},{src:'art/lynx-1c3.webp',ax:48,ay:308,h:495,w:368,ih:311,ht:0}],
+           [{src:'art/lynx-2c1.webp',ax:177,ay:373,h:495,w:424,ih:371,ht:0},{src:'art/lynx-2c2.webp',ax:176,ay:373,h:495,w:430,ih:374,ht:0},{src:'art/lynx-2c3.webp',ax:62,ay:309,h:495,w:405,ih:311,ht:0}],
+           [{src:'art/lynx-3c1.webp',ax:184,ay:377,h:495,w:449,ih:375,ht:0},{src:'art/lynx-3c2.webp',ax:175,ay:375,h:495,w:466,ih:376,ht:0},{src:'art/lynx-3c3.webp',ax:63,ay:309,h:495,w:445,ih:312,ht:0}]],
+        spell:[{vp:['#ffffff','#d6f6ff','#4fd0ff','#1a4a8a'],hand:[120,150],bySkill:[null,{shot:'art/fx-lynx-arc1.webp',sz:.6},null]},
+               {vp:['#ffffff','#d6f6ff','#4fd0ff','#1a4a8a'],hand:[120,150],bySkill:[null,{shot:'art/fx-lynx-arc2.webp',sz:.6},null]},
+               {vp:['#ffffff','#d6f6ff','#4fd0ff','#1a4a8a'],hand:[120,150],bySkill:[null,{shot:'art/fx-lynx-arc3.webp',sz:.6},null]}]},
   stag:{f:[{src:'art/stag-1.webp',ax:157,ay:824,h:819,w:408,ih:825,ht:0},{src:'art/stag-2.webp',ax:219,ay:843,h:819,w:491,ih:844,ht:0},{src:'art/stag-3.webp',ax:283,ay:907,h:819,w:614,ih:907,ht:0}],pose:'skill',
         c:[[{src:'art/stag-1c1.webp',ax:106,ay:338,h:344,w:401,ih:337,ht:0},{src:'art/stag-1c2.webp',ax:177,ay:391,h:344,w:381,ih:396,ht:0},{src:'art/stag-1c3.webp',ax:183,ay:320,h:344,w:408,ih:319,ht:0}],
            [{src:'art/stag-2c1.webp',ax:111,ay:337,h:344,w:430,ih:336,ht:0},{src:'art/stag-2c2.webp',ax:196,ay:412,h:344,w:426,ih:414,ht:0},{src:'art/stag-2c3.webp',ax:157,ay:398,h:344,w:427,ih:398,ht:0}],
