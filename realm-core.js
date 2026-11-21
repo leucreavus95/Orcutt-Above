@@ -183,6 +183,8 @@ function rlTick(u,ev){u.fx.forEach(f=>f.t--);const gone=u.fx.filter(f=>f.t<=0);u
 function rlHeal(u,a,ev){if(!u.alive)return;const b=u.hp;u.hp=Math.min(u.maxHp,u.hp+Math.round(a));const d=u.hp-b;if(d>0)ev.push({k:'heal',u:u.uid,v:d})}
 function rlDamage(B,u,amt,ev,o){
   let a=Math.max(1,Math.round(amt));
+  // Scale Plating (Kestran): 20% less damage from hits while above half HP
+  {const H=u.kind==='hero'&&typeof RL_H!=='undefined'&&RL_H[u.id];if(H&&H.plating&&!(o&&o.dot)&&u.hp>u.maxHp*.5)a=Math.max(1,Math.round(a*(1-H.plating)))}
   // Earthen Bulwark: a stone wall blunts direct hits
   if(!(o&&(o.dot||o.guarded))&&rlHas(u,'bulwark'))a=Math.max(1,Math.round(a*.75));
   // Guardian Current: the guardian takes 30% of direct hits aimed at a guarded ally
@@ -246,6 +248,7 @@ function rlAct(B,u,i,tid,power){
         if(s.vsDaze&&rlHas(t,'daze'))d*=1+s.vsDaze;
         if(s.vsSoak&&rlHas(t,'soak'))d*=1+s.vsSoak;
         if(s.vsStatic&&rlHas(t,'static'))d*=1+s.vsStatic;
+        if(s.vsBreak&&rlHas(t,'defBreak'))d*=1+s.vsBreak;
         if(s.vsPoison)d*=1+s.vsPoison*t.fx.filter(x=>x.k==='poison').length;
         if(s.rift){const n=t.fx.filter(x=>x.k==='sigil').length;if(n){d*=1+s.rift*n;if(h===(s.h||1)-1){t.fx=t.fx.filter(x=>x.k!=='sigil');ev.push({k:'rift',u:t.uid,v:n})}}}
         if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;

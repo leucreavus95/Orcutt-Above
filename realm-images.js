@@ -10,6 +10,15 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Kestran (pangolin spear knight, chibi). LEGENDARY. Frames per form are [Spear Thrust, Winding Sweep, Spearstorm]:
+  // the thrust is a lunge; the sweep reuses the thrust stance (the sheet's sweep crosses his legs) and draws the painted arc.
+  pan:{f:[{src:'art/pan-1.webp',ax:242,ay:487,h:472,w:462,ih:487,ht:0},{src:'art/pan-2.webp',ax:252,ay:502,h:485,w:455,ih:501,ht:0},{src:'art/pan-3.webp',ax:294,ay:580,h:562,w:625,ih:580,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
+        c:[[{src:'art/pan-1c1.webp',ax:128,ay:285,h:276,w:412,ih:285,ht:0},{src:'art/pan-1c2.webp',ax:128,ay:285,h:276,w:412,ih:285,ht:0},{src:'art/pan-1c3.webp',ax:138,ay:307,h:296,w:287,ih:306,ht:0}],
+           [{src:'art/pan-2c1.webp',ax:130,ay:290,h:280,w:424,ih:289,ht:0},{src:'art/pan-2c2.webp',ax:130,ay:290,h:280,w:424,ih:289,ht:0},{src:'art/pan-2c3.webp',ax:142,ay:392,h:380,w:291,ih:392,ht:0}],
+           [{src:'art/pan-3c1.webp',ax:133,ay:298,h:289,w:438,ih:298,ht:0},{src:'art/pan-3c2.webp',ax:133,ay:298,h:289,w:438,ih:298,ht:0},{src:'art/pan-3c3.webp',ax:145,ay:398,h:385,w:292,ih:397,ht:0}]],
+        spell:[{vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc1.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear1.webp'}]},
+               {vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc2.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear2.webp'}]},
+               {vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc3.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear3.webp'}]}]},
   // Brenna (lantern medic, chibi). LEGENDARY healer. Frames per form are [Kindled Aid, Hearthlight Rally, Second Dawn];
   // all three land on allies, and Second Dawn can raise a fallen ally.
   med:{f:[{src:'art/med-1.webp',ax:173,ay:713,h:690,w:469,ih:712,ht:0},{src:'art/med-2.webp',ax:178,ay:739,h:714,w:464,ih:737,ht:0},{src:'art/med-3.webp',ax:203,ay:789,h:763,w:501,ih:787,ht:0}],pose:'skill',
@@ -521,6 +530,7 @@ function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst|
     if(hit.size>=pts.length&&!this.r){this.r=1;res()}if(k>=1){this.done=true;if(!this.r)res()}}})})}
 (function(){const prev=rlArtFire,prevSup=rlArtSupport;
   rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0]||{};S=Object.assign({},S,{paint:p,bySkill:null},p.hand?{hand:p.hand}:{});
+      if(p.aoe==='spearrain'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxSpearRain(pts,S,p.img)}
       if(p.aoe==='spearsweep'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxSpearSweep(pts,S)}
       if(sk.tg==='eA'&&(p.aoe==='erupt'||p.aoe==='sweep')){const h=rlArtHand(S);const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;if(p.up&&h){await vfxShootUp(h,S,p.up);}return p.aoe==='erupt'?paintErupt(pts,S):paintSweep(h,pts,S)}}
     return prev(S,e,sk,ult)};
@@ -614,3 +624,12 @@ function vfxLantern(S,e,sk){const P=S.vp,sp=vSp(),h=rlArtHand(S),pts=e.t.map(t=>
     c.beginPath();for(let i=0;i<8;i++){const an=i*Math.PI/4+t;c.moveTo(q.x,foot);c.lineTo(q.x+Math.cos(an)*q.w*.65*g,foot+Math.sin(an)*q.w*.15*g)}c.stroke();c.restore();
     if(Math.random()<.9)vfxP({x:q.x+vR(-w,w),y:foot-vR(0,q.h),vy:vR(-140,-60),life:vR(.4,.8),s:vR(2,5),c:rlRand(P),shape:'star',vr:3});
     if(!hit&&k>.35){hit=true;sparkle(q);res()}}})})}
+
+/* Kestran: a storm of jade spears slams down diagonally onto every enemy */
+function vfxSpearRain(pts,S,src){const img=artImg(src),P=S.vp,sp=vSp();
+  return Promise.all(pts.map((q,j)=>Promise.all([0,1,2].map(i=>new Promise(res=>{let t=-(i*.09+j*.05)/sp,hit=false;const life=.32/sp,w=q.w*.55,
+      x1=q.x+vR(-q.w*.25,q.w*.25),y1=q.y+vR(-q.h*.1,q.h*.3),x0=x1-q.h*1.1,y0=y1-q.h*1.6;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=Math.min(1,t/life),x=x0+(x1-x0)*k,y=y0+(y1-y0)*k;
+      if(img){const H=w*img.naturalHeight/img.naturalWidth;c.save();c.globalAlpha=k<.9?1:1-(k-.9)/.1;c.translate(x,y);c.drawImage(img,-w*.8,-H*.8,w,H);c.restore()}
+      if(Math.random()<.6)vfxP({x,y,vx:vR(-30,30),vy:vR(-60,-20),life:vR(.2,.4),s:vR(2,4),c:rlRand(P)});
+      if(k>=1&&!hit){hit=true;this.done=true;vfxP({x:x1,y:y1,life:.3,s:6,grow:150,c:P[2],shape:'shock'});for(let n=0;n<8;n++)vfxP({x:x1,y:y1,vx:vR(-150,150),vy:vR(-200,-40),ay:500,life:vR(.3,.6),s:vR(2,4),c:rlRand(P),shape:'dia',vr:6});res()}}})})))))}
