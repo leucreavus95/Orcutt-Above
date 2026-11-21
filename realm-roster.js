@@ -118,7 +118,16 @@ const RL_ROSTER=[
      ev:['Wick','Wick Brasscap','Wick, the Everflame'],
      sk:[rlSk('Wax Glob',{m:3.2,fx:[['slow',2,60]]}),
          rlSk('Ember Spit',{cd:3,m:2.8,waxBurn:true,fx:[['burn',2,70]]}),
-         rlSk('Flame Flick',{cd:4,tg:'eA',m:1.7,vsBurn:.3,fx:[['burn',2,40]]})]}}
+         rlSk('Flame Flick',{cd:4,tg:'eA',m:1.7,vsBurn:.3,fx:[['burn',2,40]]})]}},
+  // Thalos, the manta knight (chibi art). LEGENDARY. Master of the tide: his water lance pierces armor and
+  // Soaks the target; his water blades seek out enemies and cut deeper into Soaked ones; his Deep Current
+  // drags the whole enemy line back (Soaked enemies the furthest) while shielding and hastening his team.
+  {id:'ray',col:{c:'#2f7fc0',l:'#d8f4ff',d:'#0a1e3a'},vp:['#ffffff','#d8f4ff','#5cc4f0','#1a4f8a'],
+   hero:{n:'Thalos',r:5,role:'atk',spd:117,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:20},
+     ev:['Thalos','Thalos Tidecrest','Thalos, Sovereign of the Deep'],
+     sk:[rlSk('Coral-Lance Thrust',{m:3.9,ign:.4,fx:[['soak',2,80]]}),
+         rlSk('Water-Blade Volley',{cd:3,tg:'eA',m:1.5,bounce:3,vsSoak:.4,fx:[['strip',1]]}),
+         rlSk('Deep Current',{cd:5,tg:'eA',m:2.4,undertow:true,fx:[['soak',2,60],['team','shield',12,2],['team','atb',20]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

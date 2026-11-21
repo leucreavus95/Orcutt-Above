@@ -237,6 +237,7 @@ function rlAct(B,u,i,tid,power){
         if(s.exec&&t.hp<t.maxHp*.5)d*=1+s.exec; // Finisher
         if(s.opener&&t.hp>=t.maxHp)d*=1+s.opener; // Opening strike
         if(s.vsDaze&&rlHas(t,'daze'))d*=1+s.vsDaze;
+        if(s.vsSoak&&rlHas(t,'soak'))d*=1+s.vsSoak;
         if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;
         if(u.tempo)d*=1+.1*u.tempo+(s.crescendo?s.crescendo*u.tempo:0); // Tempo: +10% per beat; Crescendo spends it big
         if(rlHas(t,'mark'))d*=1.25;if(s.vsBurn&&rlHas(t,'burn'))d*=1+s.vsBurn;
@@ -247,8 +248,11 @@ function rlAct(B,u,i,tid,power){
         if(u.stats.steal)rlHeal(u,dealt*u.stats.steal/100,ev);
       }
       const preDaze=s.ring&&rlHas(t,'daze');
+      const preSoak=s.undertow&&rlHas(t,'soak');
       if(s.waxBurn&&t.alive&&rlHas(t,'slow'))rlApplyFx(B,u,t,['burn',2,100],pw*bonus,ev,true); // melting wax: an extra Burn on Slowed targets
       for(const f of s.fx)if(f[0]!=='self'&&f[0]!=='team')rlApplyFx(B,u,t,f,pw*bonus,ev,true);
+      // Undertow: the Deep Current drags enemies' turns back, Soaked ones much further
+      if(s.undertow&&t.alive&&pw>=.99&&!rlHas(t,'immune')){const v=preSoak?60:25;t.atb=Math.max(0,t.atb-v);ev.push({k:'atb',u:t.uid,v:-v})}
       // Resonance: an enemy already Dazed when the burst lands is stunned
       if(s.ring&&t.alive&&preDaze&&!rlHas(t,'immune')){t.fx=t.fx.filter(x=>x.k!=='daze'&&x.k!=='stun');t.fx.push({k:'stun',t:1});ev.push({k:'fx',u:t.uid,f:'stun'})}
       // Foxfire: set off every Burn on the target at once (their remaining burn damage, capped)

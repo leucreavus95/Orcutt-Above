@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Thalos (manta knight, chibi). LEGENDARY. Frames per form are [Coral-Lance Thrust, Water-Blade Volley, Deep Current].
+  ray:{zoom:.36,eyeY:90,f:[{src:'art/ray-1.webp',ax:226,ay:485,h:479,w:473,ih:485,ht:3,cx:245,fy:150},{src:'art/ray-2.webp',ax:209,ay:513,h:479,w:475,ih:512,ht:3,cx:250,fy:150},{src:'art/ray-3.webp',ax:304,ay:551,h:479,w:601,ih:552,ht:3,cx:330,fy:175}],pose:'skill',
+        c:[[{src:'art/ray-1c1.webp',ax:108,ay:273,h:275,w:443,ih:272,ht:0},{src:'art/ray-1c2.webp',ax:122,ay:281,h:275,w:454,ih:279,ht:3},{src:'art/ray-1c3.webp',ax:237,ay:308,h:275,w:488,ih:313,ht:15}],
+           [{src:'art/ray-2c1.webp',ax:134,ay:285,h:275,w:455,ih:285,ht:3},{src:'art/ray-2c2.webp',ax:194,ay:315,h:275,w:439,ih:316,ht:3},{src:'art/ray-2c3.webp',ax:104,ay:337,h:275,w:453,ih:352,ht:7}],
+           [{src:'art/ray-3c1.webp',ax:171,ay:352,h:275,w:494,ih:352,ht:3},{src:'art/ray-3c2.webp',ax:244,ay:355,h:275,w:487,ih:355,ht:3},{src:'art/ray-3c3.webp',ax:207,ay:413,h:275,w:494,ih:418,ht:7}]],
+        spell:[{vp:['#ffffff','#d8f4ff','#5cc4f0','#1a4f8a'],hand:[190,110],support:'ring',bySkill:[{shot:'art/fx-ray-lance1.webp'},{shot:'art/fx-ray-blade1.webp',sz:.7},{burst:'art/fx-ray-wave1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#d8f4ff','#5cc4f0','#1a4f8a'],hand:[190,110],support:'ring',bySkill:[{shot:'art/fx-ray-lance2.webp'},{shot:'art/fx-ray-blade2.webp',sz:.7},{burst:'art/fx-ray-wave2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#d8f4ff','#5cc4f0','#1a4f8a'],hand:[190,110],support:'ring',bySkill:[{shot:'art/fx-ray-lance3.webp'},{shot:'art/fx-ray-blade3.webp',sz:.7},{burst:'art/fx-ray-wave3.webp',aoe:'sweep'}]}]},
   // Wick (candle sprite, chibi). Frames per form are [Wax Glob, Ember Spit, Flame Flick].
   wick:{zoom:.22,eyeY:135,f:[{src:'art/wick-1.webp',ax:191,ay:578,h:482,w:491,ih:583,ht:93,cx:265,fy:370},{src:'art/wick-2.webp',ax:189,ay:600,h:482,w:499,ih:604,ht:115,cx:268,fy:390},{src:'art/wick-3.webp',ax:187,ay:598,h:482,w:481,ih:602,ht:113,cx:268,fy:390}],pose:'skill',
         c:[[{src:'art/wick-1c1.webp',ax:122,ay:406,h:347,w:416,ih:409,ht:69},{src:'art/wick-1c2.webp',ax:122,ay:422,h:347,w:353,ih:423,ht:72},{src:'art/wick-1c3.webp',ax:122,ay:413,h:347,w:404,ih:416,ht:70}],
