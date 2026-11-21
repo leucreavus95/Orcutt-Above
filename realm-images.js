@@ -28,7 +28,7 @@ const RL_ART={
   // Marla (marsh trapper, chibi). RARE. Frames per form are [Hooked Jab, Snare Toss, Bog Sweep].
   // Burl (beaver bridgewright, chibi). COMMON. Frames per form are [Mallet Tap, Timber Toss, Quick Barricade].
   // Varek (ashen chain warden, chibi). LEGENDARY. Frames per form are [Chainhook Strike, Cinder Sweep, Furnace Break].
-  chain:{f:[{src:'art/chain-1.webp',ax:218,ay:737,h:732,w:505,ih:735,ht:0},{src:'art/chain-2.webp',ax:213,ay:738,h:732,w:476,ih:736,ht:0},{src:'art/chain-3.webp',ax:251,ay:742,h:732,w:530,ih:740,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'fire',
+  chain:{f:[{src:'art/chain-1.webp',ax:218,ay:737,h:732,w:510,ih:735,ht:0},{src:'art/chain-2.webp',ax:213,ay:738,h:732,w:476,ih:736,ht:0},{src:'art/chain-3.webp',ax:251,ay:742,h:732,w:530,ih:740,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'fire',
         c:[[{src:'art/chain-1c1.webp',ax:139,ay:340,h:439,w:417,ih:341,ht:0},{src:'art/chain-1c2.webp',ax:154,ay:339,h:439,w:401,ih:338,ht:0},{src:'art/chain-1c3.webp',ax:325,ay:442,h:439,w:417,ih:445,ht:0}],
            [{src:'art/chain-2c1.webp',ax:144,ay:342,h:439,w:419,ih:343,ht:0},{src:'art/chain-2c2.webp',ax:198,ay:345,h:439,w:409,ih:345,ht:0},{src:'art/chain-2c3.webp',ax:279,ay:442,h:439,w:419,ih:456,ht:0}],
            [{src:'art/chain-3c1.webp',ax:148,ay:342,h:439,w:421,ih:343,ht:0},{src:'art/chain-3c2.webp',ax:211,ay:346,h:439,w:426,ih:347,ht:0},{src:'art/chain-3c3.webp',ax:300,ay:453,h:439,w:432,ih:454,ht:0}]],
