@@ -25,6 +25,14 @@ const RL_ART={
   // Bram (boar shieldbearer, chibi). COMMON tank. Frames per form are [Tusker Bash, Shield Brace, Hold the Line].
   // Kasim (jackal duelist, chibi). EPIC. Frames per form are [Sandshear, Twin Dune Cuts, Dust Devil].
   // Corvin (raven hex-scribe, chibi). LEGENDARY. Frames per form are [Quillshot, Binding Script, Blackwing Sigils].
+  // Marla (marsh trapper, chibi). RARE. Frames per form are [Hooked Jab, Snare Toss, Bog Sweep].
+  marsh:{f:[{src:'art/marsh-1.webp',ax:184,ay:780,h:775,w:498,ih:781,ht:0},{src:'art/marsh-2.webp',ax:199,ay:788,h:775,w:506,ih:789,ht:0},{src:'art/marsh-3.webp',ax:259,ay:799,h:775,w:557,ih:799,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,
+        c:[[{src:'art/marsh-1c1.webp',ax:141,ay:378,h:465,w:407,ih:379,ht:0},{src:'art/marsh-1c2.webp',ax:125,ay:361,h:465,w:405,ih:361,ht:0},{src:'art/marsh-1c3.webp',ax:268,ay:358,h:465,w:400,ih:359,ht:0}],
+           [{src:'art/marsh-2c1.webp',ax:151,ay:391,h:465,w:435,ih:392,ht:0},{src:'art/marsh-2c2.webp',ax:139,ay:369,h:465,w:437,ih:369,ht:0},{src:'art/marsh-2c3.webp',ax:248,ay:390,h:465,w:432,ih:391,ht:0}],
+           [{src:'art/marsh-3c1.webp',ax:153,ay:420,h:465,w:446,ih:420,ht:0},{src:'art/marsh-3c2.webp',ax:139,ay:386,h:465,w:446,ih:387,ht:0},{src:'art/marsh-3c3.webp',ax:230,ay:416,h:465,w:444,ih:416,ht:0}]],
+        spell:[{vp:['#ffffff','#eef0d0','#b9b48a','#4a4a2a'],hand:[120,140],bySkill:[null,{shot:'art/fx-marsh-noose1.webp',sz:.55},{burst:'art/fx-marsh-mud1.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#ffffff','#eef0d0','#b9b48a','#4a4a2a'],hand:[120,140],bySkill:[null,{shot:'art/fx-marsh-noose2.webp',sz:.55},{burst:'art/fx-marsh-mud2.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#ffffff','#eef0d0','#b9b48a','#4a4a2a'],hand:[120,140],bySkill:[null,{shot:'art/fx-marsh-noose3.webp',sz:.55},{burst:'art/fx-marsh-mud3.webp',aoe:'erupt',sz:.5}]}]},
   raven:{f:[{src:'art/raven-1.webp',ax:247,ay:762,h:757,w:480,ih:760,ht:0},{src:'art/raven-2.webp',ax:278,ay:767,h:757,w:500,ih:765,ht:0},{src:'art/raven-3.webp',ax:241,ay:768,h:757,w:527,ih:766,ht:0}],pose:'skill',
         c:[[{src:'art/raven-1c1.webp',ax:130,ay:387,h:454,w:416,ih:387,ht:0},{src:'art/raven-1c2.webp',ax:134,ay:407,h:454,w:416,ih:406,ht:0},{src:'art/raven-1c3.webp',ax:141,ay:392,h:454,w:407,ih:392,ht:0}],
            [{src:'art/raven-2c1.webp',ax:138,ay:387,h:454,w:416,ih:387,ht:0},{src:'art/raven-2c2.webp',ax:140,ay:409,h:454,w:417,ih:408,ht:0},{src:'art/raven-2c3.webp',ax:134,ay:412,h:454,w:410,ih:413,ht:0}],

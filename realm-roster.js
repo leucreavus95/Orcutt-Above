@@ -192,6 +192,16 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Marla, the marsh trapper (chibi art). RARE. Hooked Jab dashes in with her boat hook, Snare Toss
+  // throws her noose: the Snared enemy can't gain buffs (any that land are blocked), loses one it already
+  // has, and gets rope-burned each time it acts; Bog Sweep drags a wave of bog mud through every enemy,
+  // slowing them and hitting Snared enemies much harder.
+  {id:'marsh',col:{c:'#7a8a4a',l:'#eef0d0',d:'#2a2a18'},vp:['#ffffff','#eef0d0','#b9b48a','#4a4a2a'],
+   hero:{n:'Marla',r:3,role:'atk',spd:106,it:'staff',o:'cloak',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'spd',v:8},
+     ev:['Marla','Marla Reedcloak','Marla, the Bog Warden'],
+     sk:[rlSk('Hooked Jab',{m:3.4,fx:[['atbDown',10,40]]}),
+         rlSk('Snare Toss',{cd:3,m:1.8,fx:[['strip',1],['snare',3,85]]}),
+         rlSk('Bog Sweep',{cd:4,tg:'eA',m:1.5,vsSnare:.6,fx:[['slow',2,55]]})]}},
   // Corvin, the raven hex-scribe (chibi art). LEGENDARY. A curse-writer: Quillshot fires an inked quill
   // that Marks, Binding Script wraps one enemy in runes that Seal their skills and sap their ATK, and
   // Blackwing Sigils hexes every enemy with feather-sigils that Mark them and break their DEF.

@@ -51,6 +51,7 @@ const RL_FX={
   bulwark:{n:'Bulwark',buff:1,c:'#d98a4a',g:'▣',d:'Takes 25% less damage from hits'},
   guard:{n:'Guarded',buff:1,c:'#6fe0f5',g:'⛨',d:'A guardian takes 30% of the damage for it'},
   ward:{n:'Flame Ward',buff:1,c:'#ff9a3d',g:'♨',d:'Enemies that hit it may catch fire'},
+  snare:{n:'Snared',c:'#c9a26a',g:'➰',d:'Noosed: cannot gain buffs, and the rope burns it each time it acts'},
   freeze:{n:'Frozen',c:'#9fd8ff',g:'❄',d:'Encased in ice: skips its turns until it thaws'},
   taunt:{n:'Taunted',c:'#e0a83a',g:'⚑',d:'Must aim its single-target attacks at the one who taunted it'},
   veil:{n:'Veiled',buff:1,c:'#b9a3e0',g:'◐',d:'Phased out: enemies can\'t target or hit it'}

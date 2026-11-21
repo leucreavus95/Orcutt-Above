@@ -189,6 +189,8 @@ async function rlbPlay(ev){
     else if(e.k==='reborn'){rlbFloat(e.u,'Reborn!','heal');const p=rlbPt(e.u);if(p){vfxP({x:p.x,y:p.y,life:.6,s:12,grow:280,c:'#ffb347',shape:'shock'});for(let i=0;i<40;i++)vfxP({x:p.x+vR(-p.w/3,p.w/3),y:p.y+p.h*.4,vx:vR(-60,60),vy:vR(-380,-140),life:vR(.5,1),s:vR(3,7),c:rlRand(['#ffffff','#fff1c0','#ff9a2a','#c42a10'])})}rlbSync();await rlbDelay(420)}
     else if(e.k==='rift'){rlbFloat(e.u,'✧'.repeat(e.v)+' Rift!','crit');const p=rlbPt(e.u);if(p){vfxP({x:p.x,y:p.y,life:.4,s:10,grow:240,c:'#a98bff',shape:'shock'});for(let i=0;i<8*e.v;i++){const a=Math.random()*6.283,v=vR(80,240);vfxP({x:p.x,y:p.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,drag:.9,life:vR(.4,.7),s:vR(3,6),c:rlRand(['#ffffff','#ece4ff','#a98bff']),shape:'star',vr:4})}}await rlbDelay(180)}
     else if(e.k==='zap'){rlbFloat(e.u,'Discharge!','crit');const p=rlbPt(e.u);if(p){vfxP({x:p.x,y:p.y,life:.4,s:10,grow:260,c:'#ffd23a',shape:'shock'});for(let i=0;i<5;i++){let x=p.x+vR(-20,20),y=p.y-p.h*.8;for(let j=0;j<7;j++){const nx=x+vR(-14,14),ny=y+p.h*.25;for(let k=0;k<4;k++)vfxP({x:x+(nx-x)*k/4,y:y+(ny-y)*k/4,life:.25,s:3,c:'#fff3b0'});x=nx;y=ny}}}rlbShake(true);await rlbDelay(200)}
+    else if(e.k==='rope'){rlbFloat(e.u,'Rope burn','debuff');await rlbDelay(160)}
+    else if(e.k==='bound'){rlbFloat(e.u,'Bound!','muted');await rlbDelay(120)}
     else if(e.k==='iced'){rlbFloat(e.u,'Frozen','debuff');await rlbDelay(340)}
     else if(e.k==='lost'){rlbFloat(e.u,'No target!','muted');await rlbDelay(300)}
     else if(e.k==='miss'){rlbFloat(e.u,'Miss!','muted');await rlbDelay(140)}
