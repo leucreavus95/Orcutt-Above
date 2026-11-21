@@ -12,9 +12,9 @@ const RL_ART={
   // f: standing art for each form, with the same placement fields (w/ih = file size).
   // Vexis (basilisk, chibi). LEGENDARY. Frames per form are [Venom Fang, Twin Toxin Crescents, Caustic Mireburst].
   bas:{zoom:.42,eyeY:100,f:[{src:'art/bas-1.webp',ax:249,ay:654,h:648,w:467,ih:652,ht:3,cx:285,fy:230},{src:'art/bas-2.webp',ax:250,ay:668,h:648,w:488,ih:666,ht:3,cx:290,fy:240},{src:'art/bas-3.webp',ax:285,ay:701,h:648,w:539,ih:699,ht:1,cx:330,fy:270}],pose:'skill',
-        c:[[{src:'art/bas-1c1.webp',ax:184,ay:375,h:385,w:368,ih:376,ht:2},{src:'art/bas-1c2.webp',ax:156,ay:391,h:385,w:317,ih:391,ht:3},{src:'art/bas-1c3.webp',ax:277,ay:353,h:385,w:294,ih:352,ht:1}],
-           [{src:'art/bas-2c1.webp',ax:172,ay:385,h:385,w:340,ih:386,ht:2},{src:'art/bas-2c2.webp',ax:158,ay:393,h:385,w:315,ih:393,ht:0},{src:'art/bas-2c3.webp',ax:147,ay:363,h:385,w:266,ih:362,ht:2}],
-           [{src:'art/bas-3c1.webp',ax:200,ay:392,h:385,w:374,ih:393,ht:2},{src:'art/bas-3c2.webp',ax:162,ay:398,h:385,w:316,ih:397,ht:2},{src:'art/bas-3c3.webp',ax:239,ay:369,h:385,w:258,ih:368,ht:2}]],
+        c:[[{src:'art/bas-1c1.webp',ax:184,ay:374,h:385,w:419,ih:375,ht:0},{src:'art/bas-1c2.webp',ax:155,ay:391,h:385,w:413,ih:391,ht:0},{src:'art/bas-1c3.webp',ax:160,ay:352,h:385,w:350,ih:352,ht:0}],
+           [{src:'art/bas-2c1.webp',ax:170,ay:384,h:385,w:405,ih:383,ht:0},{src:'art/bas-2c2.webp',ax:159,ay:393,h:385,w:422,ih:393,ht:0},{src:'art/bas-2c3.webp',ax:147,ay:362,h:385,w:322,ih:361,ht:0}],
+           [{src:'art/bas-3c1.webp',ax:200,ay:390,h:385,w:453,ih:394,ht:0},{src:'art/bas-3c2.webp',ax:162,ay:397,h:385,w:439,ih:396,ht:0},{src:'art/bas-3c3.webp',ax:155,ay:368,h:385,w:308,ih:367,ht:0}]],
         spell:[{vp:['#ffffff','#eaffb0','#b6e83a','#4a1a2e'],hand:[175,150],bySkill:[{shot:'art/fx-bas-fang1.webp',sz:.75},{shot:'art/fx-bas-cres1.webp',sz:.55},{burst:'art/fx-bas-mire1.webp',aoe:'erupt',sz:.65}]},
                {vp:['#ffffff','#eaffb0','#b6e83a','#4a1a2e'],hand:[175,150],bySkill:[{shot:'art/fx-bas-fang2.webp',sz:.75},{shot:'art/fx-bas-cres2.webp',sz:.55},{burst:'art/fx-bas-mire2.webp',aoe:'erupt',sz:.65}]},
                {vp:['#ffffff','#eaffb0','#b6e83a','#4a1a2e'],hand:[175,150],bySkill:[{shot:'art/fx-bas-fang3.webp',sz:.75},{shot:'art/fx-bas-cres3.webp',sz:.55},{burst:'art/fx-bas-mire3.webp',aoe:'erupt',sz:.65}]}]},
