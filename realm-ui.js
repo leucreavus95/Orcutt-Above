@@ -30,6 +30,7 @@ function rlSkillText(h,s,lvl,st){
     else if(k==='atbDown')parts.push(`Delays enemy turns (${a[2]}% chance)`);
     else if(k==='revive')parts.push('Revives fallen allies');
     else if(k==='shield')parts.push(`Shields ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP (${turns(a[2])})`);
+    else if(k==='drowsy')parts.push(`Makes ${tgt} Drowsy (${a[2]}% chance, ${turns(a[1])}): 35% chance each turn to doze off and lose it`);
     else if(k==='chill')parts.push(`Adds 1 Chill (${a[2]}% chance). At 3 Chill the enemy freezes and skips a turn`);
     else if(k==='rime')parts.push(`Rune Ward on ${tgt} (${turns(a[1])}): enemies that strike them get Chilled`);
     else if(k==='daze')parts.push(`Dazes ${tgt} (${a[2]}% chance, ${turns(a[1])})`);

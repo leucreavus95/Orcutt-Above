@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Pip (mushroom scout, chibi). Frames per form are [Pebble Flick, Spore Puff, Spore Burst].
+  shroom:{zoom:.26,eyeY:125,f:[{src:'art/shroom-1.webp',ax:215,ay:530,h:525,w:477,ih:531,ht:2,cx:270,fy:280},{src:'art/shroom-2.webp',ax:213,ay:533,h:525,w:471,ih:534,ht:2,cx:270,fy:280},{src:'art/shroom-3.webp',ax:236,ay:538,h:525,w:498,ih:539,ht:2,cx:290,fy:285}],pose:'skill',
+        c:[[{src:'art/shroom-1c1.webp',ax:133,ay:359,h:345,w:389,ih:360,ht:2},{src:'art/shroom-1c2.webp',ax:132,ay:351,h:345,w:386,ih:351,ht:3},{src:'art/shroom-1c3.webp',ax:111,ay:327,h:345,w:390,ih:327,ht:2}],
+           [{src:'art/shroom-2c1.webp',ax:137,ay:360,h:345,w:332,ih:361,ht:1},{src:'art/shroom-2c2.webp',ax:132,ay:354,h:345,w:384,ih:354,ht:3},{src:'art/shroom-2c3.webp',ax:115,ay:338,h:345,w:380,ih:336,ht:1}],
+           [{src:'art/shroom-3c1.webp',ax:151,ay:367,h:345,w:458,ih:367,ht:2},{src:'art/shroom-3c2.webp',ax:149,ay:356,h:345,w:434,ih:355,ht:1},{src:'art/shroom-3c3.webp',ax:131,ay:343,h:345,w:456,ih:342,ht:2}]],
+        spell:[{vp:['#ffffff','#f6ead2','#d9b98a','#8a5a30'],hand:[170,120],bySkill:[{shot:'art/fx-shroom-pebble1.webp',sz:.3},{shot:'art/fx-shroom-puff1.webp',sz:.75},{burst:'art/fx-shroom-burst1.webp',aoe:'erupt'}]},
+               {vp:['#ffffff','#f6ead2','#d9b98a','#8a5a30'],hand:[170,120],bySkill:[{shot:'art/fx-shroom-pebble2.webp',sz:.3},{shot:'art/fx-shroom-puff2.webp',sz:.75},{burst:'art/fx-shroom-burst2.webp',aoe:'erupt'}]},
+               {vp:['#ffffff','#f6ead2','#d9b98a','#8a5a30'],hand:[170,120],bySkill:[{shot:'art/fx-shroom-pebble3.webp',sz:.3},{shot:'art/fx-shroom-puff3.webp',sz:.75},{burst:'art/fx-shroom-burst3.webp',aoe:'erupt'}]}]},
   // Milo (spear farmhand, chibi). Frames per form are [Spear Thrust, Winding Sweep, Skycharge]:
   // thrust and skycharge are lunges (each in its own pose), the sweep swings across the enemy line.
   lance:{zoom:.55,eyeY:95,f:[{src:'art/lance-1.webp',ax:206,ay:587,h:583,w:486,ih:588,ht:1,cx:240,fy:140},{src:'art/lance-2.webp',ax:211,ay:587,h:583,w:488,ih:588,ht:1,cx:245,fy:140},{src:'art/lance-3.webp',ax:211,ay:587,h:583,w:520,ih:588,ht:1,cx:245,fy:140}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'spear',
@@ -384,7 +392,7 @@ function paintBurst(x,y,S,K,big){const P=S.vp,p=S.paint,img=p.burst&&artImg(p.bu
   VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/life),a=k<.25?k/.25:1-(k-.25)/.75,s=.55+.65*(1-Math.pow(1-k,3));c.save();c.globalCompositeOperation='lighter';c.globalAlpha=Math.max(0,a);c.translate(x,y);
     if(img){const w=110*K*s*(big?1.2:1),h=w*img.naturalHeight/img.naturalWidth;c.drawImage(img,-w/2,-h/2,w,h)}
     else if(sig&&big){c.rotate(t*1.5);const w=120*K*s;c.drawImage(sig,-w/2,-w/2,w,w)}
-    else if(shot){c.rotate(t*.8);const L=70*K*s,H=L*shot.naturalHeight/shot.naturalWidth;for(let i=0;i<3;i++){c.rotate(2.094);c.drawImage(shot,0,-H/2,L,H)}}
+    else if(shot){c.rotate(t*.8);const L=70*K*s*(p.sz||1),H=L*shot.naturalHeight/shot.naturalWidth;for(let i=0;i<3;i++){c.rotate(2.094);c.drawImage(shot,0,-H/2,L,H)}}
     c.restore();if(k>=1)this.done=true}});
   for(let i=0;i<14;i++){const a=Math.random()*6.283,v=vR(90,260)*K;vfxP({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,drag:.88,life:vR(.25,.5),s:vR(2,4)*K,c:rlRand(P)})}}
 function paintShot(x0,y0,x1,y1,S,K,big,arc){const p=S.paint,img=artImg(p.shot),P=S.vp,sp=vSp(),dur=(big?.34:.28)/sp,trail=[];let t=0;
@@ -392,7 +400,7 @@ function paintShot(x0,y0,x1,y1,S,K,big,arc){const p=S.paint,img=artImg(p.shot),P
       dx=(x1-x0)+bend*Math.PI*Math.cos(Math.PI*e)*0,ang=Math.atan2((y1-y0)+bend*Math.PI*Math.cos(Math.PI*e),x1-x0);trail.push([x,y]);
     c.save();if(p.route&&trail.length>1){c.setLineDash([6*K,7*K]);c.lineWidth=2*K;c.strokeStyle=P[2];c.globalAlpha=.8;c.beginPath();trail.forEach(([a,b],i)=>i?c.lineTo(a,b):c.moveTo(a,b));c.stroke();c.setLineDash([])}
     c.globalCompositeOperation='lighter';c.globalAlpha=1;
-    if(img){const L=(big?130:105)*K,H=L*img.naturalHeight/img.naturalWidth;c.translate(x,y);c.rotate(ang);c.drawImage(img,-L*.85,-H/2,L,H)}
+    if(img){const L=(big?130:105)*K*(p.sz||1),H=L*img.naturalHeight/img.naturalWidth;c.translate(x,y);c.rotate(ang);c.drawImage(img,-L*.85,-H/2,L,H)}
     c.restore();if(Math.random()<.8)vfxP({x,y,vx:-Math.cos(ang)*80+vR(-30,30),vy:-Math.sin(ang)*80+vR(-30,30),life:vR(.2,.4),s:vR(2,4)*K,c:rlRand(P)});
     if(k>=1){this.done=true;paintBurst(x1,y1,S,K,big);res()}}})})}
 function paintRain(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),K=paintScale(h),sig=p.sigil&&artImg(p.sigil),shot=artImg(p.shot),open=.3/sp,fall=.18/sp,hold=.25/sp;

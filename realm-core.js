@@ -175,6 +175,7 @@ function rlTurnStart(B,u){
   if(u.alive&&rlHas(u,'regen')){const a=Math.round(u.maxHp*.12);rlHeal(u,a,ev)}
   if(!u.alive){rlCheck(B,ev);return{ev,can:false}}
   if(rlHas(u,'stun')){ev.push({k:'skip',u:u.uid});rlTick(u,ev);return{ev,can:false}}
+  if(rlHas(u,'drowsy')&&Math.random()<.35){u.fx=u.fx.filter(x=>x.k!=='drowsy');ev.push({k:'doze',u:u.uid});rlTick(u,ev);return{ev,can:false}}
   return{ev,can:true};
 }
 function rlTick(u,ev){u.fx.forEach(f=>f.t--);const gone=u.fx.filter(f=>f.t<=0);u.fx=u.fx.filter(f=>f.t>0);if(gone.length)ev.push({k:'fxgone',u:u.uid});if(!rlHas(u,'shield'))u.shield=0}

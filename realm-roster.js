@@ -94,7 +94,15 @@ const RL_ROSTER=[
      ev:['Milo','Milo Brightspear','Milo, the Skylance'],
      sk:[rlSk('Spear Thrust',{m:3.5,ign:.4}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.8,fx:[['atbDown',25,60]]}),
-         rlSk('Skycharge',{cd:4,m:4.2,opener:.6,fx:[['self','spdUp',2]]})]}}
+         rlSk('Skycharge',{cd:4,m:4.2,opener:.6,fx:[['self','spdUp',2]]})]}},
+  // Pip, the mushroom scout (chibi art). Uncommon. A pest: pebbles that sting, spores that make enemies
+  // Drowsy (sometimes nodding off and losing a turn), and a spore cloud that blankets the whole line.
+  {id:'shroom',col:{c:'#c8442c',l:'#f6ead2',d:'#3a1a10'},vp:['#ffffff','#f6ead2','#d9b98a','#8a5a30'],
+   hero:{n:'Pip',r:2,role:'sup',spd:108,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:10},
+     ev:['Pip','Pip Capwise','Pip, the Sporeguard'],
+     sk:[rlSk('Pebble Flick',{m:3.2,fx:[['atkBreak',1,25]]}),
+         rlSk('Spore Puff',{cd:3,m:2.4,fx:[['drowsy',2,70]]}),
+         rlSk('Spore Burst',{cd:4,tg:'eA',m:1.5,fx:[['drowsy',2,45],['team','healT',8]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){
