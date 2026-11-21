@@ -46,10 +46,10 @@ const RL_ROSTER=[
      sk:[rlSk('Root Snare',{m:3.2,fx:[['stun',1,30]]}),
          rlSk('Seedburst',{cd:3,tg:'eA',m:1.4,fx:[['seed',2,60]]}),
          rlSk('Rejuvenation Bloom',{cd:4,tg:'aA',fx:[['healT',22],['cleanse'],['regen',2]]})]}},
-  // Tink, the clockwork beetle (chibi art). Rare. A gear-slinger: his shot cracks armor, his volley
+  // Tink, the clockwork beetle (chibi art). Epic. A gear-slinger: his shot cracks armor, his volley
   // ricochets between random enemies, and his cogblast jams the whole line's turns.
   {id:'bug',col:{c:'#c97a3a',l:'#d6fff2',d:'#1c1410'},vp:['#ffffff','#d6fff2','#5fe0c0','#8a4a1e'],
-   hero:{n:'Tink',r:3,role:'atk',spd:102,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'acc',v:20},
+   hero:{n:'Tink',r:4,role:'atk',spd:102,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'acc',v:20},
      ev:['Tink','Tink Cogwright','Tink, the Brass Colossus'],
      sk:[rlSk('Gear-Shot',{m:3.5,ign:.25,fx:[['defBreak',1,30]]}),
          rlSk('Ricochet Volley',{cd:3,tg:'eA',m:1.3,bounce:4}),
