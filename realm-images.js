@@ -12,7 +12,7 @@ const RL_ART={
   // f: standing art for each form, with the same placement fields (w/ih = file size).
   // Kestran (pangolin spear knight, chibi). LEGENDARY. Frames per form are [Spear Thrust, Winding Sweep, Spearstorm]:
   // the thrust is a lunge; the sweep reuses the thrust stance (the sheet's sweep crosses his legs) and draws the painted arc.
-  pan:{f:[{src:'art/pan-1.webp',ax:242,ay:511,h:495,w:519,ih:511,ht:0},{src:'art/pan-2.webp',ax:252,ay:527,h:511,w:540,ih:527,ht:0},{src:'art/pan-3.webp',ax:294,ay:580,h:562,w:625,ih:580,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
+  pan:{f:[{src:'art/pan-1.webp',ax:200,ay:607,h:587,w:408,ih:606,ht:0},{src:'art/pan-2.webp',ax:208,ay:615,h:595,w:423,ih:614,ht:0},{src:'art/pan-3.webp',ax:250,ay:618,h:598,w:489,ih:617,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
         c:[[{src:'art/pan-1c1.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c2.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c3.webp',ax:140,ay:313,h:303,w:289,ih:313,ht:0}],
            [{src:'art/pan-2c1.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c2.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c3.webp',ax:144,ay:391,h:379,w:293,ih:391,ht:0}],
            [{src:'art/pan-3c1.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c2.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c3.webp',ax:147,ay:421,h:408,w:304,ih:421,ht:0}]],
