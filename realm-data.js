@@ -37,7 +37,8 @@ const RL_FX={
   stun:{n:'Stun',c:'#ffd60a',g:'✶',d:'Skips its next turn'},
   burn:{n:'Burn',c:'#ff6a3d',g:'≈',d:'Takes 6% max HP each turn'},
   seal:{n:'Seal',c:'#a46bff',g:'⊘',d:'Can only use its first skill'},
-  mark:{n:'Mark',c:'#ff7eb6',g:'◎',d:'Takes 25% more damage'}
+  mark:{n:'Mark',c:'#ff7eb6',g:'◎',d:'Takes 25% more damage'},
+  ward:{n:'Flame Ward',buff:1,c:'#ff9a3d',g:'♨',d:'Enemies that hit it may catch fire'}
 };
 
 /* ---------- heroes ----------

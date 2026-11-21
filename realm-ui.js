@@ -9,6 +9,9 @@ const rlNum=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?Math.round(n/1e3)+'k':String
 const RL_ICON={gems:'<i class="rl-gem"></i>',gold:'<i class="rl-gold"></i>',energy:'<i class="rl-en"></i>',tomes:'<i class="rl-tome"></i>'};
 
 /* ---------- skill text ---------- */
+// Rarity by base stars: 1 common (white), 2 uncommon (green), 3 rare (blue), 4 epic (purple), 5 legendary (orange)
+const RL_RAR={1:['Common','#e8e8ee'],2:['Uncommon','#5fd36a'],3:['Rare','#4aa8ff'],4:['Epic','#b970ff'],5:['Legendary','#ff8a1f']};
+function rlRarTag(r){const R=RL_RAR[r]||RL_RAR[3];return`<span class="rl-rar" style="color:${R[1]};border-color:${R[1]}">${R[0]}</span>`}
 function rlSkillText(h,s,lvl,st){
   if(!st){const p=typeof P_==='function'?P_():null;st=p&&p.heroes&&p.heroes[h.id]?rlHeroStats(p,h.id):rlBaseStats(h.id,1,h.r)}
   if(s.pas)return({counter:`Passive: sometimes strikes back when hit (${s.v}% chance).`,lifesteal:`Passive: heals itself with ${s.v}% of the damage it deals.`,firstStrike:'Passive: gets a head start every battle.'}[s.pas]||'Passive.');
@@ -16,7 +19,7 @@ function rlSkillText(h,s,lvl,st){
   const parts=[];const turns=t=>`${t} turn${t>1?'s':''}`;
   if(s.m>0){const base=s.sc==='def'?st.def:s.sc==='hp'?st.hp*2:st.atk,v=base*s.m*bonus,lo=Math.max(1,Math.round(v*.95)),hi=Math.max(lo,Math.round(v*1.05));
     parts.push(`Deals ${lo}–${hi} damage to ${who}${s.h>1?`, ${s.h} times`:''}`)}
-  if(s.ign)parts.push('Pierces armor');if(s.vsBurn)parts.push('Extra damage to burning enemies');
+  if(s.ign)parts.push('Pierces armor');if(s.vsBurn)parts.push('Extra damage to burning enemies');if(s.det)parts.push('Sets off all of the target\'s Burns at once');
   s.fx.forEach(f=>{let tgt=who,k=f[0],a=f;if(k==='self'||k==='team'){tgt=k==='self'?'itself':'all allies';a=f.slice(1);k=a[0]}
     const F=RL_FX[k];
     if(k==='heal')parts.push(`Heals ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP`);
@@ -27,6 +30,7 @@ function rlSkillText(h,s,lvl,st){
     else if(k==='atbDown')parts.push(`Delays enemy turns (${a[2]}% chance)`);
     else if(k==='revive')parts.push('Revives fallen allies');
     else if(k==='shield')parts.push(`Shields ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP (${turns(a[2])})`);
+    else if(k==='ward')parts.push(`Wards ${tgt} for ${turns(a[1])}: enemies that strike a warded ally may catch fire`);
     else if(F&&F.buff)parts.push(`${F.n} for ${tgt} (${turns(a[1])})`);
     else if(F)parts.push(`${k==='stun'?'Stun':F.n} (${a[2]}% chance, ${turns(a[1])})`)});
   return parts.join('. ')+'.';
@@ -177,7 +181,7 @@ function rlHeroDetail(s,p,id){
   const gear=[0,1,2,3,4,5].map(i=>{const g=p.gear.find(x=>x.i===m.g[i]);return`<button class="rl-gslot${g?' '+g.r:''}" data-a="rlGearSlot" data-v="${i}">${g?`<span class="rl-gs-set" style="color:${RL_SETS[g.set].c}">${RL_SETS[g.set].n}</span><b>${RL_SLOTS[i].n} +${g.lv}</b><span class="muted">${RL_STAT[g.m].n} +${rlGearVal(g)}${RL_STAT[g.m].p?'%':''}</span>`:`<b class="muted">${RL_SLOTS[i].n}</b><span class="muted">Empty</span>`}</button>`}).join('');
   return`<div class="rl-sec"><button class="btn sm" data-a="rlHeroBack">← All creatures</button></div>
   <div class="rl-hd"><div class="rl-hd-art"><div class="showcase"><div class="float"><div class="rl-pframe big r${h.r} live">${rlHeroSVG(id)}</div></div></div></div>
-  <div class="stack"><div class="panel stack"><div class="row" style="justify-content:space-between"><div><h2 class="rl-hname">${esc(crName(id,m.lv))}</h2><p class="muted">${RL_ROLE[h.role]} · ${rlStars(m.st)}</p></div><div style="text-align:right"><p class="muted">Power</p><p class="big num">${rlNum(rlPower(st))}</p></div></div>
+  <div class="stack"><div class="panel stack"><div class="row" style="justify-content:space-between"><div><h2 class="rl-hname">${esc(crName(id,m.lv))}</h2><p class="muted">${rlRarTag(h.r)} ${RL_ROLE[h.role]} · ${rlStars(m.st)}</p></div><div style="text-align:right"><p class="muted">Power</p><p class="big num">${rlNum(rlPower(st))}</p></div></div>
     <div><div class="row" style="justify-content:space-between;margin-bottom:6px"><span class="lv">Level ${m.lv} / ${mx}</span><span class="muted num">${m.lv>=mx?'Max level':`${m.xp} / ${need} XP`}</span></div><div class="bar"><i style="width:${m.lv>=mx?100:m.xp/need*100}%"></i></div></div>${crEvoPath(id,m.lv)}
     <div class="row"><button class="btn" data-a="rlTome" ${p.tomes&&m.lv<mx?'':'disabled'}>Use study tome (${p.tomes})</button>${m.st<6?`<button class="btn ${m.lv>=mx?'pri':''}" data-a="rlPromote" ${m.lv>=mx&&p.ess.any>=pc.ess&&p.gold>=pc.gold?'':'disabled'}>Promote to ${m.st+1}★ · ${pc.ess} essence (have ${p.ess.any||0}) + ${rlNum(pc.gold)} gold</button>`:''}<button class="btn ${inTeam?'danger':'pri'}" data-a="rlTeamToggle" data-v="${id}">${inTeam?'Remove from team':'Add to team'}</button>${inTeam&&p.team[0]!==id?`<button class="btn" data-a="rlLead" data-v="${id}">Make leader</button>`:''}</div>
     ${m.lv>=mx&&m.st<6?`<p class="muted">Max level reached. Promote to raise the cap to ${rlMaxLv(m.st+1)} and boost all stats by 10%.</p>`:''}</div>
@@ -472,7 +476,8 @@ const REALM_TCHANGE={
 .rl-port{display:block;width:100%;height:auto}
 .rl-pframe{border-radius:10px;overflow:hidden;padding:2px;background:#3a3545;position:relative}
 .rl-pframe svg{border-radius:8px}
-.rl-pframe.r3{background:linear-gradient(160deg,#6fa8ff,#2a4a8a)}.rl-pframe.r4{background:linear-gradient(160deg,#d9a8ff,#6a2ab5);box-shadow:0 0 14px -4px #b970ff}.rl-pframe.r5{background:conic-gradient(from var(--ang,0deg),#ffd60a,#ff8a1f,#fff3b0,#ff8a1f,#ffd60a);box-shadow:0 0 20px -4px #ff8a1f;animation:spin 6s linear infinite}
+.rl-pframe.rl-rar{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid;border-radius:999px;padding:1px 8px;margin-right:4px}
+.r1{background:linear-gradient(160deg,#f4f4f6,#9a9aa6)}.r2{background:linear-gradient(160deg,#8fe08a,#2c7a35)}.r3{background:linear-gradient(160deg,#6fa8ff,#2a4a8a)}.rl-pframe.r4{background:linear-gradient(160deg,#d9a8ff,#6a2ab5);box-shadow:0 0 14px -4px #b970ff}.rl-pframe.r5{background:conic-gradient(from var(--ang,0deg),#ffd60a,#ff8a1f,#fff3b0,#ff8a1f,#ffd60a);box-shadow:0 0 20px -4px #ff8a1f;animation:spin 6s linear infinite}
 .live .rl-mote{animation:rlMote 4s ease-in-out infinite}@keyframes rlMote{0%,100%{transform:translateY(0);opacity:.25}50%{transform:translateY(-14px);opacity:.9}}
 .live .rl-float,.rl-float{animation:rlFloat 3s ease-in-out infinite}@keyframes rlFloat{50%{transform:translateY(-5px)}}
 .rl-spin{animation:rlSpin 6s linear infinite}@keyframes rlSpin{to{transform:rotate(360deg)}}

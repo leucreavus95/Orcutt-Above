@@ -228,6 +228,10 @@ function rlAct(B,u,i,tid,power){
         if(u.stats.steal)rlHeal(u,dealt*u.stats.steal/100,ev);
       }
       for(const f of s.fx)if(f[0]!=='self'&&f[0]!=='team')rlApplyFx(B,u,t,f,pw*bonus,ev,true);
+      // Foxfire: set off every Burn on the target at once (their remaining burn damage, capped)
+      if(s.det&&t.alive){const bs=t.fx.filter(x=>x.k==='burn');if(bs.length){const left=bs.reduce((a,x)=>a+Math.max(1,x.t),0);t.fx=t.fx.filter(x=>x.k!=='burn');ev.push({k:'det',u:t.uid});rlDamage(B,t,Math.min(t.maxHp*.06*left,rlEff(u,'atk')*3.2)*pw,ev,{dot:true})}}
+      // Flame Ward: whoever strikes a warded unit may catch fire
+      if(u.alive&&rlHas(t,'ward')&&!B._ward){B._ward=true;rlApplyFx(B,t,u,['burn',2,50],1,ev,true);B._ward=false}
       if(t.alive&&t.pas.pas==='counter'&&s.tg==='e1'&&!B._counter&&Math.random()*100<t.pas.v){B._counter=true;ev.push({k:'counter',u:t.uid});ev.push(...rlAct(B,t,0,u.uid,1));B._counter=false}
     }
   }else if(foe){for(const t of tg)for(const f of s.fx)if(f[0]!=='self'&&f[0]!=='team')rlApplyFx(B,u,t,f,pw*bonus,ev,true)}
