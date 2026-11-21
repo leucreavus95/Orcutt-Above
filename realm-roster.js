@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Origa, the origami crane lancer (chibi art). Epic. A quick paper spearman: Fold Dash strikes and
+  // refolds him to act sooner, Feather Piercer fires paper shards that pierce armor and crack DEF,
+  // and Paper Storm whirls razor paper through the enemy line, Blinding and slowing their turns.
+  {id:'crane',col:{c:'#d8453a',l:'#fbefe6',d:'#4a1512'},vp:['#ffffff','#fbefe6','#d8453a','#7a1f1a'],
+   hero:{n:'Origa',r:4,role:'atk',spd:116,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'spd',v:12},
+     ev:['Origa','Origa Foldwing','Origa, the Thousand-Fold Lancer'],
+     sk:[rlSk('Fold Dash',{m:3.5,fx:[['self','atb',20]]}),
+         rlSk('Feather Piercer',{cd:3,m:1.25,h:3,ign:.3,fx:[['defBreak',1,40]]}),
+         rlSk('Paper Storm',{cd:4,tg:'eA',m:1.7,fx:[['blind',2,45],['atbDown',20,50]]})]}},
   // Garrow, the jade-shelled tortoise drake (chibi art). LEGENDARY tank. His shield bash can stun, Jade Ward
   // wraps the whole team in a jade dome, and Taunt-Roar forces enemies to aim their attacks at him for 2 turns.
   {id:'tort',col:{c:'#3fae8a',l:'#dcfbee',d:'#123b30'},vp:['#ffffff','#d9fff0','#5fd9b0','#c99a3d'],

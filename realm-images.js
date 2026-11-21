@@ -16,6 +16,14 @@ const RL_ART={
   // fv holds the phased-out still poses he shows while Veiled.
   // Garrow (tortoise drake, chibi). LEGENDARY tank. Frames per form are [Shield Bash, Jade Ward, Taunt-Roar];
   // the roar's golden sigil appears over every enemy it taunts.
+  // Origa (origami crane, chibi). EPIC. Frames per form are [Fold Dash, Feather Piercer, Paper Storm].
+  crane:{f:[{src:'art/crane-1.webp',ax:198,ay:465,h:461,w:470,ih:465,ht:0},{src:'art/crane-2.webp',ax:186,ay:474,h:461,w:458,ih:475,ht:0},{src:'art/crane-3.webp',ax:304,ay:506,h:461,w:615,ih:506,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'spear',
+        c:[[{src:'art/crane-1c1.webp',ax:142,ay:304,h:322,w:404,ih:305,ht:0},{src:'art/crane-1c2.webp',ax:100,ay:284,h:322,w:397,ih:284,ht:0},{src:'art/crane-1c3.webp',ax:187,ay:364,h:322,w:395,ih:363,ht:0}],
+           [{src:'art/crane-2c1.webp',ax:153,ay:319,h:322,w:419,ih:321,ht:0},{src:'art/crane-2c2.webp',ax:101,ay:285,h:322,w:421,ih:286,ht:0},{src:'art/crane-2c3.webp',ax:178,ay:379,h:322,w:417,ih:380,ht:0}],
+           [{src:'art/crane-3c1.webp',ax:201,ay:322,h:322,w:473,ih:324,ht:0},{src:'art/crane-3c2.webp',ax:189,ay:287,h:322,w:475,ih:288,ht:0},{src:'art/crane-3c3.webp',ax:142,ay:413,h:322,w:469,ih:414,ht:0}]],
+        spell:[{vp:['#ffffff','#fbefe6','#d8453a','#7a1f1a'],hand:[125,118],bySkill:[null,{shot:'art/fx-crane-shard1.webp',sz:.55},{shot:'art/fx-crane-shard1.webp',aoe:'fan',sz:.5}]},
+               {vp:['#ffffff','#fbefe6','#d8453a','#7a1f1a'],hand:[125,118],bySkill:[null,{shot:'art/fx-crane-shard2.webp',sz:.55},{shot:'art/fx-crane-shard2.webp',aoe:'fan',sz:.5}]},
+               {vp:['#ffffff','#fbefe6','#d8453a','#7a1f1a'],hand:[125,118],bySkill:[null,{shot:'art/fx-crane-shard3.webp',sz:.55},{shot:'art/fx-crane-shard3.webp',aoe:'fan',sz:.5}]}]},
   tort:{f:[{src:'art/tort-1.webp',ax:275,ay:694,h:688,w:498,ih:694,ht:0},{src:'art/tort-2.webp',ax:265,ay:695,h:688,w:489,ih:695,ht:0},{src:'art/tort-3.webp',ax:277,ay:737,h:688,w:519,ih:737,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
         c:[[{src:'art/tort-1c1.webp',ax:162,ay:374,h:413,w:425,ih:375,ht:0},{src:'art/tort-1c2.webp',ax:193,ay:385,h:413,w:405,ih:390,ht:0},{src:'art/tort-1c3.webp',ax:202,ay:472,h:413,w:409,ih:497,ht:0}],
            [{src:'art/tort-2c1.webp',ax:166,ay:375,h:413,w:431,ih:376,ht:0},{src:'art/tort-2c2.webp',ax:200,ay:391,h:413,w:412,ih:396,ht:0},{src:'art/tort-2c3.webp',ax:206,ay:480,h:413,w:411,ih:504,ht:0}],
