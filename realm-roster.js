@@ -163,7 +163,16 @@ const RL_ROSTER=[
      ev:['Vexis','Vexis Venomscale','Vexis, the Plague Sovereign'],
      sk:[rlSk('Venom Fang',{m:3.6,fx:[['poison',3,85,2]]}),
          rlSk('Twin Toxin Crescents',{cd:3,m:1.7,h:2,vsPoison:.12,fx:[['poison',3,70,1]]}),
-         rlSk('Caustic Mireburst',{cd:5,tg:'eA',m:1.8,pburst:1.5,fx:[['poison',3,75,2]]})]}}
+         rlSk('Caustic Mireburst',{cd:5,tg:'eA',m:1.8,pburst:1.5,fx:[['poison',3,75,2]]})]}},
+  // Aurelle, the moon deer (chibi art). LEGENDARY healer. Every spell lands on her allies:
+  // a moonwater stream heals and cleanses one ally, dew rains healing and Regen on the team,
+  // and Sanctuary Bloom revives the fallen and wraps everyone in a shielded, Immune dome.
+  {id:'deer',col:{c:'#4fc6c6',l:'#e6fbff',d:'#0e3a3e'},vp:['#ffffff','#e6fbff','#8fe6f0','#2a8a96'],
+   hero:{n:'Aurelle',r:5,role:'sup',spd:112,it:'staff',o:'robe',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:20},
+     ev:['Aurelle','Aurelle Dewhorn','Aurelle, the Moonwell Sage'],
+     sk:[rlSk('Moonwell Mend',{tg:'a1',fx:[['heal',32],['cleanse'],['shield',10,1]]}),
+         rlSk('Dewfall Blessing',{cd:3,tg:'aA',fx:[['heal',18],['regen',2]]}),
+         rlSk('Sanctuary Bloom',{cd:5,tg:'aA',fx:[['revive',35],['heal',12],['shield',15,2],['immune',1]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

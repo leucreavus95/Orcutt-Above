@@ -10,6 +10,15 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Aurelle (moon deer healer, chibi). LEGENDARY. Frames per form are [Moonwell Mend, Dewfall Blessing, Sanctuary Bloom];
+  // every spell lands on her allies.
+  deer:{f:[{src:'art/deer-1.webp',ax:229,ay:564,h:545,w:476,ih:562,ht:0},{src:'art/deer-2.webp',ax:233,ay:580,h:561,w:498,ih:579,ht:0},{src:'art/deer-3.webp',ax:255,ay:608,h:587,w:546,ih:606,ht:0}],pose:'skill',
+        c:[[{src:'art/deer-1c1.webp',ax:110,ay:302,h:293,w:276,ih:303,ht:0},{src:'art/deer-1c2.webp',ax:85,ay:332,h:323,w:247,ih:334,ht:0},{src:'art/deer-1c3.webp',ax:163,ay:265,h:262,w:273,ih:271,ht:0}],
+           [{src:'art/deer-2c1.webp',ax:127,ay:331,h:322,w:316,ih:332,ht:0},{src:'art/deer-2c2.webp',ax:105,ay:349,h:341,w:290,ih:352,ht:0},{src:'art/deer-2c3.webp',ax:178,ay:276,h:273,w:293,ih:282,ht:0}],
+           [{src:'art/deer-3c1.webp',ax:139,ay:358,h:349,w:324,ih:360,ht:0},{src:'art/deer-3c2.webp',ax:120,ay:359,h:352,w:303,ih:363,ht:0},{src:'art/deer-3c3.webp',ax:155,ay:294,h:289,w:286,ih:298,ht:0}]],
+        spell:[{vp:['#ffffff','#e6fbff','#8fe6f0','#2a8a96'],hand:[120,175],support:'moonwell'},
+               {vp:['#ffffff','#e6fbff','#8fe6f0','#2a8a96'],hand:[120,175],support:'moonwell'},
+               {vp:['#ffffff','#e6fbff','#8fe6f0','#2a8a96'],hand:[120,175],support:'moonwell'}]},
   // Vexis (basilisk, chibi). LEGENDARY. Frames per form are [Venom Fang, Twin Toxin Crescents, Caustic Mireburst].
   bas:{zoom:.42,eyeY:100,f:[{src:'art/bas-1.webp',ax:249,ay:654,h:648,w:467,ih:652,ht:3,cx:285,fy:230},{src:'art/bas-2.webp',ax:250,ay:668,h:648,w:488,ih:666,ht:3,cx:290,fy:240},{src:'art/bas-3.webp',ax:285,ay:701,h:648,w:539,ih:699,ht:1,cx:330,fy:270}],pose:'skill',
         c:[[{src:'art/bas-1c1.webp',ax:184,ay:374,h:385,w:419,ih:375,ht:0},{src:'art/bas-1c2.webp',ax:155,ay:391,h:385,w:413,ih:391,ht:0},{src:'art/bas-1c3.webp',ax:160,ay:352,h:385,w:350,ih:352,ht:0}],
@@ -538,7 +547,7 @@ function vfxFlameWard(S,e){const P=S.vp,sp=vSp(),big=S.big;e.t.forEach((uid,n)=>
     c.globalAlpha=a*.25;c.fillStyle=P[2];c.beginPath();c.ellipse(0,0,R*.8*g,R*g,0,0,6.283);c.fill();
     for(let i=0;i<3;i++){c.globalAlpha=a*[.5,.8,1][i];c.strokeStyle=[P[3],P[2],P[1]][i];c.lineWidth=[12,7,3][i];c.beginPath();c.ellipse(0,0,R*.8*g,R*g,0,0,6.283);c.stroke()}
     c.restore();const fl=big?5:3;for(let i=0;i<fl;i++){const an=Math.random()*6.283;vfxP({x:q.x+Math.cos(an)*R*.8*g,y:q.y+Math.sin(an)*R*g,vy:vR(-150,-60),life:vR(.3,.6),s:vR(3,7),c:rlRand(P),shape:i%2?'c':'dia',vr:4})}}})})}
-(function(){const prev=rlArtSupport;rlArtSupport=function(S,e,sk){if(S.support==='flameward'||S.support==='ring')return vfxFlameWard(S,e);return prev(S,e,sk)}})();
+(function(){const prev=rlArtSupport;rlArtSupport=function(S,e,sk){if(S.support==='moonwell')return vfxMoonwell(S,e,sk);if(S.support==='flameward'||S.support==='ring')return vfxFlameWard(S,e);return prev(S,e,sk)}})();
 
 /* volley fired skyward before an arrow rain lands: flaming arrows streak up off the top of the stage */
 function vfxShootUp(h,S,src){const img=artImg(src),P=S.vp,sp=vSp(),n=5;
@@ -549,3 +558,28 @@ function vfxShootUp(h,S,src){const img=artImg(src),P=S.vp,sp=vSp(),n=5;
       if(Math.random()<.8)vfxP({x,y,vx:vR(-30,30),vy:vR(40,120),life:vR(.2,.45),s:vR(2,5),c:rlRand(P)});
       if(k>=1){this.done=true;if(++done===n)res()}}})}
     vfxP({x:h.x,y:h.y,life:.3,s:8,grow:180,c:P[2],shape:'shock'})}).then(()=>new Promise(r=>setTimeout(r,60/sp)))}
+
+/* Aurelle: healing that flows onto allies. 0 = a moonwater stream arcs from her staff to one ally;
+   1 = dew rains down on every ally; 2 = a crescent moon rises and a sanctuary dome closes over the team */
+const DEER_FX={stream:'art/fx-deer-stream.webp',dew:'art/fx-deer-dew.webp',moon:'art/fx-deer-moon.webp'};
+function vfxMoonwell(S,e,sk){const P=S.vp,sp=vSp(),h=rlArtHand(S),pts=e.t.map(t=>({uid:t,q:rlbPt(t)})).filter(o=>o.q);if(!pts.length)return;const glow=(x,y,R)=>vfxP({x,y,life:.45,s:R*.3,grow:R*3,c:P[1],shape:'shock'});
+  const sparkle=q=>{for(let i=0;i<18;i++)vfxP({x:q.x+vR(-q.w/3,q.w/3),y:q.y+vR(-q.h/3,q.h/2),vy:vR(-110,-40),life:vR(.5,.9),s:vR(2,5),c:rlRand(P),shape:i%3?'c':'star',vr:3});vfxHeal(q.x,q.y)};
+  if(h)glow(h.x,h.y,14);
+  if(e.s===0){const q=pts[0].q;if(!h){sparkle(q);return}
+    return paintShot(h.x,h.y,q.x,q.y-q.h*.1,Object.assign({},S,{paint:{shot:DEER_FX.stream}}),Math.max(1,h.k*1.6),true,-90).then(()=>{sparkle(q);glow(q.x,q.y,20)})}
+  if(e.s===1){const img=artImg(DEER_FX.dew);return Promise.all(pts.map(({q},i)=>new Promise(res=>{let t=-i*.08/sp,hit=false;const life=.7/sp,w=q.w*.95;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}const y=q.y-q.h*1.3+q.h*1.1*Math.min(1,k/.5),a=k<.55?Math.min(1,k/.15):1-(k-.55)/.45;
+      if(img){const H=w*img.naturalHeight/img.naturalWidth;c.save();c.globalAlpha=a*.7;c.drawImage(img,q.x-w/2,y-H*.75,w,H);c.restore()}
+      if(Math.random()<.7)vfxP({x:q.x+vR(-w/2,w/2),y:y,vy:vR(120,260),life:vR(.2,.4),s:vR(2,4),c:rlRand(P)});
+      if(!hit&&k>.45){hit=true;sparkle(q);res()}}})})))}
+  // Sanctuary Bloom
+  const img=artImg(DEER_FX.moon),xs=pts.map(o=>o.q.x),cx=(Math.min(...xs)+Math.max(...xs))/2,top=Math.min(...pts.map(o=>o.q.y-o.q.h*.9)),bot=Math.max(...pts.map(o=>o.q.y+o.q.h*.5)),
+    rx=(Math.max(...xs)-Math.min(...xs))/2+pts[0].q.w*1.1,ry=(bot-top)*.75,cy=bot,life=1.3/sp;let t=0;
+  return new Promise(res=>{let hit=false;VFX.items.push({step(dt,c){t+=dt;const k=t/life;if(k>=1){this.done=true;return}const g=Math.min(1,k/.35),a=k<.75?1:1-(k-.75)/.25;
+    c.save();c.globalAlpha=a*.28*g;c.fillStyle=P[2];c.beginPath();c.ellipse(cx,cy,rx*g,ry*g,0,Math.PI,0);c.fill();
+    c.globalAlpha=a*.9;c.strokeStyle=P[1];c.lineWidth=4;c.beginPath();c.ellipse(cx,cy,rx*g,ry*g,0,Math.PI,0);c.stroke();
+    c.globalAlpha=a*.5;c.lineWidth=10;c.strokeStyle=P[2];c.beginPath();c.ellipse(cx,cy,rx*g*1.04,ry*.18*g,0,0,6.283);c.stroke();
+    if(img){const w=60*Math.max(1,(h?h.k:1)*1.5)*(.6+.4*g),my=cy-ry*g-w*.35;c.globalAlpha=a;c.drawImage(img,cx-w/2,my-w/2,w,w)}c.restore();
+    if(Math.random()<.8)vfxP({x:cx+vR(-rx,rx)*g,y:cy-vR(0,ry)*g,vy:vR(-60,-20),life:vR(.5,.9),s:vR(2,4),c:rlRand(P),shape:'star',vr:2});
+    if(!hit&&k>.4){hit=true;pts.forEach(o=>sparkle(o.q));res()}}})})}
+Object.values(DEER_FX).forEach(artImg);

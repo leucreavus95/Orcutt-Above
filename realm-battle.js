@@ -169,7 +169,7 @@ async function rlbPlay(ev){
         else if(s.tg==='eA'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);await vfxAoe(u.el,pts)}
         else{const tp=rlbPt(e.t[0]);if(tp&&src){const n=Math.min(3,s.h||1);for(let i=0;i<n;i++){const p=vfxShot(src.x+(u.side?-20:20),src.y-10,tp.x,tp.y,u.el,ult);if(i===n-1)await p;else await rlbDelay(90)}}}}
       else{const AS=u.kind==='hero'&&typeof rlArtSpell==='function'?rlArtSpell(u):null,ASup=AS&&AS.support&&rlArtSupport;if(spr){spr.dataset.sk=e.s;spr.classList.remove('cast');void spr.offsetWidth;spr.classList.add('cast')}if(src&&!ASup)vfxCharge(src.x,src.y,u.el,.28/b.speed);await rlbDelay(260+(u.kind==='hero'&&typeof rlArtLead==='function'?rlArtLead(u.id):0));
-        if(ASup)rlArtSupport(AS,e,s);
+        if(ASup)await rlArtSupport(AS,e,s);
         e.t.forEach(t=>{const tp=rlbPt(t);if(!tp)return;if(ASup){const te=document.getElementById('rlu-'+t);if(te){te.classList.add('blessed');setTimeout(()=>te.classList.remove('blessed'),650)}return}const heal=s.fx.some(f=>f[0]==='heal'||f[0]==='healT'||f[0]==='revive');if(heal)vfxHeal(tp.x,tp.y);else vfxAura(tp.x,tp.y,col,true);const te=document.getElementById('rlu-'+t);if(te){te.classList.add('blessed');setTimeout(()=>te.classList.remove('blessed'),650)}});await rlbDelay(260)}
       await rlbDelay(60)}
     else if(e.k==='hit'){const el=document.getElementById('rlu-'+e.u);if(el){el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit')}
