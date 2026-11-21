@@ -14,6 +14,15 @@ const RL_ART={
   // the thrust is a lunge; the sweep reuses the thrust stance (the sheet's sweep crosses his legs) and draws the painted arc.
   // Sable (hooded wraith, chibi). LEGENDARY. Frames per form are [Quickstep Cut, Twin Crescent, Veilstep Attack];
   // fv holds the phased-out still poses he shows while Veiled.
+  // Garrow (tortoise drake, chibi). LEGENDARY tank. Frames per form are [Shield Bash, Jade Ward, Taunt-Roar];
+  // the roar's golden sigil appears over every enemy it taunts.
+  tort:{f:[{src:'art/tort-1.webp',ax:275,ay:694,h:688,w:498,ih:694,ht:0},{src:'art/tort-2.webp',ax:265,ay:695,h:688,w:489,ih:695,ht:0},{src:'art/tort-3.webp',ax:277,ay:737,h:688,w:519,ih:737,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
+        c:[[{src:'art/tort-1c1.webp',ax:162,ay:374,h:413,w:425,ih:375,ht:0},{src:'art/tort-1c2.webp',ax:193,ay:385,h:413,w:405,ih:390,ht:0},{src:'art/tort-1c3.webp',ax:202,ay:472,h:413,w:409,ih:497,ht:0}],
+           [{src:'art/tort-2c1.webp',ax:166,ay:375,h:413,w:431,ih:376,ht:0},{src:'art/tort-2c2.webp',ax:200,ay:391,h:413,w:412,ih:396,ht:0},{src:'art/tort-2c3.webp',ax:206,ay:480,h:413,w:411,ih:504,ht:0}],
+           [{src:'art/tort-3c1.webp',ax:176,ay:393,h:427,w:453,ih:393,ht:0},{src:'art/tort-3c2.webp',ax:217,ay:405,h:427,w:456,ih:411,ht:0},{src:'art/tort-3c3.webp',ax:217,ay:486,h:427,w:443,ih:514,ht:0}]],
+        spell:[{vp:['#ffffff','#d9fff0','#5fd9b0','#1e6a52'],hand:[60,120],support:'flameward',bySkill:[null,null,{burst:'art/fx-tort-sigil.webp',aoe:'erupt',sz:.45}]},
+               {vp:['#ffffff','#d9fff0','#5fd9b0','#1e6a52'],hand:[60,120],support:'flameward',bySkill:[null,null,{burst:'art/fx-tort-sigil.webp',aoe:'erupt',sz:.45}]},
+               {vp:['#ffffff','#d9fff0','#5fd9b0','#1e6a52'],hand:[60,120],support:'flameward',bySkill:[null,null,{burst:'art/fx-tort-sigil.webp',aoe:'erupt',sz:.45}]}]},
   sab:{f:[{src:'art/sab-1.webp',ax:229,ay:552,h:547,w:454,ih:553,ht:0},{src:'art/sab-2.webp',ax:240,ay:556,h:547,w:472,ih:556,ht:0},{src:'art/sab-3.webp',ax:294,ay:606,h:547,w:574,ih:607,ht:0}],
         fv:[{src:'art/sab-v1.webp',ax:227,ay:559,h:547,w:452,ih:560,ht:0},{src:'art/sab-v2.webp',ax:245,ay:560,h:547,w:477,ih:561,ht:0},{src:'art/sab-v3.webp',ax:292,ay:633,h:547,w:572,ih:633,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'dusk',
         c:[[{src:'art/sab-1c1.webp',ax:102,ay:287,h:364,w:386,ih:290,ht:0},{src:'art/sab-1c2.webp',ax:152,ay:340,h:364,w:403,ih:342,ht:0},{src:'art/sab-1c3.webp',ax:60,ay:312,h:364,w:398,ih:324,ht:0}],

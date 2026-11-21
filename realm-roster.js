@@ -192,6 +192,14 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Garrow, the jade-shelled tortoise drake (chibi art). LEGENDARY tank. His shield bash can stun, Jade Ward
+  // wraps the whole team in a jade dome, and Taunt-Roar forces enemies to aim their attacks at him for 2 turns.
+  {id:'tort',col:{c:'#3fae8a',l:'#dcfbee',d:'#123b30'},vp:['#ffffff','#d9fff0','#5fd9b0','#c99a3d'],
+   hero:{n:'Garrow',r:5,role:'def',spd:94,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:20},
+     ev:['Garrow','Garrow Jadeshell','Garrow, the Living Bastion'],
+     sk:[rlSk('Shield Bash',{m:3.4,sc:'def',fx:[['stun',1,25]]}),
+         rlSk('Jade Ward',{cd:4,tg:'aA',fx:[['shield',18,2],['defUp',2]]}),
+         rlSk('Taunt-Roar',{cd:4,tg:'eA',m:1.1,sc:'def',fx:[['taunt',2,100],['self','bulwark',2]]})]}},
   // Sable, the hooded wraith (chibi art). LEGENDARY. An assassin with twin sickles who slips out of reach:
   // Quickstep Cut finishes off weakened enemies, Twin Crescent hurls two blade waves that Mark the target,
   // and Veilstep Attack strikes, then phases him into the Veil for 2 turns, where nothing can target him.

@@ -214,6 +214,7 @@ function rlApplyFx(B,src,tgt,f,power,ev,isEnemy){
   if(k==='poison'){const n=f[3]||1;for(let i=0;i<n;i++)if(tgt.fx.filter(x=>x.k==='poison').length<5)tgt.fx.push({k,t:f[1]});ev.push({k:'fx',u:tgt.uid,f:k});return}
   if(k==='sigil'){if(tgt.fx.filter(x=>x.k==='sigil').length<3)tgt.fx.push({k,t:f[1]});ev.push({k:'fx',u:tgt.uid,f:k});return}
   if(k==='chill'){tgt.fx.push({k,t:f[1]});if(tgt.fx.filter(x=>x.k==='chill').length>=3){tgt.fx=tgt.fx.filter(x=>x.k!=='chill'&&x.k!=='stun');tgt.fx.push({k:'stun',t:1});ev.push({k:'frozen',u:tgt.uid});return}}
+  else if(k==='taunt'){tgt.fx=tgt.fx.filter(x=>x.k!=='taunt');tgt.fx.push({k,t:f[1],src:src.uid})} // Taunted: single-target attacks must go to the taunter
   else if(k==='burn'){if(tgt.fx.filter(x=>x.k==='burn').length<3)tgt.fx.push({k,t:f[1]})}
   else{tgt.fx=tgt.fx.filter(x=>x.k!==k);tgt.fx.push({k,t:f[1]})}
   ev.push({k:'fx',u:tgt.uid,f:k});
@@ -222,6 +223,7 @@ function rlResist(src,tgt){return Math.random()*100<rlClamp(tgt.stats.res-src.st
 function rlUsable(u,i){const s=u.sk[i];if(!s||s.pas)return false;if(i>0&&rlHas(u,'seal'))return false;return u.cds[i]<=0}
 function rlTargets(B,u,s,tid){
   const foes=B.side[1-u.side].filter(x=>x.alive&&!rlHas(x,'veil')),mine=B.side[u.side].filter(x=>x.alive); // Veiled units can't be targeted at all
+  if(s.tg==='e1'&&!s.bounce){const tn=u.fx.find(f=>f.k==='taunt'),T=tn&&foes.find(x=>x.uid===tn.src);if(T)return[T]}
   if(s.bounce&&foes.length)return Array.from({length:s.bounce},()=>foes[Math.floor(Math.random()*foes.length)]); // Ricochet: random enemy per hit
   if(s.tg==='eA')return foes;if(s.tg==='aA')return s.fx.some(f=>f[0]==='revive')?B.side[u.side]:mine;if(s.tg==='self')return[u];
   if(s.res){const all=B.side[u.side],pick=all.find(x=>x.uid===tid);if(pick)return[pick];const dead=all.find(x=>!x.alive);return[dead||mine.slice().sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0]]}

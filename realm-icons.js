@@ -57,6 +57,8 @@ const RL_GLYPH={
   sunrise:'<path d="M2.5 18.5h19"/><path d="M6.5 18.5a5.5 5.5 0 0 1 11 0"/><path d="M12 4v4M4.5 8.5l2.5 2.5M19.5 8.5L17 11"/><path d="M9.5 21.5h5"/>',
   rally:'<path d="M12 20.5s-8-4.8-8-11a4.4 4.4 0 0 1 8-2.6 4.4 4.4 0 0 1 8 2.6c0 6.2-8 11-8 11z"/><path d="M12 16V9M9 11.5l3-3 3 3"/>',
   lantern:'<path d="M8 7h8l1 10H7z"/><path d="M10 7V4.5h4V7M9.5 3h5M6.5 17h11M12 10.5c.8 1 1.5 1.6 1.5 2.6a1.5 1.5 0 0 1-3 0c0-1 .7-1.6 1.5-2.6z"/>',
+  bash:'<path d="M10 3l6 2.4v4.6c0 4-2.6 6.8-6 8.4-3.4-1.6-6-4.4-6-8.4V5.4z"/><path d="M17.5 8.5l3-1.5M18 12h3M17.5 15.5l3 1.5"/>',
+  roar:'<path d="M4 9.5v5"/><path d="M7.5 7.5a6 6 0 0 1 0 9M11 5a9.5 9.5 0 0 1 0 14"/><path d="M15 8l3-3 3 3M18 5v8"/><path d="M15 19h6"/>',
   veil:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/><path d="M4 20L20 4"/>'
 };
 const RL_SKICON={
@@ -81,7 +83,8 @@ const RL_SKICON={
   'Venom Fang':'fang','Twin Toxin Crescents':'crescents','Caustic Mireburst':'poison',
   'Moonwell Mend':'heal','Dewfall Blessing':'dew','Sanctuary Bloom':'sunrise',
   'Kindled Aid':'lantern','Hearthlight Rally':'rally','Second Dawn':'sunrise',
-  'Spearstorm':'rain','Quickstep Cut':'dash','Twin Crescent':'crescents','Veilstep Attack':'veil'
+  'Spearstorm':'rain','Quickstep Cut':'dash','Twin Crescent':'crescents','Veilstep Attack':'veil',
+  'Shield Bash':'bash','Jade Ward':'shield','Taunt-Roar':'roar'
 };
 function rlGlyphFor(s){if(RL_SKICON[s.n])return RL_SKICON[s.n];const f=s.fx.map(x=>x[0]==='self'||x[0]==='team'?x[1]:x[0]);
   if(f.includes('revive')||s.res)return'sunrise';if(f.some(k=>k==='heal'||k==='healT'))return'heal';if(f.includes('shield'))return'shield';

@@ -39,6 +39,7 @@ function rlSkillText(h,s,lvl,st){
     else if(k==='blind')parts.push(`Blinds ${tgt} (${a[2]}% chance, ${turns(a[1])}): their attacks may miss`);
     else if(k==='drowsy')parts.push(`Makes ${tgt} Drowsy (${a[2]}% chance, ${turns(a[1])}): 35% chance each turn to doze off and lose it`);
     else if(k==='chill')parts.push(`Adds 1 Chill (${a[2]}% chance). At 3 Chill the enemy freezes and skips a turn`);
+    else if(k==='taunt')parts.push(`Taunts ${tgt} (${a[2]}% chance, ${turns(a[1])}): their single-target attacks must hit ${h.n}`);
     else if(k==='veil')parts.push(`Then slips into the Veil (${turns(a[1])}): enemies can't target or hit ${tgt==='itself'?'him':tgt}`);
     else if(k==='rime')parts.push(`Rune Ward on ${tgt} (${turns(a[1])}): enemies that strike them get Chilled`);
     else if(k==='daze')parts.push(`Dazes ${tgt} (${a[2]}% chance, ${turns(a[1])})`);
@@ -441,7 +442,7 @@ const REALM_ACTIONS={
   rlbSpeed(d){const R=rlUI();R.b.speed=+d.v;R.lastSpeed=+d.v;document.querySelectorAll('[data-a="rlbSpeed"]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===d.v))},
   rlbAuto(el){const b=rlUI().b;b.auto=!b.auto;const btn=document.querySelector('[data-a="rlbAuto"]');if(btn){btn.textContent='Auto '+(b.auto?'on':'off');btn.classList.toggle('pri',b.auto)}if(b.auto&&b.phase==='pick'){b.phase='go';rlbPanel();rlbStep()}else rlbPanel()},
   rlbSkill(d){const b=rlUI().b;if(b.phase!=='pick')return;const u=b.B.find(b.actor),i=+d.v,s=u.sk[i];if(!rlUsable(u,i))return;
-    if(s.tg==='e1'||s.tg==='a1'){b.pick=i;rlbPanel();document.querySelectorAll('[id^="rlu-"]').forEach(x=>x.classList.remove('targetable'));const side=s.tg==='e1'?1-u.side:u.side;b.B.side[side].filter(x=>x.alive||(s.res&&b.B.side[side].some(y=>!y.alive))?(s.res?!x.alive||!b.B.side[side].some(y=>!y.alive):x.alive):false).filter(x=>x.side===u.side||!rlHas(x,'veil')).forEach(x=>{const e=document.getElementById('rlu-'+x.uid);if(e)e.classList.add('targetable')});return}
+    if(s.tg==='e1'||s.tg==='a1'){b.pick=i;rlbPanel();document.querySelectorAll('[id^="rlu-"]').forEach(x=>x.classList.remove('targetable'));const side=s.tg==='e1'?1-u.side:u.side;b.B.side[side].filter(x=>x.alive||(s.res&&b.B.side[side].some(y=>!y.alive))?(s.res?!x.alive||!b.B.side[side].some(y=>!y.alive):x.alive):false).filter(x=>x.side===u.side||!rlHas(x,'veil')).filter(x=>{const tn=u.fx.find(f=>f.k==='taunt');return x.side===u.side||!tn||!b.B.side[x.side].some(y=>y.uid===tn.src&&y.alive&&!rlHas(y,'veil'))||x.uid===tn.src}).forEach(x=>{const e=document.getElementById('rlu-'+x.uid);if(e)e.classList.add('targetable')});return}
     b.phase='busy';rlbUse(i)},
   rlbTarget(d){const b=rlUI().b;if(!b||b.phase!=='pick'||b.pick==null)return;const u=b.B.find(b.actor),s=u.sk[b.pick],t=b.B.find(+d.v);if(!t||(!t.alive&&!s.res))return;if(t.side!==u.side&&rlHas(t,'veil'))return;
     if((s.tg==='e1'&&t.side===u.side)||(s.tg==='a1'&&t.side!==u.side))return;document.querySelectorAll('[id^="rlu-"]').forEach(x=>x.classList.remove('targetable'));const i=b.pick;b.phase='busy';rlbUse(i,t.uid)},
