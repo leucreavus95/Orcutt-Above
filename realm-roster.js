@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Rowan, the standard-bearer (chibi art). EPIC support. Rally Standard plants his banner and lifts the whole
+  // team's ATK, Banner Feint dashes in and snaps the flag in an enemy's face (Blind), and Commanding Sweep
+  // swings the banner through every enemy, delaying their turns while pushing his team's turns forward.
+  {id:'flag',col:{c:'#a83a30',l:'#fff0d0',d:'#1a2238'},vp:['#ffffff','#fff0d0','#e8c070','#8a2a24'],
+   hero:{n:'Rowan',r:4,role:'sup',spd:113,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:15},
+     ev:['Rowan','Rowan Bannerguard','Rowan, the Standard-Bearer'],
+     sk:[rlSk('Rally Standard',{tg:'aA',fx:[['atkUp',2],['healT',4]]}),
+         rlSk('Banner Feint',{cd:3,m:3.6,fx:[['blind',2,65],['self','spdUp',2]]}),
+         rlSk('Commanding Sweep',{cd:4,tg:'eA',m:1.7,fx:[['atbDown',20,55],['team','atb',20]]})]}},
   // Lysa, the glasswright (chibi art). EPIC. Shardline fires a spear of amber glass that pierces armor,
   // Prism Snare locks one enemy inside a glass prism (may stun, and Marks them), and Glassfall flings
   // shards skyward that rain down on every enemy, cracking their DEF.

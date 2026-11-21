@@ -30,6 +30,14 @@ const RL_ART={
   // Varek (ashen chain warden, chibi). LEGENDARY. Frames per form are [Chainhook Strike, Cinder Sweep, Furnace Break].
   // Brakk (fiddler-crab tideguard, chibi). EPIC tank. Frames per form are [Clawguard, Brine Snap, Riptide Lunge].
   // Lysa (human glasswright, chibi). EPIC. Frames per form are [Shardline, Prism Snare, Glassfall].
+  // Rowan (standard-bearer, chibi). EPIC support. Frames per form are [Rally Standard, Banner Feint, Commanding Sweep].
+  flag:{f:[{src:'art/flag-1.webp',ax:179,ay:856,h:851,w:495,ih:854,ht:0},{src:'art/flag-2.webp',ax:192,ay:862,h:851,w:499,ih:860,ht:0},{src:'art/flag-3.webp',ax:227,ay:892,h:851,w:531,ih:890,ht:0}],pose:'skill',melee:true,meleeSk:[false,true,false],dashPose:1,slash:'spear',
+        c:[[{src:'art/flag-1c1.webp',ax:152,ay:432,h:511,w:366,ih:432,ht:0},{src:'art/flag-1c2.webp',ax:37,ay:359,h:511,w:391,ih:360,ht:0},{src:'art/flag-1c3.webp',ax:146,ay:349,h:511,w:401,ih:350,ht:0}],
+           [{src:'art/flag-2c1.webp',ax:151,ay:434,h:511,w:372,ih:434,ht:0},{src:'art/flag-2c2.webp',ax:34,ay:366,h:511,w:393,ih:366,ht:0},{src:'art/flag-2c3.webp',ax:148,ay:351,h:511,w:412,ih:351,ht:0}],
+           [{src:'art/flag-3c1.webp',ax:171,ay:454,h:511,w:397,ih:453,ht:0},{src:'art/flag-3c2.webp',ax:32,ay:376,h:511,w:419,ih:376,ht:0},{src:'art/flag-3c3.webp',ax:24,ay:375,h:511,w:434,ih:375,ht:0}]],
+        spell:[{vp:['#ffffff','#fff0d0','#e8c070','#8a2a24'],hand:[110,150]},
+               {vp:['#ffffff','#fff0d0','#e8c070','#8a2a24'],hand:[110,150]},
+               {vp:['#ffffff','#fff0d0','#e8c070','#8a2a24'],hand:[110,150]}]},
   glass:{f:[{src:'art/glass-1.webp',ax:170,ay:771,h:765,w:491,ih:769,ht:0},{src:'art/glass-2.webp',ax:173,ay:779,h:765,w:515,ih:777,ht:0},{src:'art/glass-3.webp',ax:177,ay:780,h:765,w:496,ih:778,ht:0}],pose:'skill',
         c:[[{src:'art/glass-1c1.webp',ax:113,ay:379,h:459,w:411,ih:380,ht:0},{src:'art/glass-1c2.webp',ax:119,ay:375,h:459,w:389,ih:375,ht:0},{src:'art/glass-1c3.webp',ax:174,ay:446,h:459,w:396,ih:446,ht:0}],
            [{src:'art/glass-2c1.webp',ax:122,ay:389,h:459,w:418,ih:389,ht:0},{src:'art/glass-2c2.webp',ax:119,ay:386,h:459,w:408,ih:387,ht:0},{src:'art/glass-2c3.webp',ax:188,ay:450,h:459,w:412,ih:451,ht:0}],
