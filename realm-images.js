@@ -11,7 +11,7 @@ const RL_ART={
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
   // Tink (clockwork beetle, chibi). Frames per form are [Gear-Shot, Ricochet Volley, Cogblast].
-  bug:{zoom:.5,eyeY:100,f:[{src:'art/bug-1.webp',ax:208,ay:550,h:545,w:472,ih:551,ht:2,cx:320,fy:170},{src:'art/bug-2.webp',ax:203,ay:553,h:545,w:479,ih:552,ht:3,cx:320,fy:170},{src:'art/bug-3.webp',ax:224,ay:601,h:545,w:548,ih:600,ht:2,cx:345,fy:220}],pose:'skill',
+  bug:{zoom:.4,eyeY:95,f:[{src:'art/bug-1.webp',ax:208,ay:550,h:545,w:472,ih:551,ht:2,cx:290,fy:195},{src:'art/bug-2.webp',ax:203,ay:553,h:545,w:479,ih:552,ht:3,cx:290,fy:195},{src:'art/bug-3.webp',ax:224,ay:601,h:545,w:548,ih:600,ht:2,cx:320,fy:245}],pose:'skill',
         c:[[{src:'art/bug-1c1.webp',ax:101,ay:336,h:304,w:397,ih:337,ht:2},{src:'art/bug-1c2.webp',ax:104,ay:309,h:304,w:411,ih:309,ht:2},{src:'art/bug-1c3.webp',ax:103,ay:300,h:304,w:435,ih:302,ht:3}],
            [{src:'art/bug-2c1.webp',ax:108,ay:338,h:304,w:429,ih:338,ht:3},{src:'art/bug-2c2.webp',ax:111,ay:315,h:304,w:440,ih:316,ht:3},{src:'art/bug-2c3.webp',ax:101,ay:300,h:304,w:460,ih:301,ht:1}],
            [{src:'art/bug-3c1.webp',ax:123,ay:374,h:304,w:484,ih:375,ht:3},{src:'art/bug-3c2.webp',ax:168,ay:343,h:304,w:545,ih:343,ht:7},{src:'art/bug-3c3.webp',ax:116,ay:364,h:304,w:541,ih:422,ht:47}]],
