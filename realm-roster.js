@@ -37,7 +37,15 @@ const RL_ROSTER=[
      ev:['Nyx','Nyx Duskwing','Nyx, the Moonveil'],
      sk:[rlSk('Dusk Dash',{m:3.3,exec:.5,again:true}),
          rlSk('Wingblade Volley',{cd:3,m:1.2,h:3,fx:[['mark',2,45]]}),
-         rlSk('Nightfall Burst',{cd:4,tg:'eA',m:2.1,fx:[['seal',1,35]]})]}}
+         rlSk('Nightfall Burst',{cd:4,tg:'eA',m:2.1,fx:[['seal',1,35]]})]}},
+  // Fern, the grove sprite (chibi art). Rare. The healer: roots pin an enemy in place, seeds planted
+  // on every enemy drain them to heal Fern's team, and the bloom heals, cleanses and regrows the team.
+  {id:'tree',col:{c:'#8cc63f',l:'#f0fad8',d:'#24401a'},vp:['#ffffff','#f4ffd0','#a8dc5a','#3d6e1e'],
+   hero:{n:'Fern',r:3,role:'sup',spd:106,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:15},
+     ev:['Fern','Fern Oakheart','Fern, the Grove Warden'],
+     sk:[rlSk('Root Snare',{m:3.2,fx:[['stun',1,30]]}),
+         rlSk('Seedburst',{cd:3,tg:'eA',m:1.4,fx:[['seed',2,60]]}),
+         rlSk('Rejuvenation Bloom',{cd:4,tg:'aA',fx:[['healT',22],['cleanse'],['regen',2]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

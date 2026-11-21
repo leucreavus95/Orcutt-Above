@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Fern (grove sprite, chibi). Frames per form are [Root Snare, Seedburst, Rejuvenation Bloom].
+  tree:{zoom:.5,eyeY:100,f:[{src:'art/tree-1.webp',ax:220,ay:564,h:559,w:509,ih:564,ht:2,cx:215,fy:120},{src:'art/tree-2.webp',ax:205,ay:565,h:559,w:491,ih:565,ht:3,cx:210,fy:120},{src:'art/tree-3.webp',ax:230,ay:613,h:559,w:603,ih:613,ht:2,cx:250,fy:165}],pose:'skill',
+        c:[[{src:'art/tree-1c1.webp',ax:129,ay:322,h:305,w:472,ih:323,ht:3},{src:'art/tree-1c2.webp',ax:135,ay:314,h:305,w:471,ih:314,ht:6},{src:'art/tree-1c3.webp',ax:140,ay:397,h:305,w:433,ih:439,ht:10}],
+           [{src:'art/tree-2c1.webp',ax:143,ay:330,h:305,w:472,ih:331,ht:2},{src:'art/tree-2c2.webp',ax:120,ay:349,h:305,w:439,ih:349,ht:21},{src:'art/tree-2c3.webp',ax:155,ay:405,h:305,w:424,ih:438,ht:2}],
+           [{src:'art/tree-3c1.webp',ax:124,ay:356,h:305,w:504,ih:360,ht:1},{src:'art/tree-3c2.webp',ax:124,ay:366,h:305,w:503,ih:374,ht:10},{src:'art/tree-3c3.webp',ax:170,ay:405,h:305,w:463,ih:448,ht:1}]],
+        spell:[{vp:['#ffffff','#f4ffd0','#a8dc5a','#3d6e1e'],hand:[150,140],support:'ring',bySkill:[{shot:'art/fx-tree-root1.webp'},{shot:'art/fx-tree-seed1.webp',aoe:'fan'},null]},
+               {vp:['#ffffff','#f4ffd0','#a8dc5a','#3d6e1e'],hand:[150,140],support:'ring',bySkill:[{shot:'art/fx-tree-root2.webp'},{shot:'art/fx-tree-seed2.webp',aoe:'fan'},null]},
+               {vp:['#ffffff','#f4ffd0','#a8dc5a','#3d6e1e'],hand:[150,140],support:'ring',bySkill:[{shot:'art/fx-tree-root3.webp'},{shot:'art/fx-tree-seed3.webp',aoe:'fan'},null]}]},
   // Nyx (moth, chibi). Frames per form are [Dusk Dash, Wingblade Volley, Nightfall Burst]:
   // a dashing dagger strike, a volley of painted wing-blades, and a crescent of night that sweeps the line.
   moth:{zoom:.5,eyeY:100,f:[{src:'art/moth-1.webp',ax:244,ay:522,h:517,w:500,ih:522,ht:2,cx:320,fy:99},{src:'art/moth-2.webp',ax:235,ay:522,h:517,w:480,ih:522,ht:2,cx:310,fy:99},{src:'art/moth-3.webp',ax:319,ay:560,h:517,w:596,ih:561,ht:2,cx:360,fy:132}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'night',

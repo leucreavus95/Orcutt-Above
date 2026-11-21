@@ -30,6 +30,8 @@ function rlSkillText(h,s,lvl,st){
     else if(k==='atbDown')parts.push(`Delays enemy turns (${a[2]}% chance)`);
     else if(k==='revive')parts.push('Revives fallen allies');
     else if(k==='shield')parts.push(`Shields ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP (${turns(a[2])})`);
+    else if(k==='seed')parts.push(`Plants a seed (${a[2]}% chance, ${turns(a[1])}): drains 5% HP each turn to heal your most hurt ally`);
+    else if(k==='regen')parts.push(`Regrowth for ${tgt}: heals 12% HP each turn (${turns(a[1])})`);
     else if(k==='bulwark')parts.push(`Raises a stone wall: ${tgt} take 25% less damage from hits (${turns(a[1])})`);
     else if(k==='guard')parts.push(`${h.n} takes 30% of the damage aimed at ${tgt} (${turns(a[1])})`);
     else if(k==='ward')parts.push(`Wards ${tgt} for ${turns(a[1])}: enemies that strike a warded ally may catch fire`);

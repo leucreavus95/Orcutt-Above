@@ -168,6 +168,8 @@ function rlTurnStart(B,u){
   const ev=[];B.turn++;u.atb=0;u.cds=u.cds.map(c=>Math.max(0,c-1));
   const burns=u.fx.filter(f=>f.k==='burn').length;
   if(burns){const d=Math.round(u.maxHp*.06*burns);rlDamage(B,u,d,ev,{dot:true})}
+  // Seeded: the seed drains 5% HP and heals the most hurt unit on the other side
+  if(u.alive&&rlHas(u,'seed')){const d=Math.round(u.maxHp*.05);rlDamage(B,u,d,ev,{dot:true});const fr=B.side[1-u.side].filter(x=>x.alive).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];if(fr)rlHeal(fr,d,ev)}
   if(u.alive&&rlHas(u,'regen')){const a=Math.round(u.maxHp*.12);rlHeal(u,a,ev)}
   if(!u.alive){rlCheck(B,ev);return{ev,can:false}}
   if(rlHas(u,'stun')){ev.push({k:'skip',u:u.uid});rlTick(u,ev);return{ev,can:false}}
