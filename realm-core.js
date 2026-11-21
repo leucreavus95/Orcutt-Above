@@ -177,6 +177,8 @@ function rlTick(u,ev){u.fx.forEach(f=>f.t--);const gone=u.fx.filter(f=>f.t<=0);u
 function rlHeal(u,a,ev){if(!u.alive)return;const b=u.hp;u.hp=Math.min(u.maxHp,u.hp+Math.round(a));const d=u.hp-b;if(d>0)ev.push({k:'heal',u:u.uid,v:d})}
 function rlDamage(B,u,amt,ev,o){
   let a=Math.max(1,Math.round(amt));
+  // Earthen Bulwark: a stone wall blunts direct hits
+  if(!(o&&(o.dot||o.guarded))&&rlHas(u,'bulwark'))a=Math.max(1,Math.round(a*.75));
   // Guardian Current: the guardian takes 30% of direct hits aimed at a guarded ally
   const gd=!(o&&(o.dot||o.guarded))&&u.fx.find(f=>f.k==='guard');if(gd){const G=B.all().find(x=>x.uid===gd.src);if(G&&G.alive&&G!==u){const sh=Math.round(a*.3);if(sh>0){a-=sh;ev.push({k:'guarded',u:u.uid,g:G.uid});rlDamage(B,G,sh,ev,{guarded:true})}}}if(u.shield>0){const s=Math.min(u.shield,a);u.shield-=s;a-=s;if(u.shield<=0)u.fx=u.fx.filter(f=>f.k!=='shield')}
   u.hp=Math.max(0,u.hp-a);ev.push({k:'hit',u:u.uid,v:Math.round(amt),hp:u.hp,crit:o&&o.crit,adv:o&&o.adv,dot:o&&o.dot});
@@ -228,6 +230,7 @@ function rlAct(B,u,i,tid,power){
         const cr=rlEff(u,'cr')+(adv>0?15:adv<0?-15:0),crit=Math.random()*100<cr;if(crit)d*=1+u.stats.cd/100;
         d*=.95+Math.random()*.1;
         const dealt=rlDamage(B,t,d,ev,{crit,adv});
+        if(s.splash&&h===0)for(const o2 of B.side[t.side].filter(x=>x.alive&&x!==t))rlDamage(B,o2,d*s.splash,ev,{}); // Aftershock
         if(u.stats.steal)rlHeal(u,dealt*u.stats.steal/100,ev);
       }
       for(const f of s.fx)if(f[0]!=='self'&&f[0]!=='team')rlApplyFx(B,u,t,f,pw*bonus,ev,true);

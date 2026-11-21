@@ -21,7 +21,15 @@ const RL_ROSTER=[
      ev:['Kai','Kai Tideshell','Kai, the Tide Templar'],
      sk:[rlSk('Tidal Thrust',{m:3.4,sc:'def',ign:.3,fx:[['slow',1,30]]}),
          rlSk('Shellspin Wave',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['strip',1],['atbDown',20,50]]}),
-         rlSk('Guardian Current',{cd:4,tg:'aA',fx:[['shield',18,2],['guard',2]]})]}}
+         rlSk('Guardian Current',{cd:4,tg:'aA',fx:[['shield',18,2],['guard',2]]})]}},
+  // Crag, the ram (chibi art). Rare. A hammer bruiser: his slam sends an aftershock through
+  // the whole enemy line, his crystals crack armor, and his stone wall blunts every hit on the team.
+  {id:'ram',col:{c:'#d98a4a',l:'#f8e7cc',d:'#3e2a1a'},vp:['#fff6e0','#f3d9a8','#d98a4a','#5a3a22'],
+   hero:{n:'Crag',r:3,role:'atk',spd:100,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:15},
+     ev:['Crag','Crag Stonehorn','Crag, the Geode King'],
+     sk:[rlSk('Seismic Strike',{m:3.5,splash:.35}),
+         rlSk('Crystal Burst',{cd:3,m:1.25,h:3,fx:[['defBreak',1,30]]}),
+         rlSk('Earthen Bulwark',{cd:4,tg:'aA',fx:[['bulwark',2],['self','defUp',2]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

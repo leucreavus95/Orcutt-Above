@@ -19,7 +19,7 @@ function rlSkillText(h,s,lvl,st){
   const parts=[];const turns=t=>`${t} turn${t>1?'s':''}`;
   if(s.m>0){const base=s.sc==='def'?st.def:s.sc==='hp'?st.hp*2:st.atk,v=base*s.m*bonus,lo=Math.max(1,Math.round(v*.95)),hi=Math.max(lo,Math.round(v*1.05));
     parts.push(`Deals ${lo}–${hi} damage to ${who}${s.h>1?`, ${s.h} times`:''}`)}
-  if(s.ign)parts.push('Pierces armor');if(s.vsBurn)parts.push('Extra damage to burning enemies');if(s.det)parts.push('Sets off all of the target\'s Burns at once');
+  if(s.ign)parts.push('Pierces armor');if(s.vsBurn)parts.push('Extra damage to burning enemies');if(s.splash)parts.push(`Aftershock: ${Math.round(s.splash*100)}% of the damage also hits every other enemy`);if(s.det)parts.push('Sets off all of the target\'s Burns at once');
   s.fx.forEach(f=>{let tgt=who,k=f[0],a=f;if(k==='self'||k==='team'){tgt=k==='self'?'itself':'all allies';a=f.slice(1);k=a[0]}
     const F=RL_FX[k];
     if(k==='heal')parts.push(`Heals ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP`);
@@ -30,6 +30,7 @@ function rlSkillText(h,s,lvl,st){
     else if(k==='atbDown')parts.push(`Delays enemy turns (${a[2]}% chance)`);
     else if(k==='revive')parts.push('Revives fallen allies');
     else if(k==='shield')parts.push(`Shields ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP (${turns(a[2])})`);
+    else if(k==='bulwark')parts.push(`Raises a stone wall: ${tgt} take 25% less damage from hits (${turns(a[1])})`);
     else if(k==='guard')parts.push(`${h.n} takes 30% of the damage aimed at ${tgt} (${turns(a[1])})`);
     else if(k==='ward')parts.push(`Wards ${tgt} for ${turns(a[1])}: enemies that strike a warded ally may catch fire`);
     else if(F&&F.buff)parts.push(`${F.n} for ${tgt} (${turns(a[1])})`);
