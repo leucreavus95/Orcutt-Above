@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Tink (clockwork beetle, chibi). Frames per form are [Gear-Shot, Ricochet Volley, Cogblast].
+  bug:{zoom:.5,eyeY:100,f:[{src:'art/bug-1.webp',ax:208,ay:550,h:545,w:472,ih:551,ht:2,cx:320,fy:170},{src:'art/bug-2.webp',ax:203,ay:553,h:545,w:479,ih:552,ht:3,cx:320,fy:170},{src:'art/bug-3.webp',ax:224,ay:601,h:545,w:548,ih:600,ht:2,cx:345,fy:220}],pose:'skill',
+        c:[[{src:'art/bug-1c1.webp',ax:101,ay:336,h:304,w:397,ih:337,ht:2},{src:'art/bug-1c2.webp',ax:104,ay:309,h:304,w:411,ih:309,ht:2},{src:'art/bug-1c3.webp',ax:103,ay:300,h:304,w:435,ih:302,ht:3}],
+           [{src:'art/bug-2c1.webp',ax:108,ay:338,h:304,w:429,ih:338,ht:3},{src:'art/bug-2c2.webp',ax:111,ay:315,h:304,w:440,ih:316,ht:3},{src:'art/bug-2c3.webp',ax:101,ay:300,h:304,w:460,ih:301,ht:1}],
+           [{src:'art/bug-3c1.webp',ax:123,ay:374,h:304,w:484,ih:375,ht:3},{src:'art/bug-3c2.webp',ax:168,ay:343,h:304,w:545,ih:343,ht:7},{src:'art/bug-3c3.webp',ax:116,ay:364,h:304,w:541,ih:422,ht:47}]],
+        spell:[{vp:['#ffffff','#d6fff2','#5fe0c0','#8a4a1e'],hand:[170,150],bySkill:[{shot:'art/fx-bug-gear1.webp'},{shot:'art/fx-bug-gear1.webp'},{burst:'art/fx-bug-blast1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#d6fff2','#5fe0c0','#8a4a1e'],hand:[170,150],bySkill:[{shot:'art/fx-bug-gear2.webp'},{shot:'art/fx-bug-gear2.webp'},{burst:'art/fx-bug-blast2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#d6fff2','#5fe0c0','#8a4a1e'],hand:[170,150],bySkill:[{shot:'art/fx-bug-gear3.webp'},{shot:'art/fx-bug-gear3.webp'},{burst:'art/fx-bug-blast3.webp',aoe:'sweep'}]}]},
   // Fern (grove sprite, chibi). Frames per form are [Root Snare, Seedburst, Rejuvenation Bloom].
   tree:{zoom:.5,eyeY:100,f:[{src:'art/tree-1.webp',ax:220,ay:564,h:559,w:509,ih:564,ht:2,cx:215,fy:120},{src:'art/tree-2.webp',ax:205,ay:565,h:559,w:491,ih:565,ht:3,cx:210,fy:120},{src:'art/tree-3.webp',ax:230,ay:613,h:559,w:603,ih:613,ht:2,cx:250,fy:165}],pose:'skill',
         c:[[{src:'art/tree-1c1.webp',ax:129,ay:322,h:305,w:472,ih:323,ht:3},{src:'art/tree-1c2.webp',ax:135,ay:314,h:305,w:471,ih:314,ht:6},{src:'art/tree-1c3.webp',ax:140,ay:397,h:305,w:433,ih:439,ht:10}],

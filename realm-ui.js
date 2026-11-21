@@ -15,10 +15,10 @@ function rlRarTag(r){const R=RL_RAR[r]||RL_RAR[3];return`<span class="rl-rar" st
 function rlSkillText(h,s,lvl,st){
   if(!st){const p=typeof P_==='function'?P_():null;st=p&&p.heroes&&p.heroes[h.id]?rlHeroStats(p,h.id):rlBaseStats(h.id,1,h.r)}
   if(s.pas)return({counter:`Passive: sometimes strikes back when hit (${s.v}% chance).`,lifesteal:`Passive: heals itself with ${s.v}% of the damage it deals.`,firstStrike:'Passive: gets a head start every battle.'}[s.pas]||'Passive.');
-  const who={e1:'one enemy',eA:'all enemies',a1:'one ally',aA:'all allies',self:'itself'}[s.tg]||'one enemy',bonus=1+.1*((lvl||1)-1);
+  const who={e1:'one enemy',eA:'all enemies',a1:'one ally',aA:'all allies',self:'itself'}[s.tg]||'one enemy',who2=s.bounce?`random enemies (${s.bounce} ricochets)`:null,bonus=1+.1*((lvl||1)-1);
   const parts=[];const turns=t=>`${t} turn${t>1?'s':''}`;
   if(s.m>0){const base=s.sc==='def'?st.def:s.sc==='hp'?st.hp*2:st.atk,v=base*s.m*bonus,lo=Math.max(1,Math.round(v*.95)),hi=Math.max(lo,Math.round(v*1.05));
-    parts.push(`Deals ${lo}–${hi} damage to ${who}${s.h>1?`, ${s.h} times`:''}`)}
+    parts.push(`Deals ${lo}–${hi} damage to ${who2||who}${s.h>1?`, ${s.h} times`:''}`)}
   if(s.ign)parts.push('Pierces armor');if(s.vsBurn)parts.push('Extra damage to burning enemies');if(s.exec)parts.push(`Deals ${Math.round(s.exec*100)}% more damage to enemies under half HP`);if(s.again)parts.push('If it defeats the target, she acts again right away');if(s.splash)parts.push(`Aftershock: ${Math.round(s.splash*100)}% of the damage also hits every other enemy`);if(s.det)parts.push('Sets off all of the target\'s Burns at once');
   s.fx.forEach(f=>{let tgt=who,k=f[0],a=f;if(k==='self'||k==='team'){tgt=k==='self'?'itself':'all allies';a=f.slice(1);k=a[0]}
     const F=RL_FX[k];

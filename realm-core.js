@@ -210,6 +210,7 @@ function rlResist(src,tgt){return Math.random()*100<rlClamp(tgt.stats.res-src.st
 function rlUsable(u,i){const s=u.sk[i];if(!s||s.pas)return false;if(i>0&&rlHas(u,'seal'))return false;return u.cds[i]<=0}
 function rlTargets(B,u,s,tid){
   const foes=B.side[1-u.side].filter(x=>x.alive),mine=B.side[u.side].filter(x=>x.alive);
+  if(s.bounce&&foes.length)return Array.from({length:s.bounce},()=>foes[Math.floor(Math.random()*foes.length)]); // Ricochet: random enemy per hit
   if(s.tg==='eA')return foes;if(s.tg==='aA')return s.fx.some(f=>f[0]==='revive')?B.side[u.side]:mine;if(s.tg==='self')return[u];
   if(s.tg==='a1')return[mine.find(x=>x.uid===tid)||mine[0]];
   return[foes.find(x=>x.uid===tid)||foes[0]];
