@@ -13,9 +13,9 @@ const RL_ART={
   // Kestran (pangolin spear knight, chibi). LEGENDARY. Frames per form are [Spear Thrust, Winding Sweep, Spearstorm]:
   // the thrust is a lunge; the sweep reuses the thrust stance (the sheet's sweep crosses his legs) and draws the painted arc.
   pan:{f:[{src:'art/pan-1.webp',ax:200,ay:607,h:587,w:408,ih:606,ht:0},{src:'art/pan-2.webp',ax:208,ay:615,h:595,w:423,ih:614,ht:0},{src:'art/pan-3.webp',ax:250,ay:618,h:598,w:489,ih:617,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
-        c:[[{src:'art/pan-1c1.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c2.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c3.webp',ax:140,ay:313,h:303,w:289,ih:313,ht:0}],
-           [{src:'art/pan-2c1.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c2.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c3.webp',ax:144,ay:391,h:379,w:293,ih:391,ht:0}],
-           [{src:'art/pan-3c1.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c2.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c3.webp',ax:147,ay:421,h:408,w:304,ih:421,ht:0}]],
+        c:[[{src:'art/pan-1c1.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c2.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c3.webp',ax:140,ay:371,h:359,w:346,ih:371,ht:0}],
+           [{src:'art/pan-2c1.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c2.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c3.webp',ax:144,ay:391,h:379,w:311,ih:391,ht:0}],
+           [{src:'art/pan-3c1.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c2.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c3.webp',ax:147,ay:401,h:389,w:349,ih:401,ht:0}]],
         spell:[{vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc1.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear1.webp'}]},
                {vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc2.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear2.webp'}]},
                {vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc3.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear3.webp'}]}]},
