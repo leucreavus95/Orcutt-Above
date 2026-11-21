@@ -140,7 +140,7 @@ function rlbBuild(es){const b=rlUI().b,B=b.B,box=document.getElementById('rlb-un
   box.innerHTML=B.all().map(u=>rlbUnitEl(B,u,es!=null?u.side===es:enter)).join('');vfxInit(rlStageKind(b.ctx));rlbSync()}
 function rlbSync(){const b=rlUI().b;if(!b)return;const B=b.B;
   for(const u of B.all()){const el=document.getElementById('rlu-'+u.uid);if(!el)continue;
-    el.classList.toggle('dead',!u.alive);el.classList.toggle('turn',b.actor===u.uid&&u.alive);el.classList.toggle('stunned',rlHas(u,'stun'));
+    const pend=b.rezPend&&b.rezPend.has(u.uid);el.classList.toggle('dead',!u.alive||pend);el.classList.toggle('turn',b.actor===u.uid&&u.alive);el.classList.toggle('stunned',rlHas(u,'stun'));
     const hp=el.querySelector('.hp'),sh=el.querySelector('.sh'),tx=el.querySelector('.rlb-hp span'),fx=el.querySelector('.rlb-chips');
     hp.style.width=(u.hp/u.maxHp*100)+'%';hp.classList.toggle('low',u.hp/u.maxHp<.3);sh.style.width=Math.min(100,u.shield/u.maxHp*100)+'%';tx.textContent=u.alive?rlNum(u.hp):'';
     const counts={};u.fx.forEach(f=>counts[f.k]=(counts[f.k]||0)+1);
@@ -159,7 +159,7 @@ async function rlbPlay(ev){
   const b=rlUI().b,B=b.B;let lastEl='light';
   for(const e of ev){
     if(!rlUI().b)return;
-    if(e.k==='act'){const u=B.find(e.u),s=u.sk[e.s],el=document.getElementById('rlu-'+e.u),spr=el&&el.querySelector('.rlb-spr');lastEl=u.el;b.actor=e.u;rlbSync();
+    if(e.k==='act'){const u=B.find(e.u),s=u.sk[e.s],el=document.getElementById('rlu-'+e.u),spr=el&&el.querySelector('.rlb-spr');lastEl=u.el;b.actor=e.u;if(s.res){b.rezPend=new Set(e.t.filter(t=>{const x=document.getElementById('rlu-'+t);return x&&x.classList.contains('dead')}))}rlbSync();
       const foe=s.tg==='e1'||s.tg==='eA',ult=e.s===2,col=RL_EL[u.el].c,src=rlbPt(e.u);
       rlbFloat(e.u,s.n+(e.p<1?' · half power':''),'name');
       if(ult&&!STILL){const d=document.getElementById('rlb-dim');if(d){d.classList.remove('on');void d.offsetWidth;d.classList.add('on')}rlbBanner(s.n,col);await rlbDelay(380)}
@@ -179,7 +179,7 @@ async function rlbPlay(ev){
     else if(e.k==='fx'){const F=RL_FX[e.f],p=rlbPt(e.u);rlbFloat(e.u,F.n,F.buff?'buff':'debuff');if(p){if(e.f==='shield')vfxP({x:p.x,y:p.y,life:.5,s:p.w*.45,grow:20,c:'#9fd6ff',shape:'shock'});else vfxAura(p.x,p.y,F.c,!!F.buff)}rlbSync();await rlbDelay(150)}
     else if(e.k==='resist'){rlbFloat(e.u,'Resisted','muted');await rlbDelay(90)}
     else if(e.k==='die'){const u=B.find(e.u),p=rlbPt(e.u);if(u&&u.side===1)b.kills.push(u.el);if(p){vfxBurst(p.x,p.y,u?u.el:'dark',30,1.3);for(let i=0;i<20;i++)vfxP({x:p.x+vR(-p.w/3,p.w/3),y:p.y+vR(-p.h/3,p.h/3),vy:vR(-90,-30),life:vR(.6,1.1),s:vR(2,4),c:'#e8e0ff',glow:false})}rlbSync();await rlbDelay(320)}
-    else if(e.k==='revive'){const p=rlbPt(e.u);if(p){vfxAoe('light',[p])}rlbFloat(e.u,'Revived','heal');rlbSync();await rlbDelay(260)}
+    else if(e.k==='revive'){if(b.rezPend)b.rezPend.delete(e.u);const p=rlbPt(e.u);if(p){vfxAoe('light',[p])}rlbFloat(e.u,'Revived','heal');rlbSync();await rlbDelay(260)}
     else if(e.k==='atb'){rlbFloat(e.u,(e.v>0?'+':'')+e.v+'% turn',e.v>0?'buff':'debuff');rlbSync();await rlbDelay(90)}
     else if(e.k==='skip'){rlbFloat(e.u,'Stunned','debuff');await rlbDelay(340)}
     else if(e.k==='counter'){rlbFloat(e.u,'Counter!','buff');await rlbDelay(160)}
@@ -250,6 +250,7 @@ window.addEventListener('resize',()=>{if(VFX.cv)vfxSize()});
 .rlb-u.stunned .rlb-spr::after{content:"✦ ✦ ✦";position:absolute;left:0;right:0;top:-2%;text-align:center;color:#ffd60a;font-size:14px;letter-spacing:4px;animation:rlSpin 1.2s linear infinite;text-shadow:0 0 6px #ffd60a}
 .rlb-u.dead .rlb-spr{opacity:0;transform:translateY(8%) scale(.9);filter:grayscale(1) brightness(.4);animation:none!important;transition:opacity .7s .1s,transform .7s,filter .4s}
 .rlb-u.dead .rlb-tag,.rlb-u.dead .rlb-shadow{opacity:0;transition:opacity .4s}
+.rlb-u.dead.targetable .rlb-spr{opacity:.45;filter:grayscale(1) brightness(.8)}.rlb-u.dead.targetable{cursor:pointer}
 .rlb-cam.shake{animation:rlShake .3s}.rlb-cam.shake2{animation:rlShake2 .42s}
 @keyframes rlShake{20%{transform:translate(-5px,3px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-3px,2px)}80%{transform:translate(2px,-1px)}}
 @keyframes rlShake2{10%{transform:translate(-9px,5px) scale(1.02)}30%{transform:translate(9px,-6px) scale(1.02)}50%{transform:translate(-7px,4px)}70%{transform:translate(5px,-2px)}90%{transform:translate(-2px,1px)}}

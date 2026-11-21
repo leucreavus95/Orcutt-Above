@@ -10,6 +10,15 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Brenna (lantern medic, chibi). LEGENDARY healer. Frames per form are [Kindled Aid, Hearthlight Rally, Second Dawn];
+  // all three land on allies, and Second Dawn can raise a fallen ally.
+  med:{f:[{src:'art/med-1.webp',ax:173,ay:713,h:690,w:469,ih:712,ht:0},{src:'art/med-2.webp',ax:178,ay:739,h:714,w:464,ih:737,ht:0},{src:'art/med-3.webp',ax:203,ay:789,h:763,w:501,ih:787,ht:0}],pose:'skill',
+        c:[[{src:'art/med-1c1.webp',ax:88,ay:346,h:333,w:241,ih:344,ht:0},{src:'art/med-1c2.webp',ax:121,ay:362,h:353,w:260,ih:364,ht:0},{src:'art/med-1c3.webp',ax:83,ay:351,h:342,w:220,ih:353,ht:0}],
+           [{src:'art/med-2c1.webp',ax:98,ay:348,h:335,w:231,ih:346,ht:0},{src:'art/med-2c2.webp',ax:114,ay:376,h:366,w:255,ih:378,ht:0},{src:'art/med-2c3.webp',ax:91,ay:338,h:329,w:242,ih:340,ht:0}],
+           [{src:'art/med-3c1.webp',ax:151,ay:402,h:387,w:304,ih:399,ht:0},{src:'art/med-3c2.webp',ax:136,ay:383,h:373,w:267,ih:385,ht:0},{src:'art/med-3c3.webp',ax:131,ay:354,h:345,w:280,ih:356,ht:0}]],
+        spell:[{vp:['#ffffff','#fff3c8','#ffc65a','#b5501e'],hand:[95,215],support:'lantern',beam:'art/fx-med-beam1.webp'},
+               {vp:['#ffffff','#fff3c8','#ffc65a','#b5501e'],hand:[95,215],support:'lantern',beam:'art/fx-med-beam2.webp'},
+               {vp:['#ffffff','#fff3c8','#ffc65a','#b5501e'],hand:[95,215],support:'lantern',beam:'art/fx-med-beam3.webp'}]},
   // Aurelle (moon deer healer, chibi). LEGENDARY. Frames per form are [Moonwell Mend, Dewfall Blessing, Sanctuary Bloom];
   // every spell lands on her allies.
   deer:{f:[{src:'art/deer-1.webp',ax:229,ay:564,h:545,w:476,ih:562,ht:0},{src:'art/deer-2.webp',ax:233,ay:580,h:561,w:498,ih:579,ht:0},{src:'art/deer-3.webp',ax:255,ay:608,h:587,w:546,ih:606,ht:0}],pose:'skill',
@@ -547,7 +556,7 @@ function vfxFlameWard(S,e){const P=S.vp,sp=vSp(),big=S.big;e.t.forEach((uid,n)=>
     c.globalAlpha=a*.25;c.fillStyle=P[2];c.beginPath();c.ellipse(0,0,R*.8*g,R*g,0,0,6.283);c.fill();
     for(let i=0;i<3;i++){c.globalAlpha=a*[.5,.8,1][i];c.strokeStyle=[P[3],P[2],P[1]][i];c.lineWidth=[12,7,3][i];c.beginPath();c.ellipse(0,0,R*.8*g,R*g,0,0,6.283);c.stroke()}
     c.restore();const fl=big?5:3;for(let i=0;i<fl;i++){const an=Math.random()*6.283;vfxP({x:q.x+Math.cos(an)*R*.8*g,y:q.y+Math.sin(an)*R*g,vy:vR(-150,-60),life:vR(.3,.6),s:vR(3,7),c:rlRand(P),shape:i%2?'c':'dia',vr:4})}}})})}
-(function(){const prev=rlArtSupport;rlArtSupport=function(S,e,sk){if(S.support==='moonwell')return vfxMoonwell(S,e,sk);if(S.support==='flameward'||S.support==='ring')return vfxFlameWard(S,e);return prev(S,e,sk)}})();
+(function(){const prev=rlArtSupport;rlArtSupport=function(S,e,sk){if(S.support==='lantern')return vfxLantern(S,e,sk);if(S.support==='moonwell')return vfxMoonwell(S,e,sk);if(S.support==='flameward'||S.support==='ring')return vfxFlameWard(S,e);return prev(S,e,sk)}})();
 
 /* volley fired skyward before an arrow rain lands: flaming arrows streak up off the top of the stage */
 function vfxShootUp(h,S,src){const img=artImg(src),P=S.vp,sp=vSp(),n=5;
@@ -583,3 +592,25 @@ function vfxMoonwell(S,e,sk){const P=S.vp,sp=vSp(),h=rlArtHand(S),pts=e.t.map(t=
     if(Math.random()<.8)vfxP({x:cx+vR(-rx,rx)*g,y:cy-vR(0,ry)*g,vy:vR(-60,-20),life:vR(.5,.9),s:vR(2,4),c:rlRand(P),shape:'star',vr:2});
     if(!hit&&k>.4){hit=true;pts.forEach(o=>sparkle(o.q));res()}}})})}
 Object.values(DEER_FX).forEach(artImg);
+
+/* Brenna: lantern light on allies. 0 = a star-beam from her lantern to one ally; 1 = golden rings rise
+   around every ally; 2 = a pillar of dawn light and a rune circle raise the chosen ally */
+function vfxLantern(S,e,sk){const P=S.vp,sp=vSp(),h=rlArtHand(S),pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;
+  const sparkle=q=>{for(let i=0;i<16;i++)vfxP({x:q.x+vR(-q.w/3,q.w/3),y:q.y+vR(-q.h/3,q.h/2),vy:vR(-110,-40),life:vR(.5,.9),s:vR(2,5),c:rlRand(P),shape:i%3?'c':'star',vr:3});vfxHeal(q.x,q.y)};
+  if(h)vfxP({x:h.x,y:h.y,life:.45,s:6,grow:160,c:P[2],shape:'shock'});
+  if(e.s===0){const q=pts[0];if(!h){sparkle(q);return}return paintShot(h.x,h.y,q.x,q.y-q.h*.1,Object.assign({},S,{paint:{shot:S.beam}}),Math.max(1,h.k*1.6),false,-40).then(()=>sparkle(q))}
+  if(e.s===1)return Promise.all(pts.map((q,i)=>new Promise(res=>{let t=-i*.07/sp,hit=false;const life=.9/sp,foot=q.y+q.h*.42;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}const a=k<.7?1:1-(k-.7)/.3;c.save();c.globalCompositeOperation='lighter';
+      for(let j=0;j<3;j++){const kk=Math.max(0,Math.min(1,k*1.4-j*.18)),y=foot-q.h*.75*kk,rx=q.w*(.55+.1*j);c.globalAlpha=a*(1-kk*.6);c.strokeStyle=j%2?P[1]:P[2];c.lineWidth=5;c.beginPath();c.ellipse(q.x,y,rx,rx*.22,0,0,6.283);c.stroke()}
+      c.restore();if(!hit&&k>.4){hit=true;sparkle(q);res()}}})})));
+  // Second Dawn: pillar of light + rune circle on the chosen ally
+  const q=pts[0],foot=q.y+q.h*.45,life=1.2/sp;let t=0;
+  return new Promise(res=>{let hit=false;VFX.items.push({step(dt,c){t+=dt;const k=t/life;if(k>=1){this.done=true;return}const g=Math.min(1,k/.25),a=k<.75?1:1-(k-.75)/.25;
+    c.save();c.globalCompositeOperation='lighter';c.globalAlpha=a;
+    const w=q.w*.8*g,gr=c.createLinearGradient(q.x-w,0,q.x+w,0);gr.addColorStop(0,'rgba(255,200,90,0)');gr.addColorStop(.5,'rgba(255,240,190,.85)');gr.addColorStop(1,'rgba(255,200,90,0)');
+    c.fillStyle=gr;c.fillRect(q.x-w,0,w*2,foot);
+    c.strokeStyle=P[2];c.lineWidth=4;c.beginPath();c.ellipse(q.x,foot,q.w*.9*g,q.w*.22*g,0,0,6.283);c.stroke();
+    c.lineWidth=2;c.strokeStyle=P[1];c.beginPath();c.ellipse(q.x,foot,q.w*.65*g,q.w*.15*g,0,0,6.283);c.stroke();
+    c.beginPath();for(let i=0;i<8;i++){const an=i*Math.PI/4+t;c.moveTo(q.x,foot);c.lineTo(q.x+Math.cos(an)*q.w*.65*g,foot+Math.sin(an)*q.w*.15*g)}c.stroke();c.restore();
+    if(Math.random()<.9)vfxP({x:q.x+vR(-w,w),y:foot-vR(0,q.h),vy:vR(-140,-60),life:vR(.4,.8),s:vR(2,5),c:rlRand(P),shape:'star',vr:3});
+    if(!hit&&k>.35){hit=true;sparkle(q);res()}}})})}

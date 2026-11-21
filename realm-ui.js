@@ -29,6 +29,7 @@ function rlSkillText(h,s,lvl,st){
     else if(k==='atb')parts.push(`${tgt==='itself'?'Acts':'Allies act'} sooner`);
     else if(k==='atbDown')parts.push(`Delays enemy turns (${a[2]}% chance)`);
     else if(k==='revive')parts.push('Revives fallen allies');
+    else if(k==='rez')parts.push(`Raises the chosen fallen ally with ${a[1]}% HP (a living ally is healed instead)`);
     else if(k==='shield')parts.push(`Shields ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP (${turns(a[2])})`);
     else if(k==='poison')parts.push(`Poisons ${tgt}: ${a[3]||1} stack${(a[3]||1)>1?'s':''} (${a[2]}% chance, ${turns(a[1])}). Each stack deals 4% max HP per turn, up to 5`);
     else if(k==='sigil')parts.push(`Brands ${tgt} with a Sigil (${a[2]}% chance, stacks up to 3)`);
@@ -425,9 +426,9 @@ const REALM_ACTIONS={
   rlbSpeed(d){const R=rlUI();R.b.speed=+d.v;R.lastSpeed=+d.v;document.querySelectorAll('[data-a="rlbSpeed"]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===d.v))},
   rlbAuto(el){const b=rlUI().b;b.auto=!b.auto;const btn=document.querySelector('[data-a="rlbAuto"]');if(btn){btn.textContent='Auto '+(b.auto?'on':'off');btn.classList.toggle('pri',b.auto)}if(b.auto&&b.phase==='pick'){b.phase='go';rlbPanel();rlbStep()}else rlbPanel()},
   rlbSkill(d){const b=rlUI().b;if(b.phase!=='pick')return;const u=b.B.find(b.actor),i=+d.v,s=u.sk[i];if(!rlUsable(u,i))return;
-    if(s.tg==='e1'||s.tg==='a1'){b.pick=i;rlbPanel();document.querySelectorAll('[id^="rlu-"]').forEach(x=>x.classList.remove('targetable'));const side=s.tg==='e1'?1-u.side:u.side;b.B.side[side].filter(x=>x.alive).forEach(x=>{const e=document.getElementById('rlu-'+x.uid);if(e)e.classList.add('targetable')});return}
+    if(s.tg==='e1'||s.tg==='a1'){b.pick=i;rlbPanel();document.querySelectorAll('[id^="rlu-"]').forEach(x=>x.classList.remove('targetable'));const side=s.tg==='e1'?1-u.side:u.side;b.B.side[side].filter(x=>x.alive||(s.res&&b.B.side[side].some(y=>!y.alive))?(s.res?!x.alive||!b.B.side[side].some(y=>!y.alive):x.alive):false).forEach(x=>{const e=document.getElementById('rlu-'+x.uid);if(e)e.classList.add('targetable')});return}
     b.phase='busy';rlbUse(i)},
-  rlbTarget(d){const b=rlUI().b;if(!b||b.phase!=='pick'||b.pick==null)return;const u=b.B.find(b.actor),s=u.sk[b.pick],t=b.B.find(+d.v);if(!t||!t.alive)return;
+  rlbTarget(d){const b=rlUI().b;if(!b||b.phase!=='pick'||b.pick==null)return;const u=b.B.find(b.actor),s=u.sk[b.pick],t=b.B.find(+d.v);if(!t||(!t.alive&&!s.res))return;
     if((s.tg==='e1'&&t.side===u.side)||(s.tg==='a1'&&t.side!==u.side))return;document.querySelectorAll('[id^="rlu-"]').forEach(x=>x.classList.remove('targetable'));const i=b.pick;b.phase='busy';rlbUse(i,t.uid)},
   rlbAns(d){rlbAnswer(+d.v)},
   rlbQuit(){const R=rlUI(),b=R.b;if(!b)return;if(!b.res&&!b.ctx.arenaVs){confirmBox('Retreat from battle?','You keep nothing from this battle, and the energy is not refunded.','Retreat',()=>{R.b=null})}else if(!b.res&&b.ctx.arenaVs){confirmBox('Forfeit this arena battle?','It counts as a loss.','Forfeit',()=>{b.B.status='lose';rlbEnd();R.b=null})}else{R.b=null;R.v=b.ctx.arenaVs?'arena':'world';render()}},

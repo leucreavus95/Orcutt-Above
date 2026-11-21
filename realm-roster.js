@@ -172,7 +172,16 @@ const RL_ROSTER=[
      ev:['Aurelle','Aurelle Dewhorn','Aurelle, the Moonwell Sage'],
      sk:[rlSk('Moonwell Mend',{tg:'a1',fx:[['heal',32],['cleanse'],['shield',10,1]]}),
          rlSk('Dewfall Blessing',{cd:3,tg:'aA',fx:[['heal',18],['regen',2]]}),
-         rlSk('Sanctuary Bloom',{cd:5,tg:'aA',fx:[['revive',35],['heal',12],['shield',15,2],['immune',1]]})]}}
+         rlSk('Sanctuary Bloom',{cd:5,tg:'aA',fx:[['revive',35],['heal',12],['shield',15,2],['immune',1]]})]}},
+  // Brenna, the lantern medic (chibi art). LEGENDARY healer. Kindled Aid beams light to one ally (heal + ATK Up),
+  // Hearthlight Rally rings every ally (heal, cleanse, DEF Up), and Second Dawn raises one fallen ally
+  // (or, if no one has fallen, fully mends and protects the chosen ally).
+  {id:'med',col:{c:'#e08a3a',l:'#fff3c8',d:'#3a1a0a'},vp:['#ffffff','#fff3c8','#ffc65a','#b5501e'],
+   hero:{n:'Brenna',r:5,role:'sup',spd:108,it:'staff',o:'robe',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:20},
+     ev:['Brenna','Brenna Hearthwarden','Brenna, the Beacon-Keeper'],
+     sk:[rlSk('Kindled Aid',{tg:'a1',fx:[['heal',28],['atkUp',2]]}),
+         rlSk('Hearthlight Rally',{cd:3,tg:'aA',fx:[['heal',16],['cleanse'],['defUp',2]]}),
+         rlSk('Second Dawn',{cd:5,tg:'a1',res:true,fx:[['rez',55],['shield',20,2],['immune',1]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

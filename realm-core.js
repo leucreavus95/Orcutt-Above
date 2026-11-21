@@ -222,6 +222,7 @@ function rlTargets(B,u,s,tid){
   const foes=B.side[1-u.side].filter(x=>x.alive),mine=B.side[u.side].filter(x=>x.alive);
   if(s.bounce&&foes.length)return Array.from({length:s.bounce},()=>foes[Math.floor(Math.random()*foes.length)]); // Ricochet: random enemy per hit
   if(s.tg==='eA')return foes;if(s.tg==='aA')return s.fx.some(f=>f[0]==='revive')?B.side[u.side]:mine;if(s.tg==='self')return[u];
+  if(s.res){const all=B.side[u.side],pick=all.find(x=>x.uid===tid);if(pick)return[pick];const dead=all.find(x=>!x.alive);return[dead||mine.slice().sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0]]}
   if(s.tg==='a1')return[mine.find(x=>x.uid===tid)||mine[0]];
   return[foes.find(x=>x.uid===tid)||foes[0]];
 }
@@ -276,8 +277,10 @@ function rlAct(B,u,i,tid,power){
     }
   }else if(foe){for(const t of tg)for(const f of s.fx)if(f[0]!=='self'&&f[0]!=='team')rlApplyFx(B,u,t,f,pw*bonus,ev,true)}
   else{
+    // Second Dawn: raise the chosen fallen ally (a living target is fully mended instead)
+    if(s.res){const t=tg[0];const rz=s.fx.find(f=>f[0]==='rez');if(t&&!t.alive){t.alive=true;t.hp=Math.round(t.maxHp*rz[1]/100*pw);t.atb=0;t.fx=[];ev.push({k:'revive',u:t.uid,hp:t.hp})}else if(t){rlHeal(t,t.maxHp*.35*pw,ev)}}
     for(const f of s.fx){if(f[0]==='revive'){for(const t of B.side[u.side])if(!t.alive&&!t.revived){t.alive=true;t.revived=true;t.hp=Math.round(t.maxHp*f[1]/100*pw);t.atb=0;ev.push({k:'revive',u:t.uid,hp:t.hp})}continue}
-      if(f[0]==='self'||f[0]==='team')continue;for(const t of tg)if(t.alive)rlApplyFx(B,u,t,f,pw*bonus,ev,false)}
+      if(f[0]==='self'||f[0]==='team'||f[0]==='rez')continue;for(const t of tg)if(t.alive)rlApplyFx(B,u,t,f,pw*bonus,ev,false)}
   }
   for(const f of s.fx){if(f[0]==='self')rlApplyFx(B,u,u,f.slice(1),pw*bonus,ev,false);if(f[0]==='team')for(const t of B.side[u.side])if(t.alive)rlApplyFx(B,u,t,f.slice(1),pw*bonus,ev,false)}
   // Discharge: Tempest Drive sets off the Static on every enemy
