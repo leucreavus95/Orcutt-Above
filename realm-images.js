@@ -18,6 +18,14 @@ const RL_ART={
   // the roar's golden sigil appears over every enemy it taunts.
   // Origa (origami crane, chibi). EPIC. Frames per form are [Fold Dash, Feather Piercer, Paper Storm].
   // Ignis (salamander arcanist, chibi). LEGENDARY. Frames per form are [Cinder Bolt, Scorching Arc, Ignition Burst].
+  // Kael (frost owl, chibi). LEGENDARY. Frames per form are [Glacial Talon, Shardstorm, Permafrost Ring].
+  frowl:{f:[{src:'art/frowl-1.webp',ax:196,ay:684,h:679,w:428,ih:685,ht:0},{src:'art/frowl-2.webp',ax:283,ay:704,h:679,w:480,ih:702,ht:0},{src:'art/frowl-3.webp',ax:327,ay:812,h:679,w:638,ih:810,ht:0}],pose:'skill',
+        c:[[{src:'art/frowl-1c1.webp',ax:126,ay:327,h:340,w:410,ih:327,ht:0},{src:'art/frowl-1c2.webp',ax:129,ay:322,h:340,w:404,ih:323,ht:0},{src:'art/frowl-1c3.webp',ax:177,ay:256,h:340,w:394,ih:385,ht:0}],
+           [{src:'art/frowl-2c1.webp',ax:133,ay:336,h:340,w:438,ih:336,ht:0},{src:'art/frowl-2c2.webp',ax:132,ay:332,h:340,w:430,ih:332,ht:0},{src:'art/frowl-2c3.webp',ax:180,ay:258,h:340,w:431,ih:396,ht:0}],
+           [{src:'art/frowl-3c1.webp',ax:144,ay:395,h:340,w:448,ih:395,ht:0},{src:'art/frowl-3c2.webp',ax:140,ay:375,h:340,w:461,ih:375,ht:0},{src:'art/frowl-3c3.webp',ax:206,ay:309,h:340,w:462,ih:440,ht:0}]],
+        spell:[{vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave1.webp',sz:.6},{shot:'art/fx-frowl-shards1.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-crystal.webp'}]},
+               {vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave2.webp',sz:.6},{shot:'art/fx-frowl-shards2.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-crystal.webp'}]},
+               {vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave3.webp',sz:.6},{shot:'art/fx-frowl-shards3.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-crystal.webp'}]}]},
   sal:{f:[{src:'art/sal-1.webp',ax:247,ay:554,h:548,w:470,ih:552,ht:0},{src:'art/sal-2.webp',ax:264,ay:595,h:548,w:504,ih:594,ht:0},{src:'art/sal-3.webp',ax:321,ay:689,h:548,w:589,ih:689,ht:0}],pose:'skill',
         c:[[{src:'art/sal-1c1.webp',ax:131,ay:333,h:362,w:418,ih:333,ht:0},{src:'art/sal-1c2.webp',ax:118,ay:387,h:362,w:414,ih:387,ht:0},{src:'art/sal-1c3.webp',ax:102,ay:307,h:362,w:416,ih:312,ht:0}],
            [{src:'art/sal-2c1.webp',ax:126,ay:350,h:362,w:442,ih:350,ht:0},{src:'art/sal-2c2.webp',ax:123,ay:398,h:362,w:437,ih:400,ht:0},{src:'art/sal-2c3.webp',ax:206,ay:346,h:362,w:434,ih:367,ht:0}],
@@ -567,6 +575,7 @@ function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst|
 (function(){const prev=rlArtFire,prevSup=rlArtSupport;
   rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0]||{};S=Object.assign({},S,{paint:p,bySkill:null},p.hand?{hand:p.hand}:{});
       if(p.aoe==='spearrain'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxSpearRain(pts,S,p.img)}
+      if(p.aoe==='permafrost'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxPermafrost(pts,S,p.img)}
       if(p.aoe==='meteor'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxMeteor(pts,S,p.img)}
       if(p.aoe==='spearsweep'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxSpearSweep(pts,S)}
       if(sk.tg==='eA'&&(p.aoe==='erupt'||p.aoe==='sweep')){const h=rlArtHand(S);const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;if(p.up&&h){await vfxShootUp(h,S,p.up);}return p.aoe==='erupt'?paintErupt(pts,S):paintSweep(h,pts,S)}}
@@ -606,6 +615,23 @@ function vfxFlameWard(S,e){const P=S.vp,sp=vSp(),big=S.big;e.t.forEach((uid,n)=>
 (function(){const prev=rlArtSupport;rlArtSupport=function(S,e,sk){if(S.support==='lantern')return vfxLantern(S,e,sk);if(S.support==='moonwell')return vfxMoonwell(S,e,sk);if(S.support==='flameward'||S.support==='ring')return vfxFlameWard(S,e);return prev(S,e,sk)}})();
 
 /* volley fired skyward before an arrow rain lands: flaming arrows streak up off the top of the stage */
+/* Permafrost Ring: a frost ring races out under each enemy and ice crystals spear up around them */
+function vfxPermafrost(pts,S,src){const img=artImg(src),P=S.vp,sp=vSp();rlbShake(true);
+  return Promise.all(pts.map((q,j)=>new Promise(res=>{let t=-j*.07/sp,hit=false;const life=1.05/sp,foot=q.y+q.h*.42,R=q.w*.75,N=9;
+    const cr=Array.from({length:N},(_,i)=>({an:i/N*6.283+vR(-.2,.2),h:vR(.45,.8)*q.h,d:vR(.0,.12)}));
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}if(k>.3&&!hit){hit=true;res()}
+      const g=1-Math.pow(1-Math.min(1,k/.3),3),a=k<.7?1:1-(k-.7)/.3;
+      c.save();c.translate(q.x,foot);
+      // frost disc + ring on the ground
+      c.save();c.scale(1,.32);c.globalAlpha=a*.5;const rg=c.createRadialGradient(0,0,0,0,0,R*g);rg.addColorStop(0,P[1]);rg.addColorStop(.7,P[2]);rg.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=rg;c.beginPath();c.arc(0,0,R*g,0,6.283);c.fill();
+      c.globalAlpha=a;c.strokeStyle=P[0];c.lineWidth=5;c.shadowColor=P[2];c.shadowBlur=16;c.beginPath();c.arc(0,0,R*g,0,6.283);c.stroke();c.lineWidth=2;c.setLineDash([8,8]);c.beginPath();c.arc(0,0,R*.72*g,0,6.283);c.stroke();c.restore();
+      // crystals spearing up, back ones first
+      cr.slice().sort((x,y)=>Math.sin(x.an)-Math.sin(y.an)).forEach((o,i)=>{const kk=Math.min(1,Math.max(0,(k-.12-o.d)/.22)),e=1-Math.pow(1-kk,3);if(e<=0||!img)return;
+        const x=Math.cos(o.an)*R*.85,y=Math.sin(o.an)*R*.85*.32,H=o.h*e,W=H*img.naturalWidth/img.naturalHeight;c.save();c.globalAlpha=a;c.translate(x,y);c.rotate(Math.cos(o.an)*.35);c.drawImage(img,-W/2,-H,W,H);c.restore()});
+      c.restore();
+      if(Math.random()<.7)vfxP({x:q.x+vR(-R,R),y:foot-vR(0,q.h*.6),vx:vR(-20,20),vy:vR(-60,-10),life:vR(.4,.8),s:vR(2,4),c:rlRand(P),shape:'dia',vr:3})}});
+    setTimeout(()=>{vfxP({x:q.x,y:q.y+q.h*.1,life:.4,s:10,grow:220,c:P[1],shape:'shock'})},(j*70+300)/sp)})))}
+
 /* Ignition Burst: fireballs fly up off the staff, then drop straight onto each enemy and blossom into flame */
 function vfxMeteor(pts,S,src){const img=artImg(src),P=S.vp,sp=vSp();
   return Promise.all(pts.map((q,j)=>new Promise(res=>{let t=-j*.08/sp,hit=false;const life=.36/sp,x1=q.x,y1=q.y+q.h*.18,x0=x1-q.h*.35,y0=y1-q.h*2.2,ang=Math.atan2(y1-y0,x1-x0),L=q.h*1.05;

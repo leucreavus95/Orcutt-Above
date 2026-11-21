@@ -84,6 +84,7 @@ const RL_SKICON={
   'Moonwell Mend':'heal','Dewfall Blessing':'dew','Sanctuary Bloom':'sunrise',
   'Kindled Aid':'lantern','Hearthlight Rally':'rally','Second Dawn':'sunrise',
   'Spearstorm':'rain','Quickstep Cut':'dash','Twin Crescent':'crescents','Veilstep Attack':'veil',
+  'Glacial Talon':'crescents','Shardstorm':'shards','Permafrost Ring':'snow',
   'Shield Bash':'bash','Jade Ward':'shield','Taunt-Roar':'roar'
 };
 function rlGlyphFor(s){if(RL_SKICON[s.n])return RL_SKICON[s.n];const f=s.fx.map(x=>x[0]==='self'||x[0]==='team'?x[1]:x[0]);

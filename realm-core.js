@@ -176,6 +176,7 @@ function rlTurnStart(B,u){
   if(u.alive&&rlHas(u,'regen')){const a=Math.round(u.maxHp*.12);rlHeal(u,a,ev)}
   if(!u.alive){rlCheck(B,ev);return{ev,can:false}}
   if(rlHas(u,'stun')){ev.push({k:'skip',u:u.uid});rlTick(u,ev);return{ev,can:false}}
+  if(rlHas(u,'freeze')){ev.push({k:'iced',u:u.uid});rlTick(u,ev);return{ev,can:false}} // Permafrost: frozen solid, skips the turn
   if(rlHas(u,'drowsy')&&Math.random()<.35){u.fx=u.fx.filter(x=>x.k!=='drowsy');ev.push({k:'doze',u:u.uid});rlTick(u,ev);return{ev,can:false}}
   return{ev,can:true};
 }

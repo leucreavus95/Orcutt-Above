@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Kael, the frost-owl cryomancer (chibi art). LEGENDARY. A control mage: Glacial Talon hurls a frost
+  // slash that Chills, Shardstorm pelts one enemy with ice shards (harder per Chill), and
+  // Permafrost Ring freezes every enemy solid for 2 turns.
+  {id:'frowl',col:{c:'#5aa8e8',l:'#e2f3ff',d:'#14243f'},vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],
+   hero:{n:'Kael',r:5,role:'sup',spd:110,it:'staff',o:'cloak',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'res',v:25},
+     ev:['Kael','Kael Frostplume','Kael, the Permafrost Sage'],
+     sk:[rlSk('Glacial Talon',{m:3.6,fx:[['chill',3,65]]}),
+         rlSk('Shardstorm',{cd:3,m:1.25,h:3,vsChill:.25,fx:[['chill',3,45]]}),
+         rlSk('Permafrost Ring',{cd:5,tg:'eA',m:1.3,fx:[['freeze',2,100]]})]}},
   // Ignis, the kiln-born salamander arcanist (chibi art). LEGENDARY. A fire mage built around Burn:
   // Cinder Bolt scorches one enemy, Scorching Arc sweeps the line and hits burning enemies harder,
   // and Ignition Burst sets every enemy ablaze with 2 stacks of Burn (fire damage each turn for 3 turns).

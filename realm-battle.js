@@ -140,7 +140,7 @@ function rlbBuild(es){const b=rlUI().b,B=b.B,box=document.getElementById('rlb-un
   box.innerHTML=B.all().map(u=>rlbUnitEl(B,u,es!=null?u.side===es:enter)).join('');vfxInit(rlStageKind(b.ctx));rlbSync()}
 function rlbSync(){const b=rlUI().b;if(!b)return;const B=b.B;
   for(const u of B.all()){const el=document.getElementById('rlu-'+u.uid);if(!el)continue;
-    const pend=!!(b.rezPend&&b.rezPend.has(u.uid));el.classList.toggle('dead',!u.alive||pend);el.classList.toggle('turn',b.actor===u.uid&&u.alive);el.classList.toggle('stunned',rlHas(u,'stun'));el.classList.toggle('veiled',u.alive&&rlHas(u,'veil'));
+    const pend=!!(b.rezPend&&b.rezPend.has(u.uid));el.classList.toggle('dead',!u.alive||pend);el.classList.toggle('turn',b.actor===u.uid&&u.alive);el.classList.toggle('stunned',rlHas(u,'stun'));el.classList.toggle('veiled',u.alive&&rlHas(u,'veil'));el.classList.toggle('iced',u.alive&&rlHas(u,'freeze'));
     const hp=el.querySelector('.hp'),sh=el.querySelector('.sh'),tx=el.querySelector('.rlb-hp span'),fx=el.querySelector('.rlb-chips');
     hp.style.width=(u.hp/u.maxHp*100)+'%';hp.classList.toggle('low',u.hp/u.maxHp<.3);sh.style.width=Math.min(100,u.shield/u.maxHp*100)+'%';tx.textContent=u.alive?rlNum(u.hp):'';
     const counts={};u.fx.forEach(f=>counts[f.k]=(counts[f.k]||0)+1);
@@ -189,6 +189,7 @@ async function rlbPlay(ev){
     else if(e.k==='reborn'){rlbFloat(e.u,'Reborn!','heal');const p=rlbPt(e.u);if(p){vfxP({x:p.x,y:p.y,life:.6,s:12,grow:280,c:'#ffb347',shape:'shock'});for(let i=0;i<40;i++)vfxP({x:p.x+vR(-p.w/3,p.w/3),y:p.y+p.h*.4,vx:vR(-60,60),vy:vR(-380,-140),life:vR(.5,1),s:vR(3,7),c:rlRand(['#ffffff','#fff1c0','#ff9a2a','#c42a10'])})}rlbSync();await rlbDelay(420)}
     else if(e.k==='rift'){rlbFloat(e.u,'✧'.repeat(e.v)+' Rift!','crit');const p=rlbPt(e.u);if(p){vfxP({x:p.x,y:p.y,life:.4,s:10,grow:240,c:'#a98bff',shape:'shock'});for(let i=0;i<8*e.v;i++){const a=Math.random()*6.283,v=vR(80,240);vfxP({x:p.x,y:p.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,drag:.9,life:vR(.4,.7),s:vR(3,6),c:rlRand(['#ffffff','#ece4ff','#a98bff']),shape:'star',vr:4})}}await rlbDelay(180)}
     else if(e.k==='zap'){rlbFloat(e.u,'Discharge!','crit');const p=rlbPt(e.u);if(p){vfxP({x:p.x,y:p.y,life:.4,s:10,grow:260,c:'#ffd23a',shape:'shock'});for(let i=0;i<5;i++){let x=p.x+vR(-20,20),y=p.y-p.h*.8;for(let j=0;j<7;j++){const nx=x+vR(-14,14),ny=y+p.h*.25;for(let k=0;k<4;k++)vfxP({x:x+(nx-x)*k/4,y:y+(ny-y)*k/4,life:.25,s:3,c:'#fff3b0'});x=nx;y=ny}}}rlbShake(true);await rlbDelay(200)}
+    else if(e.k==='iced'){rlbFloat(e.u,'Frozen','debuff');await rlbDelay(340)}
     else if(e.k==='lost'){rlbFloat(e.u,'No target!','muted');await rlbDelay(300)}
     else if(e.k==='miss'){rlbFloat(e.u,'Miss!','muted');await rlbDelay(140)}
     else if(e.k==='doze'){rlbFloat(e.u,'Zzz… dozed off','debuff');await rlbDelay(340)}
@@ -207,6 +208,7 @@ window.addEventListener('resize',()=>{if(VFX.cv)vfxSize()});
 
 /* ---------- styles ---------- */
 (function(){const st=document.createElement('style');st.textContent=`
+.rlb-u.iced .rlb-spr{filter:grayscale(.75) brightness(1.22) contrast(.92) drop-shadow(0 0 2px #fff) drop-shadow(0 0 7px #8fd0ff)}
 .rlb-stage{position:relative;isolation:isolate;height:clamp(300px,min(48vw,calc(100dvh - 250px)),540px);border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 60px -30px #000;background:#120f19;user-select:none}
 .rlb-cam{position:absolute;inset:0;transform-origin:50% 70%}
 .rlb-bg{position:absolute;inset:-3%}.rlb-bg svg{width:100%;height:100%;display:block}
