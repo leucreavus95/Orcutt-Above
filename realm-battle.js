@@ -140,7 +140,7 @@ function rlbBuild(es){const b=rlUI().b,B=b.B,box=document.getElementById('rlb-un
   box.innerHTML=B.all().map(u=>rlbUnitEl(B,u,es!=null?u.side===es:enter)).join('');vfxInit(rlStageKind(b.ctx));rlbSync()}
 function rlbSync(){const b=rlUI().b;if(!b)return;const B=b.B;
   for(const u of B.all()){const el=document.getElementById('rlu-'+u.uid);if(!el)continue;
-    const pend=b.rezPend&&b.rezPend.has(u.uid);el.classList.toggle('dead',!u.alive||pend);el.classList.toggle('turn',b.actor===u.uid&&u.alive);el.classList.toggle('stunned',rlHas(u,'stun'));
+    const pend=!!(b.rezPend&&b.rezPend.has(u.uid));el.classList.toggle('dead',!u.alive||pend);el.classList.toggle('turn',b.actor===u.uid&&u.alive);el.classList.toggle('stunned',rlHas(u,'stun'));
     const hp=el.querySelector('.hp'),sh=el.querySelector('.sh'),tx=el.querySelector('.rlb-hp span'),fx=el.querySelector('.rlb-chips');
     hp.style.width=(u.hp/u.maxHp*100)+'%';hp.classList.toggle('low',u.hp/u.maxHp<.3);sh.style.width=Math.min(100,u.shield/u.maxHp*100)+'%';tx.textContent=u.alive?rlNum(u.hp):'';
     const counts={};u.fx.forEach(f=>counts[f.k]=(counts[f.k]||0)+1);
