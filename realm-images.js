@@ -29,6 +29,14 @@ const RL_ART={
   // Burl (beaver bridgewright, chibi). COMMON. Frames per form are [Mallet Tap, Timber Toss, Quick Barricade].
   // Varek (ashen chain warden, chibi). LEGENDARY. Frames per form are [Chainhook Strike, Cinder Sweep, Furnace Break].
   // Brakk (fiddler-crab tideguard, chibi). EPIC tank. Frames per form are [Clawguard, Brine Snap, Riptide Lunge].
+  // Lysa (human glasswright, chibi). EPIC. Frames per form are [Shardline, Prism Snare, Glassfall].
+  glass:{f:[{src:'art/glass-1.webp',ax:170,ay:771,h:765,w:491,ih:769,ht:0},{src:'art/glass-2.webp',ax:173,ay:779,h:765,w:515,ih:777,ht:0},{src:'art/glass-3.webp',ax:177,ay:780,h:765,w:496,ih:778,ht:0}],pose:'skill',
+        c:[[{src:'art/glass-1c1.webp',ax:113,ay:379,h:459,w:411,ih:380,ht:0},{src:'art/glass-1c2.webp',ax:119,ay:375,h:459,w:389,ih:375,ht:0},{src:'art/glass-1c3.webp',ax:174,ay:446,h:459,w:396,ih:446,ht:0}],
+           [{src:'art/glass-2c1.webp',ax:122,ay:389,h:459,w:418,ih:389,ht:0},{src:'art/glass-2c2.webp',ax:119,ay:386,h:459,w:408,ih:387,ht:0},{src:'art/glass-2c3.webp',ax:188,ay:450,h:459,w:412,ih:451,ht:0}],
+           [{src:'art/glass-3c1.webp',ax:129,ay:397,h:459,w:438,ih:398,ht:0},{src:'art/glass-3c2.webp',ax:136,ay:412,h:459,w:431,ih:413,ht:0},{src:'art/glass-3c3.webp',ax:202,ay:469,h:459,w:427,ih:469,ht:0}]],
+        spell:[{vp:['#fff6dc','#ffd98a','#f0a830','#5a2a3a'],hand:[130,150],bySkill:[{shot:'art/fx-glass-shard1.webp',sz:.6},{burst:'art/fx-glass-prism1.webp',aoe:'erupt',sz:.5},{aoe:'meteor',shatter:1,img:'art/fx-glass-cry1.webp'}]},
+               {vp:['#fff6dc','#ffd98a','#f0a830','#5a2a3a'],hand:[130,150],bySkill:[{shot:'art/fx-glass-shard2.webp',sz:.6},{burst:'art/fx-glass-prism2.webp',aoe:'erupt',sz:.5},{aoe:'meteor',shatter:1,img:'art/fx-glass-cry2.webp'}]},
+               {vp:['#fff6dc','#ffd98a','#f0a830','#5a2a3a'],hand:[130,150],bySkill:[{shot:'art/fx-glass-shard3.webp',sz:.6},{burst:'art/fx-glass-prism3.webp',aoe:'erupt',sz:.5},{aoe:'meteor',shatter:1,img:'art/fx-glass-cry3.webp'}]}]},
   crab:{f:[{src:'art/crab-1.webp',ax:108,ay:742,h:736,w:517,ih:743,ht:0},{src:'art/crab-2.webp',ax:112,ay:743,h:736,w:510,ih:744,ht:0},{src:'art/crab-3.webp',ax:121,ay:745,h:736,w:536,ih:744,ht:0}],pose:'skill',melee:true,meleeSk:[true,true,true],dashPose:[0,1,2],slash:'ice',
         c:[[{src:'art/crab-1c1.webp',ax:177,ay:444,h:442,w:355,ih:445,ht:0},{src:'art/crab-1c2.webp',ax:149,ay:412,h:442,w:413,ih:413,ht:0},{src:'art/crab-1c3.webp',ax:167,ay:297,h:442,w:405,ih:308,ht:0}],
            [{src:'art/crab-2c1.webp',ax:200,ay:467,h:442,w:391,ih:467,ht:0},{src:'art/crab-2c2.webp',ax:152,ay:412,h:442,w:434,ih:419,ht:0},{src:'art/crab-2c3.webp',ax:155,ay:317,h:442,w:428,ih:320,ht:0}],
@@ -659,7 +667,7 @@ function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst|
   rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0]||{},C=typeof RL_CUT!=='undefined'&&RL_CUT[S.hid]&&RL_CUT[S.hid][S.st]&&RL_CUT[S.hid][S.st][e.s];S=Object.assign({},S,{paint:p,bySkill:null},p.hand?{hand:p.hand}:{},C&&C.hand&&p.shot&&!p.up?{hand:C.hand}:{});
       if(p.aoe==='spearrain'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxSpearRain(pts,S,p.img)}
       if(p.aoe==='permafrost'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxPermafrost(pts,S,p.img)}
-      if(p.aoe==='meteor'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxMeteor(pts,S,p.img)}
+      if(p.aoe==='meteor'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxMeteor(pts,p.shatter?Object.assign({},S,{shatter:1}):S,p.img)}
       if(p.aoe==='spearsweep'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxSpearSweep(pts,S)}
       if(sk.tg==='eA'&&(p.aoe==='erupt'||p.aoe==='sweep')){const h=rlArtHand(S);const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;if(p.up&&h){await vfxShootUp(h,S,p.up);}return p.aoe==='erupt'?paintErupt(pts,S):paintSweep(h,pts,S)}}
     return prev(S,e,sk,ult)};
@@ -713,7 +721,10 @@ function vfxMeteor(pts,S,src){const img=artImg(src),P=S.vp,sp=vSp();
     VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=Math.min(1,t/life),e=k*k,x=x0+(x1-x0)*e,y=y0+(y1-y0)*e;
       if(img){const H=L*img.naturalHeight/img.naturalWidth;c.save();c.globalCompositeOperation='lighter';c.translate(x,y);c.rotate(ang);c.drawImage(img,-L*.88,-H/2,L,H);c.restore()}
       if(Math.random()<.9)vfxP({x:x+vR(-6,6),y:y-vR(0,20),vx:vR(-30,30),vy:vR(-90,-30),life:vR(.2,.45),s:vR(2,5),c:rlRand(P)});
-      if(k>=1&&!hit){hit=true;this.done=true;vfxIgnite(q,P);res()}}})})))}
+      if(k>=1&&!hit){hit=true;this.done=true;(S.shatter?vfxShatter:vfxIgnite)(q,P);res()}}})})))}
+// glass hitting home: a bright flash and a spray of glittering shards, no flame
+function vfxShatter(q,P){const sp=vSp(),cy=q.y+q.h*.15;rlbShake(false);vfxP({x:q.x,y:cy,life:.3,s:8,grow:160,c:P[1],shape:'shock'});
+  for(let i=0;i<26;i++){const an=Math.random()*6.283,v=vR(140,360);vfxP({x:q.x,y:cy,vx:Math.cos(an)*v,vy:Math.sin(an)*v-90,ay:520,life:vR(.35,.7)/sp,s:vR(3,7),c:rlRand(P),shape:'dia',vr:vR(-8,8)})}}
 function vfxIgnite(q,P){const sp=vSp(),life=.7/sp,R=q.w*.62,foot=q.y+q.h*.42;let t=0;rlbShake(true);
   VFX.items.push({step(dt,c){t+=dt;const k=t/life;if(k>=1){this.done=true;return}const g=1-Math.pow(1-Math.min(1,k/.35),3),a=k<.45?1:1-(k-.45)/.55;
     c.save();c.globalCompositeOperation='lighter';

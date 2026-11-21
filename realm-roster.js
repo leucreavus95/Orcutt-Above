@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Lysa, the glasswright (chibi art). EPIC. Shardline fires a spear of amber glass that pierces armor,
+  // Prism Snare locks one enemy inside a glass prism (may stun, and Marks them), and Glassfall flings
+  // shards skyward that rain down on every enemy, cracking their DEF.
+  {id:'glass',col:{c:'#e0a030',l:'#fff1d0',d:'#2a1424'},vp:['#fff6dc','#ffd98a','#f0a830','#5a2a3a'],
+   hero:{n:'Lysa',r:4,role:'atk',spd:110,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cd',v:20},
+     ev:['Lysa','Lysa Glasswright','Lysa, the Prism Maker'],
+     sk:[rlSk('Shardline',{m:3.7,ign:.25}),
+         rlSk('Prism Snare',{cd:3,m:2.0,fx:[['stun',1,55],['mark',2,70]]}),
+         rlSk('Glassfall',{cd:4,tg:'eA',m:1.8,fx:[['defBreak',2,55]]})]}},
   // Brakk, the fiddler-crab tideguard (chibi art). EPIC tank. Clawguard bashes with his giant claw raised
   // as a shield (DEF-scaled, shields himself), Brine Snap crushes one enemy, Soaking them and sapping their
   // ATK, and Riptide Lunge surges in on a wave: a heavy hit that drags the enemy's turn back (much further
