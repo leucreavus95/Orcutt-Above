@@ -92,7 +92,7 @@ const RL_ART={
 const ART_IMG={};
 function artImg(src){let i=ART_IMG[src];if(!i){i=ART_IMG[src]=new Image();i.src=src}return i.complete&&i.naturalWidth?i:null}
 const ART_ST=new WeakMap();let artRaf=0;
-const AX0=-60,AY0=-80,AW=420,AH=330,STRIPS=72;
+const AX0=-140,AY0=-80,AW=560,AH=330,STRIPS=72;
 const CAST_T=[0,70,260,320,480,520,950,1100,1150]; // reach in, hold, to charge, hold, to release (spell fires at 500), hold, back out, end
 function rlArtLead(id){const A=RL_ART[id];return A&&A.c&&A.c.some(x=>x&&x.length)?260:0}
 const aEase=k=>k<0?0:k>1?1:k*k*(3-2*k),aBack=k=>{k=Math.min(1,Math.max(0,k));const c=1.7;return 1+(c+1)*Math.pow(k-1,3)+c*Math.pow(k-1,2)};
@@ -151,7 +151,7 @@ function artDraw(cv,now){
 function artLoop(){if(artRaf)return;const step=now=>{const cvs=document.querySelectorAll('.rl-artcv');if(!cvs.length){artRaf=0;return}cvs.forEach(cv=>{try{artDraw(cv,now)}catch(e){}});artRaf=requestAnimationFrame(step)};artRaf=requestAnimationFrame(step)}
 (function(){const st=document.createElement('style');st.textContent=`
 .rl-artbox{position:relative;width:100%;height:100%}
-.rl-artcv{position:absolute;left:-25%;top:-33.333%;width:175%;height:137.5%;pointer-events:none}
+.rl-artcv{position:absolute;left:-58.333%;top:-33.333%;width:233.333%;height:137.5%;pointer-events:none}
 .rlb-u.a .rlb-spr:has(.rl-artbox){animation:none}
 .rlb-spr.cast:has(.rl-artbox){animation:none!important}`;document.head.appendChild(st)})();
 
