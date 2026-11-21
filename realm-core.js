@@ -238,6 +238,7 @@ function rlAct(B,u,i,tid,power){
         if(s.opener&&t.hp>=t.maxHp)d*=1+s.opener; // Opening strike
         if(s.vsDaze&&rlHas(t,'daze'))d*=1+s.vsDaze;
         if(s.vsSoak&&rlHas(t,'soak'))d*=1+s.vsSoak;
+        if(s.vsStatic&&rlHas(t,'static'))d*=1+s.vsStatic;
         if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;
         if(u.tempo)d*=1+.1*u.tempo+(s.crescendo?s.crescendo*u.tempo:0); // Tempo: +10% per beat; Crescendo spends it big
         if(rlHas(t,'mark'))d*=1.25;if(s.vsBurn&&rlHas(t,'burn'))d*=1+s.vsBurn;
@@ -269,6 +270,8 @@ function rlAct(B,u,i,tid,power){
       if(f[0]==='self'||f[0]==='team')continue;for(const t of tg)if(t.alive)rlApplyFx(B,u,t,f,pw*bonus,ev,false)}
   }
   for(const f of s.fx){if(f[0]==='self')rlApplyFx(B,u,u,f.slice(1),pw*bonus,ev,false);if(f[0]==='team')for(const t of B.side[u.side])if(t.alive)rlApplyFx(B,u,t,f.slice(1),pw*bonus,ev,false)}
+  // Discharge: Tempest Drive sets off the Static on every enemy
+  if(s.discharge&&pw>=.5){for(const t of B.side[1-u.side].filter(x=>x.alive&&rlHas(x,'static'))){t.fx=t.fx.filter(x=>x.k!=='static');ev.push({k:'zap',u:t.uid});rlDamage(B,t,rlEff(u,'atk')*s.discharge*pw*(.95+Math.random()*.1),ev,{crit:true})}}
   // Tempo: Rio's beats build up with each skill; Rhythm Burst spends them
   if(s.crescendo&&u.tempo){u.tempo=0;ev.push({k:'tempo',u:u.uid,v:0})}else if(s.tempo){const b=u.tempo||0;u.tempo=Math.min(3,b+s.tempo);if(u.tempo!==b)ev.push({k:'tempo',u:u.uid,v:u.tempo})}
   // Dusk Dash: landing the final blow lets her move again right away

@@ -127,7 +127,16 @@ const RL_ROSTER=[
      ev:['Thalos','Thalos Tidecrest','Thalos, Sovereign of the Deep'],
      sk:[rlSk('Coral-Lance Thrust',{m:3.9,ign:.4,fx:[['soak',2,80]]}),
          rlSk('Water-Blade Volley',{cd:3,tg:'eA',m:1.5,bounce:3,vsSoak:.4,fx:[['strip',1]]}),
-         rlSk('Deep Current',{cd:5,tg:'eA',m:2.4,undertow:true,fx:[['soak',2,60],['team','shield',12,2],['team','atb',20]]})]}}
+         rlSk('Deep Current',{cd:5,tg:'eA',m:2.4,undertow:true,fx:[['soak',2,60],['team','shield',12,2],['team','atb',20]]})]}},
+  // Brontos, the storm hammer knight (chibi art). LEGENDARY. Charges enemies with Static: his cleave shocks
+  // the target and arcs into the rest of the line, his chain-bolts seek and crackle harder on Static foes,
+  // and Tempest Drive slams one enemy then discharges every Static enemy at once.
+  {id:'thun',col:{c:'#2f5fd0',l:'#fff3b0',d:'#0c163a'},vp:['#ffffff','#fff3b0','#ffd23a','#2a4fbf'],
+   hero:{n:'Brontos',r:5,role:'atk',spd:111,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:20},
+     ev:['Brontos','Brontos Stormhelm','Brontos, the Thunder Sovereign'],
+     sk:[rlSk('Lightning Cleave',{m:3.8,splash:.3,fx:[['static',2,70]]}),
+         rlSk('Chain-Bolt Volley',{cd:3,tg:'eA',m:1.4,bounce:4,vsStatic:.5,fx:[['static',2,40]]}),
+         rlSk('Tempest Drive',{cd:5,m:4.6,discharge:1.6,fx:[['self','spdUp',2]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

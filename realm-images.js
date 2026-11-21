@@ -10,6 +10,15 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Brontos (storm hammer knight, chibi). LEGENDARY. Frames per form are [Lightning Cleave, Chain-Bolt Volley, Tempest Drive]:
+  // the cleave and the drive are lunges in their own swing poses (the lightning arcs are part of the art).
+  thun:{zoom:.5,eyeY:85,f:[{src:'art/thun-1.webp',ax:203,ay:510,h:504,w:454,ih:511,ht:3,cx:235,fy:140},{src:'art/thun-2.webp',ax:246,ay:560,h:504,w:494,ih:561,ht:2,cx:278,fy:140},{src:'art/thun-3.webp',ax:260,ay:580,h:504,w:577,ih:581,ht:4,cx:300,fy:150}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],
+        c:[[{src:'art/thun-1c1.webp',ax:123,ay:309,h:275,w:451,ih:310,ht:3},{src:'art/thun-1c2.webp',ax:112,ay:280,h:275,w:435,ih:280,ht:2},{src:'art/thun-1c3.webp',ax:234,ay:336,h:275,w:455,ih:341,ht:20}],
+           [{src:'art/thun-2c1.webp',ax:144,ay:333,h:275,w:441,ih:355,ht:4},{src:'art/thun-2c2.webp',ax:111,ay:281,h:275,w:437,ih:281,ht:2},{src:'art/thun-2c3.webp',ax:179,ay:364,h:275,w:433,ih:366,ht:0}],
+           [{src:'art/thun-3c1.webp',ax:209,ay:385,h:275,w:511,ih:406,ht:4},{src:'art/thun-3c2.webp',ax:125,ay:315,h:275,w:513,ih:316,ht:4},{src:'art/thun-3c3.webp',ax:259,ay:396,h:275,w:520,ih:398,ht:0}]],
+        spell:[{vp:['#ffffff','#fff3b0','#ffd23a','#2a4fbf'],hand:[180,130],bySkill:[null,{shot:'art/fx-thun-bolt1.webp',sz:.6},null]},
+               {vp:['#ffffff','#fff3b0','#ffd23a','#2a4fbf'],hand:[180,130],bySkill:[null,{shot:'art/fx-thun-bolt2.webp',sz:.6},null]},
+               {vp:['#ffffff','#fff3b0','#ffd23a','#2a4fbf'],hand:[180,130],bySkill:[null,{shot:'art/fx-thun-bolt3.webp',sz:.6},null]}]},
   // Thalos (manta knight, chibi). LEGENDARY. Frames per form are [Coral-Lance Thrust, Water-Blade Volley, Deep Current].
   ray:{zoom:.36,eyeY:90,f:[{src:'art/ray-1.webp',ax:226,ay:485,h:479,w:473,ih:485,ht:3,cx:245,fy:150},{src:'art/ray-2.webp',ax:209,ay:513,h:479,w:475,ih:512,ht:3,cx:250,fy:150},{src:'art/ray-3.webp',ax:304,ay:551,h:479,w:601,ih:552,ht:3,cx:330,fy:175}],pose:'skill',
         c:[[{src:'art/ray-1c1.webp',ax:108,ay:273,h:275,w:443,ih:272,ht:0},{src:'art/ray-1c2.webp',ax:122,ay:281,h:275,w:454,ih:279,ht:3},{src:'art/ray-1c3.webp',ax:237,ay:308,h:275,w:488,ih:313,ht:15}],
