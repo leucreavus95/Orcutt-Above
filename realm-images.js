@@ -10,6 +10,15 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Kai (sea turtle, chibi). Frames per form are [Tidal Thrust, Shellspin Wave, Guardian Current]:
+  // the thrust fires the painted water spear, the wave rolls across the enemy line, the current rings his allies.
+  turtle:{zoom:.5,eyeY:100,f:[{src:'art/turtle-1.webp',ax:223,ay:430,h:425,w:485,ih:431,ht:2,cx:270,fy:100},{src:'art/turtle-2.webp',ax:228,ay:430,h:425,w:474,ih:431,ht:3,cx:270,fy:95},{src:'art/turtle-3.webp',ax:264,ay:568,h:425,w:616,ih:567,ht:2,cx:345,fy:205}],pose:'skill',
+        c:[[{src:'art/turtle-1c1.webp',ax:117,ay:266,h:262,w:435,ih:267,ht:1},{src:'art/turtle-1c2.webp',ax:107,ay:318,h:262,w:366,ih:318,ht:56},{src:'art/turtle-1c3.webp',ax:156,ay:370,h:262,w:360,ih:398,ht:54}],
+           [{src:'art/turtle-2c1.webp',ax:138,ay:267,h:262,w:430,ih:268,ht:2},{src:'art/turtle-2c2.webp',ax:118,ay:317,h:262,w:406,ih:322,ht:53},{src:'art/turtle-2c3.webp',ax:163,ay:372,h:262,w:390,ih:407,ht:62}],
+           [{src:'art/turtle-3c1.webp',ax:169,ay:330,h:262,w:543,ih:330,ht:8},{src:'art/turtle-3c2.webp',ax:171,ay:361,h:262,w:533,ih:380,ht:38},{src:'art/turtle-3c3.webp',ax:206,ay:405,h:262,w:506,ih:487,ht:88}]],
+        spell:[{vp:['#ffffff','#dffaff','#6fe0f5','#1a7fa8'],hand:[160,152],support:'ring',bySkill:[{shot:'art/fx-tt-spear1.webp',burst:'art/fx-tt-wave1.webp'},{burst:'art/fx-tt-wave1.webp',aoe:'sweep'},null]},
+               {vp:['#ffffff','#dffaff','#6fe0f5','#1a7fa8'],hand:[160,152],support:'ring',bySkill:[{shot:'art/fx-tt-spear2.webp',burst:'art/fx-tt-wave2.webp'},{burst:'art/fx-tt-wave2.webp',aoe:'sweep'},null]},
+               {vp:['#ffffff','#dffaff','#6fe0f5','#1a7fa8'],hand:[160,152],support:'ring',bySkill:[{shot:'art/fx-tt-spear3.webp',burst:'art/fx-tt-wave3.webp'},{burst:'art/fx-tt-wave3.webp',aoe:'sweep'},null]}]},
   // Ren (fire fox, chibi). Frames per form are [Ember Slash, Foxfire Bolt, Flame Ward];
   // the slash is a lunge, the bolt throws the painted fireball, the ward rings every ally in fire.
   fox:{zoom:.48,eyeY:100,f:[{src:'art/fox-1.webp',ax:253,ay:554,h:549,w:486,ih:555,ht:2,cx:305,fy:205},{src:'art/fox-2.webp',ax:243,ay:554,h:549,w:488,ih:554,ht:2,cx:295,fy:205},{src:'art/fox-3.webp',ax:231,ay:554,h:549,w:493,ih:555,ht:2,cx:283,fy:205}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'fire',
@@ -379,4 +388,4 @@ function vfxFlameWard(S,e){const P=S.vp,sp=vSp(),big=S.big;e.t.forEach((uid,n)=>
     c.globalAlpha=a*.25;c.fillStyle=P[2];c.beginPath();c.ellipse(0,0,R*.8*g,R*g,0,0,6.283);c.fill();
     for(let i=0;i<3;i++){c.globalAlpha=a*[.5,.8,1][i];c.strokeStyle=[P[3],P[2],P[1]][i];c.lineWidth=[12,7,3][i];c.beginPath();c.ellipse(0,0,R*.8*g,R*g,0,0,6.283);c.stroke()}
     c.restore();const fl=big?5:3;for(let i=0;i<fl;i++){const an=Math.random()*6.283;vfxP({x:q.x+Math.cos(an)*R*.8*g,y:q.y+Math.sin(an)*R*g,vy:vR(-150,-60),life:vR(.3,.6),s:vR(3,7),c:rlRand(P),shape:i%2?'c':'dia',vr:4})}}})})}
-(function(){const prev=rlArtSupport;rlArtSupport=function(S,e,sk){if(S.support==='flameward')return vfxFlameWard(S,e);return prev(S,e,sk)}})();
+(function(){const prev=rlArtSupport;rlArtSupport=function(S,e,sk){if(S.support==='flameward'||S.support==='ring')return vfxFlameWard(S,e);return prev(S,e,sk)}})();

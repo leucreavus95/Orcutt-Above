@@ -13,7 +13,15 @@ const RL_ROSTER=[
      ev:['Ren','Ren Emberfang','Ren, the Foxfire Warden'],
      sk:[rlSk('Ember Slash',{m:3.7,fx:[['burn',2,45]]}),
          rlSk('Foxfire Bolt',{cd:3,m:3.0,det:true}),
-         rlSk('Flame Ward',{cd:4,tg:'aA',fx:[['shield',15,2],['ward',2]]})]}}
+         rlSk('Flame Ward',{cd:4,tg:'aA',fx:[['shield',15,2],['ward',2]]})]}},
+  // Kai, the sea turtle (chibi art). Rare. A guardian: his hits scale from DEF, his water spear
+  // punches through armor, his wave washes buffs away, and his current lets him take hits for his friends.
+  {id:'turtle',col:{c:'#3fc7c0',l:'#d9fbf6',d:'#0d3f45'},vp:['#ffffff','#dffaff','#6fe0f5','#1a7fa8'],
+   hero:{n:'Kai',r:3,role:'def',spd:98,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:15},
+     ev:['Kai','Kai Tideshell','Kai, the Tide Templar'],
+     sk:[rlSk('Tidal Thrust',{m:3.4,sc:'def',ign:.3,fx:[['slow',1,30]]}),
+         rlSk('Shellspin Wave',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['strip',1],['atbDown',20,50]]}),
+         rlSk('Guardian Current',{cd:4,tg:'aA',fx:[['shield',18,2],['guard',2]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

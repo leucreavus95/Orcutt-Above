@@ -183,6 +183,7 @@ async function rlbPlay(ev){
     else if(e.k==='atb'){rlbFloat(e.u,(e.v>0?'+':'')+e.v+'% turn',e.v>0?'buff':'debuff');rlbSync();await rlbDelay(90)}
     else if(e.k==='skip'){rlbFloat(e.u,'Stunned','debuff');await rlbDelay(340)}
     else if(e.k==='counter'){rlbFloat(e.u,'Counter!','buff');await rlbDelay(160)}
+    else if(e.k==='guarded'){rlbFloat(e.g,'Guard!','buff');const a=rlbPt(e.u),g=rlbPt(e.g);if(a&&g){for(let i=0;i<14;i++){const k=i/14;vfxP({x:a.x+(g.x-a.x)*k,y:a.y+(g.y-a.y)*k-Math.sin(k*Math.PI)*40,vy:vR(-40,-10),life:vR(.3,.6),s:vR(2,4),c:rlRand(RL_VP.turtle||RL_VP.light)})}}await rlbDelay(120)}
     else if(e.k==='det'){rlbFloat(e.u,'Detonate!','crit');const p=rlbPt(e.u);if(p){vfxBurst(p.x,p.y,'fox',40,1.6);vfxP({x:p.x,y:p.y,life:.45,s:10,grow:320,c:'#ffb347',shape:'shock'})}rlbShake(true);await rlbDelay(260)}
     else if(e.k==='cleanse'||e.k==='strip'){rlbFloat(e.u,e.k==='cleanse'?'Cleansed':'Buffs removed',e.k==='cleanse'?'buff':'debuff');const p=rlbPt(e.u);if(p)vfxAura(p.x,p.y,e.k==='cleanse'?'#ffffff':'#ff4d6d',e.k==='cleanse');rlbSync();await rlbDelay(130)}
     else if(e.k==='wave'){await rlbDelay(520);const f=document.getElementById('rlb-floats');if(f){const w=document.createElement('div');w.className='rlb-banner';w.textContent=`Wave ${e.n+1}`;f.appendChild(w);setTimeout(()=>w.remove(),1300)}rlbBuild(1);await rlbDelay(800)}

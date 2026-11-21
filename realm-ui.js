@@ -25,11 +25,12 @@ function rlSkillText(h,s,lvl,st){
     if(k==='heal')parts.push(`Heals ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP`);
     else if(k==='healT')parts.push(`Heals ${tgt} for about ${Math.round(st.hp*a[1]/100*bonus)} HP`);
     else if(k==='cleanse')parts.push(`Removes debuffs from ${tgt}`);
-    else if(k==='strip')parts.push('Removes enemy buffs');
+    else if(k==='strip')parts.push(a[1]===1?'Washes away 1 buff from each enemy':'Removes enemy buffs');
     else if(k==='atb')parts.push(`${tgt==='itself'?'Acts':'Allies act'} sooner`);
     else if(k==='atbDown')parts.push(`Delays enemy turns (${a[2]}% chance)`);
     else if(k==='revive')parts.push('Revives fallen allies');
     else if(k==='shield')parts.push(`Shields ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP (${turns(a[2])})`);
+    else if(k==='guard')parts.push(`${h.n} takes 30% of the damage aimed at ${tgt} (${turns(a[1])})`);
     else if(k==='ward')parts.push(`Wards ${tgt} for ${turns(a[1])}: enemies that strike a warded ally may catch fire`);
     else if(F&&F.buff)parts.push(`${F.n} for ${tgt} (${turns(a[1])})`);
     else if(F)parts.push(`${k==='stun'?'Stun':F.n} (${a[2]}% chance, ${turns(a[1])})`)});

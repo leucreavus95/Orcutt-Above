@@ -176,7 +176,9 @@ function rlTurnStart(B,u){
 function rlTick(u,ev){u.fx.forEach(f=>f.t--);const gone=u.fx.filter(f=>f.t<=0);u.fx=u.fx.filter(f=>f.t>0);if(gone.length)ev.push({k:'fxgone',u:u.uid});if(!rlHas(u,'shield'))u.shield=0}
 function rlHeal(u,a,ev){if(!u.alive)return;const b=u.hp;u.hp=Math.min(u.maxHp,u.hp+Math.round(a));const d=u.hp-b;if(d>0)ev.push({k:'heal',u:u.uid,v:d})}
 function rlDamage(B,u,amt,ev,o){
-  let a=Math.max(1,Math.round(amt));if(u.shield>0){const s=Math.min(u.shield,a);u.shield-=s;a-=s;if(u.shield<=0)u.fx=u.fx.filter(f=>f.k!=='shield')}
+  let a=Math.max(1,Math.round(amt));
+  // Guardian Current: the guardian takes 30% of direct hits aimed at a guarded ally
+  const gd=!(o&&(o.dot||o.guarded))&&u.fx.find(f=>f.k==='guard');if(gd){const G=B.all().find(x=>x.uid===gd.src);if(G&&G.alive&&G!==u){const sh=Math.round(a*.3);if(sh>0){a-=sh;ev.push({k:'guarded',u:u.uid,g:G.uid});rlDamage(B,G,sh,ev,{guarded:true})}}}if(u.shield>0){const s=Math.min(u.shield,a);u.shield-=s;a-=s;if(u.shield<=0)u.fx=u.fx.filter(f=>f.k!=='shield')}
   u.hp=Math.max(0,u.hp-a);ev.push({k:'hit',u:u.uid,v:Math.round(amt),hp:u.hp,crit:o&&o.crit,adv:o&&o.adv,dot:o&&o.dot});
   if(u.hp<=0&&u.alive){u.alive=false;u.atb=0;u.fx=[];u.shield=0;ev.push({k:'die',u:u.uid})}
   return a}
@@ -190,7 +192,8 @@ function rlApplyFx(B,src,tgt,f,power,ev,isEnemy){
   if(k==='revive'){return}
   if(k==='atbDown'){if(power<1)return;if(Math.random()*100<f[2]&&!rlResist(src,tgt)&&!rlHas(tgt,'immune')){tgt.atb=Math.max(0,tgt.atb-f[1]);ev.push({k:'atb',u:tgt.uid,v:-f[1]})}else ev.push({k:'resist',u:tgt.uid});return}
   if(!F)return;
-  if(F.buff){const t=k==='shield'?f[2]:f[1];tgt.fx=tgt.fx.filter(x=>x.k!==k);tgt.fx.push({k,t:t+(tgt===src?1:0)});if(k==='shield'){tgt.shield=Math.round(src.maxHp*f[1]/100*power*(tgt===src?1:1))}ev.push({k:'fx',u:tgt.uid,f:k});return}
+  if(k==='guard'&&tgt===src)return; // the guardian doesn't guard himself
+  if(F.buff){const t=k==='shield'?f[2]:f[1];tgt.fx=tgt.fx.filter(x=>x.k!==k);tgt.fx.push(k==='guard'?{k,t,src:src.uid}:{k,t:t+(tgt===src?1:0)});if(k==='shield'){tgt.shield=Math.round(src.maxHp*f[1]/100*power*(tgt===src?1:1))}ev.push({k:'fx',u:tgt.uid,f:k});return}
   // debuff
   if(power<1||!tgt.alive)return;
   if(Math.random()*100>=f[2])return;
