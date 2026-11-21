@@ -192,6 +192,16 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Brakk, the fiddler-crab tideguard (chibi art). EPIC tank. Clawguard bashes with his giant claw raised
+  // as a shield (DEF-scaled, shields himself), Brine Snap crushes one enemy, Soaking them and sapping their
+  // ATK, and Riptide Lunge surges in on a wave: a heavy hit that drags the enemy's turn back (much further
+  // if Soaked) and shields the whole team.
+  {id:'crab',col:{c:'#3f9a9a',l:'#dffcfc',d:'#12302e'},vp:['#ffffff','#d6fbff','#5fd0d8','#1e5a5a'],
+   hero:{n:'Brakk',r:4,role:'def',spd:98,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:15},
+     ev:['Brakk','Brakk Tideshell','Brakk, the Tideguard'],
+     sk:[rlSk('Clawguard',{m:3.2,sc:'def',fx:[['self','shield',10,1]]}),
+         rlSk('Brine Snap',{cd:3,m:3.8,sc:'def',fx:[['soak',2,75],['atkBreak',2,45]]}),
+         rlSk('Riptide Lunge',{cd:4,m:4.4,sc:'def',undertow:true,fx:[['soak',2,70],['team','shield',12,2]]})]}},
   // Varek, the ashen chain warden (chibi art). LEGENDARY bruiser. Chainhook Strike hooks one enemy and
   // drags their turn back, Cinder Sweep whips a burning chain across every enemy (Burn), and Furnace Break
   // slams the hook down on one enemy: huge damage, more against burning foes, splash to the rest, may stun.

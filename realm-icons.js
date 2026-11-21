@@ -93,7 +93,7 @@ function rlGlyphFor(s){if(RL_SKICON[s.n])return RL_SKICON[s.n];const f=s.fx.map(
   if(f.includes('burn'))return'flame';if(f.includes('poison'))return'poison';if(f.includes('chill'))return'snow';if(s.tg==='eA')return'burst';return(s.h||1)>1?'blades':'sword'}
 /* the icon tile: glyph on the hero's colour. dim: greyed (on cooldown) */
 // painted icons from the ability atlas (art/icons/<hero>-<1..3>.webp); heroes not listed use the glyph tiles
-const RL_ICON_ART=new Set(['fox','turtle','ram','moth','tree','bug','bell','ice','drum','bow','lance','shroom','mole','wick','thun','ray','star','phx','bas','deer','med','pan','sab','tort','crane','sal','frowl','stag','lynx','herb','boar','jack','raven','marsh','beav','chain']);
+const RL_ICON_ART=new Set(['fox','turtle','ram','moth','tree','bug','bell','ice','drum','bow','lance','shroom','mole','wick','thun','ray','star','phx','bas','deer','med','pan','sab','tort','crane','sal','frowl','stag','lynx','herb','boar','jack','raven','marsh','beav','chain','crab']);
 function rlSkIcon(id,lv,i){const H=RL_H[id],s=H&&H.sk[i];if(!s||s.pas)return'';
   if(RL_ICON_ART.has(id))return`<span class="rl-skic art"><img src="art/icons/${id}-${i+1}.webp" alt="" loading="lazy" decoding="async">${i===2?'<i class="ult"></i>':''}</span>`;const E=RL_EL[H.el]||{c:'#888',d:'#222',l:'#fff'},g=RL_GLYPH[rlGlyphFor(s)]||RL_GLYPH.sword;
   return`<span class="rl-skic" style="--ic:${E.c};--icd:${E.d};--icl:${E.l}"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="sh">${g}</g><g>${g}</g></svg>${i===2?'<i class="ult"></i>':''}</span>`}

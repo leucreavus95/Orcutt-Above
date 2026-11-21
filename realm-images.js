@@ -28,6 +28,14 @@ const RL_ART={
   // Marla (marsh trapper, chibi). RARE. Frames per form are [Hooked Jab, Snare Toss, Bog Sweep].
   // Burl (beaver bridgewright, chibi). COMMON. Frames per form are [Mallet Tap, Timber Toss, Quick Barricade].
   // Varek (ashen chain warden, chibi). LEGENDARY. Frames per form are [Chainhook Strike, Cinder Sweep, Furnace Break].
+  // Brakk (fiddler-crab tideguard, chibi). EPIC tank. Frames per form are [Clawguard, Brine Snap, Riptide Lunge].
+  crab:{f:[{src:'art/crab-1.webp',ax:108,ay:742,h:736,w:517,ih:743,ht:0},{src:'art/crab-2.webp',ax:112,ay:743,h:736,w:510,ih:744,ht:0},{src:'art/crab-3.webp',ax:121,ay:745,h:736,w:536,ih:744,ht:0}],pose:'skill',melee:true,meleeSk:[true,true,true],dashPose:[0,1,2],slash:'ice',
+        c:[[{src:'art/crab-1c1.webp',ax:177,ay:444,h:442,w:355,ih:445,ht:0},{src:'art/crab-1c2.webp',ax:149,ay:412,h:442,w:413,ih:413,ht:0},{src:'art/crab-1c3.webp',ax:167,ay:297,h:442,w:405,ih:308,ht:0}],
+           [{src:'art/crab-2c1.webp',ax:200,ay:467,h:442,w:391,ih:467,ht:0},{src:'art/crab-2c2.webp',ax:152,ay:412,h:442,w:434,ih:419,ht:0},{src:'art/crab-2c3.webp',ax:155,ay:317,h:442,w:428,ih:320,ht:0}],
+           [{src:'art/crab-3c1.webp',ax:222,ay:473,h:442,w:422,ih:472,ht:0},{src:'art/crab-3c2.webp',ax:154,ay:426,h:442,w:442,ih:438,ht:0},{src:'art/crab-3c3.webp',ax:174,ay:342,h:442,w:428,ih:343,ht:0}]],
+        spell:[{vp:['#ffffff','#d6fbff','#5fd0d8','#1e5a5a']},
+               {vp:['#ffffff','#d6fbff','#5fd0d8','#1e5a5a']},
+               {vp:['#ffffff','#d6fbff','#5fd0d8','#1e5a5a']}]},
   chain:{f:[{src:'art/chain-1.webp',ax:218,ay:737,h:732,w:510,ih:735,ht:0},{src:'art/chain-2.webp',ax:213,ay:738,h:732,w:476,ih:736,ht:0},{src:'art/chain-3.webp',ax:251,ay:742,h:732,w:530,ih:740,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'fire',
         c:[[{src:'art/chain-1c1.webp',ax:139,ay:340,h:439,w:417,ih:341,ht:0},{src:'art/chain-1c2.webp',ax:154,ay:339,h:439,w:401,ih:338,ht:0},{src:'art/chain-1c3.webp',ax:325,ay:442,h:439,w:417,ih:445,ht:0}],
            [{src:'art/chain-2c1.webp',ax:144,ay:342,h:439,w:419,ih:343,ht:0},{src:'art/chain-2c2.webp',ax:198,ay:345,h:439,w:409,ih:345,ht:0},{src:'art/chain-2c3.webp',ax:279,ay:442,h:439,w:419,ih:456,ht:0}],
