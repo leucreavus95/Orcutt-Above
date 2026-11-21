@@ -302,12 +302,24 @@ function rlbSync(){const b=rlUI().b;if(!b)return;const B=b.B;
   const o=document.getElementById('rlb-order');if(o){const live=B.all().filter(u=>u.alive).map(u=>({u,t:(100-u.atb)/rlEff(u,'spd')})).sort((a,c)=>a.t-c.t).slice(0,8);const key=live.map(x=>x.u.uid).join(',');
     if(o.dataset.k!==key){o.dataset.k=key;o.innerHTML=`<span class="muted">Next</span>`+live.map(x=>`<span class="rlb-oc ${x.u.side?'e':'a'}" title="${esc(x.u.name)}">${rlPort(x.u)}</span>`).join('')}}
 }
+// a question sheet left open when the battle view goes away (tab switch, retreat) is cleared
+setInterval(()=>{const o=document.getElementById('rlb-mathov');if(o&&(!document.getElementById('rlb')||!(rlUI().b&&rlUI().b.math)))o.remove()},500);
 function rlbPanel(){const R=rlUI(),b=R.b,el=document.getElementById('rlb-panel');if(!el||!b)return;const B=b.B;
-  if(b.res){el.innerHTML=rlbResult(b);return}
-  if(b.math){const m=b.math;el.innerHTML=`<div class="rlb-math"><p class="rl-kicker">Power up ${esc(m.sk.n)}</p><div class="q"><small>${esc(m.q.topic)}</small>${m.q.q}</div><div class="rlb-mt"><i id="rlb-mt" style="width:100%"></i></div><div class="choices">${m.q.choices.map((c,i)=>`<button class="choice" data-a="rlbAns" data-v="${i}"><kbd>${i+1}</kbd>${esc(c)}</button>`).join('')}</div><p class="muted">Correct: full power. Wrong or out of time: half power, and its harmful effects won't land.</p></div>`;if(!STILL)el.scrollIntoView({behavior:'smooth',block:'nearest'});return}
+  const stage=document.getElementById('rlb-stage');let ov=document.getElementById('rlb-mathov');
+  if(!b.math&&ov)ov.remove();
+  if(b.res){el.classList.remove('skillbar');el.innerHTML=rlbResult(b);if(!STILL)el.scrollIntoView({behavior:'smooth',block:'nearest'});return}
+  el.classList.add('skillbar');
+  if(b.math){const m=b.math,html=`<div class="rlb-math"><p class="rl-kicker">Power up ${esc(m.sk.n)}</p><div class="q"><small>${esc(m.q.topic)}</small>${m.q.q}</div><div class="rlb-mt"><i id="rlb-mt" style="width:100%"></i></div><div class="choices">${m.q.choices.map((c,i)=>`<button class="choice" data-a="rlbAns" data-v="${i}"><kbd>${i+1}</kbd>${esc(c)}</button>`).join('')}</div><p class="muted">Correct: full power. Wrong or out of time: half power, and its harmful effects won't land.</p></div>`;
+    // the question floats over the battlefield, so nothing below has to be scrolled to
+    if(stage){const sheet=innerWidth<=700;if(!ov){ov=document.createElement('div');ov.id='rlb-mathov';ov.className='rlb-mathov'+(sheet?' sheet':'');(sheet?document.body:stage).appendChild(ov)}if(ov.dataset.k!==String(m.t0)){ov.dataset.k=String(m.t0);ov.innerHTML=html}
+      el.innerHTML=`<div class="rlb-hint wide"><b>⚡ ${esc(m.sk.n)}</b><span>Answer the question on the battlefield for full power.</span></div>`}
+    else el.innerHTML=html;return}
   const u=b.phase==='pick'&&B.find(b.actor);
-  if(!u){el.innerHTML=`<p class="muted rlb-wait">${b.auto?'Auto battle: skills fire at half power without questions.':'…'}</p>`;return}
-  el.innerHTML=`<div class="rlb-actor"><div class="rl-pframe r${RL_H[u.id].r}">${rlHeroSVG(u.id,{motes:false})}</div><div><b>${esc(u.name)}'s turn</b><p class="muted">${b.pick!=null?`Choose a target for ${esc(u.sk[b.pick].n)}.`:'Choose a skill.'}</p></div></div><div class="rlb-skills">${u.sk.map((k,i)=>{if(k.pas)return`<div class="rlb-sk pas"><b>${esc(k.n)}</b><span>Passive</span></div>`;const ok=rlUsable(u,i);return`<button class="rlb-sk${b.pick===i?' on':''}" data-a="rlbSkill" data-v="${i}" ${ok?'':'disabled'} title="${esc(rlSkillText(RL_H[u.id],k,u.skl[i],u.stats))}"><b>${esc(k.n)}</b><span>${!ok?(rlHas(u,'seal')&&i>0?'Sealed':`Ready in ${u.cds[i]}`):i===0?'Basic':rlCfg().mathSkills?'⚡ Question':'Skill'}</span><small>${esc(rlSkillText(RL_H[u.id],k,u.skl[i],u.stats))}</small></button>`}).join('')}</div>`;
+  if(!u){const a=b.actor!=null&&B.find(b.actor);el.innerHTML=`<div class="rlb-hint wide"><span>${b.auto?'Auto battle: skills fire at half power without questions.':a&&a.alive?`${esc(a.name)} is acting…`:'…'}</span></div>`;return}
+  const H=RL_H[u.id],tip=i=>esc(rlSkillText(H,u.sk[i],u.skl[i],u.stats)),pk=b.pick;
+  el.innerHTML=`<div class="rlb-who"><div class="rl-pframe r${H.r}">${rlHeroSVG(u.id,{motes:false})}</div><div class="rlb-hint"><b>${esc(u.name)}'s turn</b><span id="rlb-hint">${pk!=null?`Tap a target for ${esc(u.sk[pk].n)}.`:'Choose a skill.'}</span></div></div>
+   <div class="rlb-skills">${u.sk.map((k,i)=>{if(k.pas)return`<div class="rlb-sk pas"><b>${esc(k.n)}</b><span class="st">Passive</span></div>`;const ok=rlUsable(u,i),st=!ok?(rlHas(u,'seal')&&i>0?'Sealed':`Ready in ${u.cds[i]}`):i===0?'Basic':rlCfg().mathSkills?'⚡ Question':'Skill';
+     return`<button class="rlb-sk${pk===i?' on':''}${ok?'':' cd'}" data-a="rlbSkill" data-v="${i}" ${ok?'':'disabled'} aria-label="${esc(k.n)}: ${tip(i)}"><kbd>${'QWE'[i]}</kbd><b>${esc(k.n)}</b><span class="st">${st}</span><span class="tip" role="tooltip">${tip(i)}</span></button>`}).join('')}</div>`;
 }
 function rlbDelay(ms){const b=rlUI().b;return new Promise(r=>setTimeout(r,STILL?0:ms/(b?b.speed:1)))}
 function rlbFloat(uid,text,cls){const el=document.getElementById('rlu-'+uid);if(!el)return;const f=document.createElement('span');f.className='rlb-float '+(cls||'');f.textContent=text;f.style.left=(30+Math.random()*40)+'%';el.appendChild(f);setTimeout(()=>f.remove(),1100)}
@@ -434,7 +446,7 @@ const REALM_ACTIONS={
   rlbTarget(d){const b=rlUI().b;if(!b||b.phase!=='pick'||b.pick==null)return;const u=b.B.find(b.actor),s=u.sk[b.pick],t=b.B.find(+d.v);if(!t||(!t.alive&&!s.res))return;if(t.side!==u.side&&rlHas(t,'veil'))return;
     if((s.tg==='e1'&&t.side===u.side)||(s.tg==='a1'&&t.side!==u.side))return;document.querySelectorAll('[id^="rlu-"]').forEach(x=>x.classList.remove('targetable'));const i=b.pick;b.phase='busy';rlbUse(i,t.uid)},
   rlbAns(d){rlbAnswer(+d.v)},
-  rlbQuit(){const R=rlUI(),b=R.b;if(!b)return;if(!b.res&&!b.ctx.arenaVs){confirmBox('Retreat from battle?','You keep nothing from this battle, and the energy is not refunded.','Retreat',()=>{R.b=null})}else if(!b.res&&b.ctx.arenaVs){confirmBox('Forfeit this arena battle?','It counts as a loss.','Forfeit',()=>{b.B.status='lose';rlbEnd();R.b=null})}else{R.b=null;R.v=b.ctx.arenaVs?'arena':'world';render()}},
+  rlbQuit(){const R=rlUI(),b=R.b;if(!b)return;{const o=document.getElementById('rlb-mathov');if(o&&b.res)o.remove()}if(!b.res&&!b.ctx.arenaVs){confirmBox('Retreat from battle?','You keep nothing from this battle, and the energy is not refunded.','Retreat',()=>{R.b=null})}else if(!b.res&&b.ctx.arenaVs){confirmBox('Forfeit this arena battle?','It counts as a loss.','Forfeit',()=>{b.B.status='lose';rlbEnd();R.b=null})}else{R.b=null;R.v=b.ctx.arenaVs?'arena':'world';render()}},
   rlbAgain(){const R=rlUI(),b=R.b;const node=b.ctx.node;R.b=null;rlLaunch(node)},
   // teacher
   rlTGiveHero(){const id=document.getElementById('rlt-hero').value,f=+document.getElementById('rlt-form').value,who=document.getElementById('rlt-hwho').value;if(!RL_H[id])return;
@@ -610,14 +622,29 @@ const REALM_TCHANGE={
 .rlb-float.crit{color:#ffb800;font-size:30px}.rlb-float.dmg{color:#fff}.rlb-float.dot{color:#ff8a3d;font-size:18px}.rlb-float.heal{color:#5ef0b0}.rlb-float.buff{color:#7ab8ff;font-size:15px}.rlb-float.debuff{color:#ff7a8f;font-size:15px}.rlb-float.adv{color:#ffd60a;font-size:13px;top:40%}.rlb-float.weak{color:#a69fb0;font-size:13px;top:40%}.rlb-float.muted{color:#a69fb0;font-size:14px}.rlb-float.name{color:#ffd60a;font-size:15px;top:-6px;font-family:var(--body);font-weight:800}
 @keyframes rlRise{0%{transform:translateY(8px) scale(.7);opacity:0}15%{transform:translateY(0) scale(1.1);opacity:1}100%{transform:translateY(-34px);opacity:0}}
 .rlb-banner{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-size:56px;color:#fff;text-shadow:0 0 30px var(--elc);z-index:5;animation:rlBanner 1.3s ease-out forwards;pointer-events:none}@keyframes rlBanner{0%{transform:scale(1.6);opacity:0}20%{transform:scale(1);opacity:1}80%{opacity:1}100%{opacity:0}}
-.rlb-panel{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01)),#1a1721;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px;min-height:120px}
-.rlb-wait{text-align:center;padding:30px 0}
-.rlb-actor{display:flex;gap:12px;align-items:center;margin-bottom:10px}.rlb-actor .rl-pframe{width:56px}
-.rlb-skills{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.rlb-sk{display:flex;flex-direction:column;gap:3px;text-align:left;background:linear-gradient(180deg,#332d40,#251f30);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px;transition:transform .12s,border-color .12s}
-.rlb-sk:hover:not(:disabled){transform:translateY(-2px);border-color:#ffd60a}.rlb-sk.on{border-color:#ffd60a;box-shadow:0 0 18px -6px #ffd60a}.rlb-sk:disabled{opacity:.45}
-.rlb-sk span{font-size:12px;font-weight:700;color:#ffd60a}.rlb-sk small{font-size:12px;color:var(--muted);line-height:1.3}.rlb-sk.pas{opacity:.6}
-@media(max-width:700px){.rlb-skills{grid-template-columns:1fr}.rlb-field{grid-template-columns:1fr;padding:10px;min-height:0}.rlb-vs{display:none}.rlb-side.e{order:-1}.rlb-side{gap:6px}.rlu{grid-template-columns:44px minmax(0,1fr);gap:6px;padding:5px}.rlu.boss{grid-template-columns:64px minmax(0,1fr)}.rlu-name{font-size:13px}.rlu-name .muted{display:none}}
+.rlb-panel{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01)),#1a1721;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px}
+.rlb-stage:has(+.rlb-panel.skillbar){border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:0}
+.rlb-panel.skillbar{display:flex;align-items:center;gap:14px;min-height:78px;padding:9px 12px;border-radius:0 0 16px 16px;border-top:0;margin-top:-10px;position:relative;z-index:3}
+.rlb-who{display:flex;gap:10px;align-items:center;flex:0 0 auto;min-width:0;max-width:240px}.rlb-who .rl-pframe{width:52px;flex:0 0 auto}
+.rlb-hint{display:flex;flex-direction:column;gap:2px;min-width:0}.rlb-hint b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rlb-hint span{font-size:13px;color:var(--muted)}
+.rlb-hint.wide{flex:1;align-items:center;text-align:center}
+.rlb-wait{text-align:center;padding:14px 0}
+.rlb-skills{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1;min-width:0}
+.rlb-sk{position:relative;display:flex;flex-direction:column;justify-content:center;gap:2px;text-align:left;min-height:58px;background:linear-gradient(180deg,#3a3349,#262031);border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:8px 10px 8px 36px;transition:transform .12s,border-color .12s,box-shadow .12s}
+.rlb-sk b{font-size:14px;line-height:1.15}.rlb-sk kbd{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:20px;height:20px;display:grid;place-items:center;border-radius:6px;background:rgba(255,255,255,.1);font:700 11px/1 var(--mono,monospace);color:var(--muted)}
+.rlb-sk:hover:not(:disabled),.rlb-sk:focus-visible{transform:translateY(-2px);border-color:#ffd60a}.rlb-sk.on{border-color:#ffd60a;box-shadow:0 0 18px -6px #ffd60a;background:linear-gradient(180deg,#4a3f22,#2c2516)}.rlb-sk:disabled{opacity:.5}
+.rlb-sk .st{font-size:12px;font-weight:700;color:#ffd60a}.rlb-sk.cd .st{color:var(--muted)}.rlb-sk.pas{opacity:.6}
+.rlb-sk .tip{position:absolute;left:50%;bottom:calc(100% + 10px);transform:translate(-50%,4px);width:max(100%,250px);max-width:320px;padding:9px 11px;border-radius:10px;background:#0f0c14f2;border:1px solid rgba(255,255,255,.16);box-shadow:0 12px 30px -10px #000;font-size:12.5px;line-height:1.35;font-weight:400;color:#e8e4f0;opacity:0;pointer-events:none;transition:opacity .12s,transform .12s;z-index:20}
+.rlb-sk:hover .tip,.rlb-sk:focus-visible .tip,.rlb-sk.on .tip{opacity:1;transform:translate(-50%,0)}
+.rlb-skills .rlb-sk:first-child .tip{left:0;transform:translate(0,4px)}.rlb-skills .rlb-sk:first-child:hover .tip,.rlb-skills .rlb-sk:first-child.on .tip,.rlb-skills .rlb-sk:first-child:focus-visible .tip{transform:none}
+.rlb-skills .rlb-sk:last-child .tip{left:auto;right:0;transform:translate(0,4px)}.rlb-skills .rlb-sk:last-child:hover .tip,.rlb-skills .rlb-sk:last-child.on .tip,.rlb-skills .rlb-sk:last-child:focus-visible .tip{transform:none}
+.rlb-mathov{position:absolute;inset:0;z-index:400;display:grid;place-items:center;padding:14px;background:rgba(10,8,16,.55);backdrop-filter:blur(2px);animation:rlbOvIn .18s ease-out}
+.rlb-mathov .rlb-math{width:min(560px,100%);max-height:100%;overflow:auto;background:#1a1721f2;border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px;box-shadow:0 20px 50px -20px #000}
+.rlb-mathov .choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}.rlb-mathov .rlb-math>.muted{font-size:12px;margin:0}
+@keyframes rlbOvIn{from{opacity:0}to{opacity:1}}
+.rlb-mathov.sheet{position:fixed;inset:0;z-index:1000;place-items:end center;padding:0;background:rgba(10,8,16,.45)}.rlb-mathov.sheet .rlb-math{border-radius:18px 18px 0 0;max-height:82vh;padding:14px 14px calc(14px + env(safe-area-inset-bottom));animation:rlbUp .2s ease-out}
+@keyframes rlbUp{from{transform:translateY(30px)}to{transform:none}}
+@media(max-width:700px){.rlb-panel.skillbar{flex-direction:column;align-items:stretch;gap:8px;padding:8px}.rlb-who{max-width:none}.rlb-who .rl-pframe{width:38px}.rlb-sk{padding:7px 6px 7px 8px;min-height:52px}.rlb-sk kbd{display:none}.rlb-sk b{font-size:12.5px}.rlb-sk .st{font-size:11px}.rlb-sk .tip{width:min(86vw,300px)}.rlb-mathov .choices{grid-template-columns:1fr}.rlb-field{grid-template-columns:1fr;padding:10px;min-height:0}.rlb-vs{display:none}.rlb-side.e{order:-1}.rlb-side{gap:6px}.rlu{grid-template-columns:44px minmax(0,1fr);gap:6px;padding:5px}.rlu.boss{grid-template-columns:64px minmax(0,1fr)}.rlu-name{font-size:13px}.rlu-name .muted{display:none}}
 .rlb-math{display:flex;flex-direction:column;gap:10px}.rlb-math .q{padding:16px}
 .rlb-mt{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}.rlb-mt i{display:block;height:100%;background:#ffd60a}
 .rlb-verdict{font-family:var(--display);font-size:26px;text-align:center}

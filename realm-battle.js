@@ -207,7 +207,7 @@ window.addEventListener('resize',()=>{if(VFX.cv)vfxSize()});
 
 /* ---------- styles ---------- */
 (function(){const st=document.createElement('style');st.textContent=`
-.rlb-stage{position:relative;height:clamp(300px,48vw,540px);border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 60px -30px #000;background:#120f19;user-select:none}
+.rlb-stage{position:relative;isolation:isolate;height:clamp(300px,min(48vw,calc(100dvh - 250px)),540px);border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 60px -30px #000;background:#120f19;user-select:none}
 .rlb-cam{position:absolute;inset:0;transform-origin:50% 70%}
 .rlb-bg{position:absolute;inset:-3%}.rlb-bg svg{width:100%;height:100%;display:block}
 .rlb-units{position:absolute;inset:0}
