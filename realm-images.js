@@ -24,6 +24,14 @@ const RL_ART={
   // Sage (village herbalist, chibi). COMMON healer. Frames per form are [Quick Remedy, Herbal Poultice, Renewing Draught].
   // Bram (boar shieldbearer, chibi). COMMON tank. Frames per form are [Tusker Bash, Shield Brace, Hold the Line].
   // Kasim (jackal duelist, chibi). EPIC. Frames per form are [Sandshear, Twin Dune Cuts, Dust Devil].
+  // Corvin (raven hex-scribe, chibi). LEGENDARY. Frames per form are [Quillshot, Binding Script, Blackwing Sigils].
+  raven:{f:[{src:'art/raven-1.webp',ax:247,ay:762,h:757,w:480,ih:760,ht:0},{src:'art/raven-2.webp',ax:278,ay:767,h:757,w:500,ih:765,ht:0},{src:'art/raven-3.webp',ax:241,ay:768,h:757,w:527,ih:766,ht:0}],pose:'skill',
+        c:[[{src:'art/raven-1c1.webp',ax:130,ay:387,h:454,w:416,ih:387,ht:0},{src:'art/raven-1c2.webp',ax:134,ay:407,h:454,w:416,ih:406,ht:0},{src:'art/raven-1c3.webp',ax:141,ay:392,h:454,w:407,ih:392,ht:0}],
+           [{src:'art/raven-2c1.webp',ax:138,ay:387,h:454,w:416,ih:387,ht:0},{src:'art/raven-2c2.webp',ax:140,ay:409,h:454,w:417,ih:408,ht:0},{src:'art/raven-2c3.webp',ax:134,ay:412,h:454,w:410,ih:413,ht:0}],
+           [{src:'art/raven-3c1.webp',ax:140,ay:395,h:454,w:427,ih:396,ht:0},{src:'art/raven-3c2.webp',ax:144,ay:412,h:454,w:422,ih:411,ht:0},{src:'art/raven-3c3.webp',ax:132,ay:430,h:454,w:420,ih:430,ht:0}]],
+        spell:[{vp:['#fff3dc','#e8c99a','#b9875a','#3a1a2a'],hand:[130,150],bySkill:[{shot:'art/fx-raven-quill1.webp',sz:.55},{burst:'art/fx-raven-script1.webp',aoe:'erupt',sz:.55},{shot:'art/fx-raven-feathers1.webp',aoe:'fan',sz:.5}]},
+               {vp:['#fff3dc','#e8c99a','#b9875a','#3a1a2a'],hand:[130,150],bySkill:[{shot:'art/fx-raven-quill2.webp',sz:.55},{burst:'art/fx-raven-script2.webp',aoe:'erupt',sz:.55},{shot:'art/fx-raven-feathers2.webp',aoe:'fan',sz:.5}]},
+               {vp:['#fff3dc','#e8c99a','#b9875a','#3a1a2a'],hand:[130,150],bySkill:[{shot:'art/fx-raven-quill3.webp',sz:.55},{burst:'art/fx-raven-script3.webp',aoe:'erupt',sz:.55},{shot:'art/fx-raven-feathers3.webp',aoe:'fan',sz:.5}]}]},
   jack:{f:[{src:'art/jack-1.webp',ax:253,ay:752,h:746,w:478,ih:753,ht:0},{src:'art/jack-2.webp',ax:264,ay:752,h:746,w:515,ih:752,ht:0},{src:'art/jack-3.webp',ax:281,ay:749,h:746,w:539,ih:749,ht:0}],pose:'skill',
         c:[[{src:'art/jack-1c1.webp',ax:117,ay:368,h:433,w:404,ih:371,ht:0},{src:'art/jack-1c2.webp',ax:146,ay:382,h:433,w:389,ih:386,ht:0},{src:'art/jack-1c3.webp',ax:287,ay:408,h:433,w:385,ih:433,ht:0}],
            [{src:'art/jack-2c1.webp',ax:117,ay:371,h:433,w:419,ih:379,ht:0},{src:'art/jack-2c2.webp',ax:152,ay:379,h:433,w:410,ih:387,ht:0},{src:'art/jack-2c3.webp',ax:276,ay:409,h:433,w:397,ih:430,ht:0}],

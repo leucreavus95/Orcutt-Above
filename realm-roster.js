@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Corvin, the raven hex-scribe (chibi art). LEGENDARY. A curse-writer: Quillshot fires an inked quill
+  // that Marks, Binding Script wraps one enemy in runes that Seal their skills and sap their ATK, and
+  // Blackwing Sigils hexes every enemy with feather-sigils that Mark them and break their DEF.
+  {id:'raven',col:{c:'#7a3a5a',l:'#f3e2c8',d:'#1a0e14'},vp:['#fff3dc','#e8c99a','#b9875a','#3a1a2a'],
+   hero:{n:'Corvin',r:5,role:'sup',spd:112,it:'staff',o:'cloak',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:15},
+     ev:['Corvin','Corvin Inkfeather','Corvin, the Hex-Scribe'],
+     sk:[rlSk('Quillshot',{m:3.6,fx:[['mark',2,45]]}),
+         rlSk('Binding Script',{cd:3,m:2.2,fx:[['seal',2,80],['atkBreak',2,60]]}),
+         rlSk('Blackwing Sigils',{cd:4,tg:'eA',m:1.7,fx:[['mark',2,70],['defBreak',2,55]]})]}},
   // Kasim, the jackal dune duelist (chibi art). EPIC. Sandshear flings a blade of sand that can Blind,
   // Twin Dune Cuts sends two sand slashes that crack DEF, and Dust Devil whips a sandstorm across every
   // enemy, Blinding them, while Kasim speeds up.
