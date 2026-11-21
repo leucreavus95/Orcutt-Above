@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Varek, the ashen chain warden (chibi art). LEGENDARY bruiser. Chainhook Strike hooks one enemy and
+  // drags their turn back, Cinder Sweep whips a burning chain across every enemy (Burn), and Furnace Break
+  // slams the hook down on one enemy: huge damage, more against burning foes, splash to the rest, may stun.
+  {id:'chain',col:{c:'#b8442a',l:'#ffe2cc',d:'#1e1410'},vp:['#fff0d8','#ffb37a','#e2482a','#3a1410'],
+   hero:{n:'Varek',r:5,role:'atk',spd:104,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:15},
+     ev:['Varek','Varek Ashbound','Varek, the Chain Warden'],
+     sk:[rlSk('Chainhook Strike',{m:3.8,fx:[['atbDown',25,60]]}),
+         rlSk('Cinder Sweep',{cd:3,tg:'eA',m:1.6,fx:[['burn',2,65]]}),
+         rlSk('Furnace Break',{cd:4,m:5.0,splash:.35,vsBurn:.5,fx:[['stun',1,40]]})]}},
   // Burl, the beaver bridgewright (chibi art). COMMON. A sturdy builder: Mallet Tap whacks one enemy
   // (DEF-scaled), Timber Toss lobs a log that can stun, and Quick Barricade throws up a wooden wall that
   // shields the whole team and raises their DEF.

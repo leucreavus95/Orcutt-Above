@@ -27,6 +27,14 @@ const RL_ART={
   // Corvin (raven hex-scribe, chibi). LEGENDARY. Frames per form are [Quillshot, Binding Script, Blackwing Sigils].
   // Marla (marsh trapper, chibi). RARE. Frames per form are [Hooked Jab, Snare Toss, Bog Sweep].
   // Burl (beaver bridgewright, chibi). COMMON. Frames per form are [Mallet Tap, Timber Toss, Quick Barricade].
+  // Varek (ashen chain warden, chibi). LEGENDARY. Frames per form are [Chainhook Strike, Cinder Sweep, Furnace Break].
+  chain:{f:[{src:'art/chain-1.webp',ax:218,ay:737,h:732,w:505,ih:735,ht:0},{src:'art/chain-2.webp',ax:213,ay:738,h:732,w:476,ih:736,ht:0},{src:'art/chain-3.webp',ax:251,ay:742,h:732,w:530,ih:740,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'fire',
+        c:[[{src:'art/chain-1c1.webp',ax:139,ay:340,h:439,w:417,ih:341,ht:0},{src:'art/chain-1c2.webp',ax:154,ay:339,h:439,w:401,ih:338,ht:0},{src:'art/chain-1c3.webp',ax:325,ay:442,h:439,w:417,ih:445,ht:0}],
+           [{src:'art/chain-2c1.webp',ax:144,ay:342,h:439,w:419,ih:343,ht:0},{src:'art/chain-2c2.webp',ax:198,ay:345,h:439,w:409,ih:345,ht:0},{src:'art/chain-2c3.webp',ax:279,ay:442,h:439,w:419,ih:456,ht:0}],
+           [{src:'art/chain-3c1.webp',ax:148,ay:342,h:439,w:421,ih:343,ht:0},{src:'art/chain-3c2.webp',ax:211,ay:346,h:439,w:426,ih:347,ht:0},{src:'art/chain-3c3.webp',ax:300,ay:453,h:439,w:432,ih:454,ht:0}]],
+        spell:[{vp:['#fff0d8','#ffb37a','#e2482a','#3a1410'],hand:[140,150],bySkill:[null,{burst:'art/fx-chain-fire1.webp',aoe:'erupt',sz:.55},null]},
+               {vp:['#fff0d8','#ffb37a','#e2482a','#3a1410'],hand:[140,150],bySkill:[null,{burst:'art/fx-chain-fire2.webp',aoe:'erupt',sz:.55},null]},
+               {vp:['#fff0d8','#ffb37a','#e2482a','#3a1410'],hand:[140,150],bySkill:[null,{burst:'art/fx-chain-fire3.webp',aoe:'erupt',sz:.55},null]}]},
   beav:{f:[{src:'art/beav-1.webp',ax:289,ay:723,h:719,w:500,ih:723,ht:0},{src:'art/beav-2.webp',ax:278,ay:725,h:719,w:486,ih:726,ht:0},{src:'art/beav-3.webp',ax:277,ay:726,h:719,w:486,ih:727,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,
         c:[[{src:'art/beav-1c1.webp',ax:163,ay:370,h:431,w:391,ih:374,ht:0},{src:'art/beav-1c2.webp',ax:156,ay:354,h:431,w:408,ih:359,ht:0},{src:'art/beav-1c3.webp',ax:211,ay:327,h:431,w:398,ih:332,ht:0}],
            [{src:'art/beav-2c1.webp',ax:164,ay:369,h:431,w:398,ih:374,ht:0},{src:'art/beav-2c2.webp',ax:166,ay:372,h:431,w:410,ih:376,ht:0},{src:'art/beav-2c3.webp',ax:214,ay:331,h:431,w:407,ih:336,ht:0}],
