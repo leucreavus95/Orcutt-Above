@@ -12,6 +12,16 @@ const RL_ART={
   // f: standing art for each form, with the same placement fields (w/ih = file size).
   // Kestran (pangolin spear knight, chibi). LEGENDARY. Frames per form are [Spear Thrust, Winding Sweep, Spearstorm]:
   // the thrust is a lunge; the sweep reuses the thrust stance (the sheet's sweep crosses his legs) and draws the painted arc.
+  // Sable (hooded wraith, chibi). LEGENDARY. Frames per form are [Quickstep Cut, Twin Crescent, Veilstep Attack];
+  // fv holds the phased-out still poses he shows while Veiled.
+  sab:{f:[{src:'art/sab-1.webp',ax:229,ay:552,h:547,w:454,ih:553,ht:0},{src:'art/sab-2.webp',ax:240,ay:556,h:547,w:472,ih:556,ht:0},{src:'art/sab-3.webp',ax:294,ay:606,h:547,w:574,ih:607,ht:0}],
+        fv:[{src:'art/sab-v1.webp',ax:227,ay:559,h:547,w:452,ih:560,ht:0},{src:'art/sab-v2.webp',ax:245,ay:560,h:547,w:477,ih:561,ht:0},{src:'art/sab-v3.webp',ax:292,ay:633,h:547,w:572,ih:633,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'dusk',
+        c:[[{src:'art/sab-1c1.webp',ax:102,ay:287,h:364,w:386,ih:290,ht:0},{src:'art/sab-1c2.webp',ax:152,ay:340,h:364,w:403,ih:342,ht:0},{src:'art/sab-1c3.webp',ax:60,ay:312,h:364,w:398,ih:324,ht:0}],
+           [{src:'art/sab-2c1.webp',ax:124,ay:308,h:358,w:410,ih:311,ht:0},{src:'art/sab-2c2.webp',ax:162,ay:340,h:358,w:421,ih:342,ht:0},{src:'art/sab-2c3.webp',ax:46,ay:320,h:358,w:419,ih:329,ht:0}],
+           [{src:'art/sab-3c1.webp',ax:139,ay:320,h:383,w:446,ih:322,ht:0},{src:'art/sab-3c2.webp',ax:184,ay:340,h:383,w:450,ih:342,ht:0},{src:'art/sab-3c3.webp',ax:50,ay:345,h:383,w:453,ih:348,ht:0}]],
+        spell:[{vp:['#ffffff','#ecdcf4','#b07ac0','#4a1f45'],hand:[70,112],bySkill:[null,{shot:'art/fx-sab-cres.webp',sz:.72},null]},
+               {vp:['#ffffff','#ecdcf4','#b07ac0','#4a1f45'],hand:[70,112],bySkill:[null,{shot:'art/fx-sab-cres.webp',sz:.72},null]},
+               {vp:['#ffffff','#ecdcf4','#b07ac0','#4a1f45'],hand:[70,112],bySkill:[null,{shot:'art/fx-sab-cres.webp',sz:.72},null]}]},
   pan:{f:[{src:'art/pan-1.webp',ax:200,ay:607,h:587,w:408,ih:606,ht:0},{src:'art/pan-2.webp',ax:208,ay:615,h:595,w:423,ih:614,ht:0},{src:'art/pan-3.webp',ax:250,ay:618,h:598,w:489,ih:617,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
         c:[[{src:'art/pan-1c1.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c2.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c3.webp',ax:140,ay:371,h:359,w:346,ih:371,ht:0}],
            [{src:'art/pan-2c1.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c2.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c3.webp',ax:144,ay:391,h:379,w:311,ih:391,ht:0}],
@@ -200,7 +210,7 @@ const RL_ART={
                {vp:['#ffffff','#fff0b8','#ffb347','#e0461c'],hand:[118,92],support:'flameward',bySkill:[null,{shot:'art/fx-fox-ball3.webp',burst:'art/fx-fox-ball3.webp'},null]}]},
 };
 (function(){
-  const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.decoding='async';i.src=f.src;(window.__rlPre=window.__rlPre||[]).push(i)})};preload();
+  const preload=()=>{for(const id in RL_ART)[...RL_ART[id].f,...(RL_ART[id].fv||[])].forEach(f=>{const i=new Image();i.decoding='async';i.src=f.src;(window.__rlPre=window.__rlPre||[]).push(i)})};preload();
   const lvOf=(id,o)=>o.lv!=null?o.lv:(o.stage!=null?[1,CR_EVO[0],CR_EVO[1]][o.stage]:crLv(id));
   const oldPort=rlHeroSVG,oldBody=rlHeroBody;
   // card portrait: element backdrop, figure shown head to knees
@@ -258,7 +268,8 @@ function artPose(st,now,speed){ // the figure's shape at this moment
   return P}
 function artDraw(cv,now){
   const box=cv.parentNode,id=box.dataset.id,s=+box.dataset.s,A=RL_ART[id];if(!A)return;
-  const F0=A.f[s],img=artImg(F0.src);if(!img)return;const FR=A.c&&A.c[s]&&A.c[s].length?A.c[s]:null;if(FR)FR.forEach(f=>artImg(f.src));
+  const unit0=cv.closest('.rlb-u'),veil=!!(A.fv&&unit0&&unit0.classList.contains('veiled')); // Veiled: the phased-out still pose
+  const F0=(veil?A.fv:A.f)[s],img=artImg(F0.src);if(!img)return;if(A.fv)artImg(A.fv[s].src);const FR=A.c&&A.c[s]&&A.c[s].length?A.c[s]:null;if(FR)FR.forEach(f=>artImg(f.src));
   const dpr=Math.min(2,window.devicePixelRatio||1),cw=Math.round(cv.clientWidth*dpr),ch=Math.round(cv.clientHeight*dpr);if(!cw||!ch)return;
   if(cv.width!==cw||cv.height!==ch){cv.width=cw;cv.height=ch}
   const spr=cv.closest('.rlb-spr'),unit=cv.closest('.rlb-u'),b=typeof rlUI==='function'&&rlUI().b,speed=b&&b.speed||1,dir=unit&&unit.classList.contains('e')?-1:1;
@@ -277,14 +288,14 @@ function artDraw(cv,now){
       cape=v<.55?Math.sin(Math.PI*v/.55):0,off=dir*P.lean*Math.pow(Math.min(v,1.2),1.3)+P.sway*Math.sin(t*1.7+v*4)*cape+P.drift*v*v,
       sx=P.sx*(1+P.chest*Math.exp(-Math.pow((v-.68)/.12,2)));
       g.drawImage(im,0,sy0,iw,sy1-sy0+.6,120-ax*k*sx+off,y0,iw*k*sx,y1-y0+.7)}};
-  const Hs=s===2?238:224,frame=(f,al)=>{const im=artImg(f.src),k=Hs/f.h*(1+(P.pulse||0));g.save();g.globalAlpha=al;g.translate(120-dir*7*(P.kick||0),228);g.scale(dir*k,k);g.drawImage(im,-f.ax,-f.ay);g.restore()};
-  if(P.seq)P.seq.forEach(([i,al])=>{if(al<=0)return;if(i<0)strips(img,al);else frame(FR[i],al)});else strips(img,1);g.globalAlpha=1;
+  const Hs=s===2?238:224,frame=(f,al,fi)=>{const im=artImg(f.src),k=Hs/f.h*(1+(P.pulse||0));g.save();g.globalAlpha=al*(veil&&fi!==2?.5:1);g.translate(120-dir*7*(P.kick||0),228);g.scale(dir*k,k);g.drawImage(im,-f.ax,-f.ay);g.restore()};
+  if(P.seq)P.seq.forEach(([i,al])=>{if(al<=0)return;if(i<0)strips(img,al);else frame(FR[i],al,i)});else strips(img,1);g.globalAlpha=1;
   const c=cv.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cw,ch);
   if(P.ring>0){c.setTransform(sc,0,0,sc,-AX0*sc,-AY0*sc);c.save();c.translate(120,229);c.scale(1,.24);{const rg=c.createRadialGradient(0,0,0,0,0,80);rg.addColorStop(0,E.l);rg.addColorStop(.5,E.c);rg.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.45*P.ring;c.fillStyle=rg;c.beginPath();c.arc(0,0,80,0,7);c.fill()}c.globalAlpha=P.ring;c.strokeStyle=E.l;c.shadowColor=E.c;c.shadowBlur=14;
     const r=46+20*Math.min(1,P.ring*1.3);c.lineWidth=4.5;c.beginPath();c.arc(0,0,r,0,7);c.stroke();c.lineWidth=1.6;c.setLineDash([10,7]);c.rotate(t*2.4);c.beginPath();c.arc(0,0,r*.74,0,7);c.stroke();c.setLineDash([]);
     for(let k=0;k<8;k++){const a=k/8*6.283-t*1.6;c.beginPath();c.arc(Math.cos(a)*r*.88,Math.sin(a)*r*.88,2.6,0,7);c.fillStyle=E.l;c.fill()}c.restore();c.setTransform(1,0,0,1,0,0)}
   if(P.glow>0){c.save();c.shadowColor=E.c;c.shadowBlur=26*P.glow*sc;c.drawImage(buf,0,0);c.restore();c.globalCompositeOperation='lighter';c.globalAlpha=.22*P.glow;c.drawImage(buf,0,0);c.globalCompositeOperation='source-over';c.globalAlpha=1}
-  else c.drawImage(buf,0,0)}
+  else{if(veil)c.globalAlpha=.8+.12*Math.sin(t*3.1);c.drawImage(buf,0,0);c.globalAlpha=1}}
 function artLoop(){if(artRaf)return;const step=now=>{const cvs=document.querySelectorAll('.rl-artcv');if(!cvs.length){artRaf=0;return}cvs.forEach(cv=>{try{artDraw(cv,now)}catch(e){}});artRaf=requestAnimationFrame(step)};artRaf=requestAnimationFrame(step)}
 (function(){const st=document.createElement('style');st.textContent=`
 .rl-artbox{position:relative;width:100%;height:100%}

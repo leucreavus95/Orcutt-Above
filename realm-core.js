@@ -221,17 +221,18 @@ function rlApplyFx(B,src,tgt,f,power,ev,isEnemy){
 function rlResist(src,tgt){return Math.random()*100<rlClamp(tgt.stats.res-src.stats.acc,15,90)}
 function rlUsable(u,i){const s=u.sk[i];if(!s||s.pas)return false;if(i>0&&rlHas(u,'seal'))return false;return u.cds[i]<=0}
 function rlTargets(B,u,s,tid){
-  const foes=B.side[1-u.side].filter(x=>x.alive),mine=B.side[u.side].filter(x=>x.alive);
+  const foes=B.side[1-u.side].filter(x=>x.alive&&!rlHas(x,'veil')),mine=B.side[u.side].filter(x=>x.alive); // Veiled units can't be targeted at all
   if(s.bounce&&foes.length)return Array.from({length:s.bounce},()=>foes[Math.floor(Math.random()*foes.length)]); // Ricochet: random enemy per hit
   if(s.tg==='eA')return foes;if(s.tg==='aA')return s.fx.some(f=>f[0]==='revive')?B.side[u.side]:mine;if(s.tg==='self')return[u];
   if(s.res){const all=B.side[u.side],pick=all.find(x=>x.uid===tid);if(pick)return[pick];const dead=all.find(x=>!x.alive);return[dead||mine.slice().sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0]]}
   if(s.tg==='a1')return[mine.find(x=>x.uid===tid)||mine[0]];
-  return[foes.find(x=>x.uid===tid)||foes[0]];
+  return[foes.find(x=>x.uid===tid)||foes[0]].filter(Boolean);
 }
 /* perform a skill. power: 1 = full, 0.5 = math answer missed */
 function rlAct(B,u,i,tid,power){
   const s=u.sk[i],ev=[],pw=power==null?1:power,lvl=u.skl[i]||1,bonus=1+.1*(lvl-1);
   const tg=rlTargets(B,u,s,tid);ev.push({k:'act',u:u.uid,s:i,t:tg.map(x=>x.uid),p:pw});
+  if((s.tg==='e1'||s.tg==='eA')&&!tg.length&&B.side[1-u.side].some(x=>x.alive))ev.push({k:'lost',u:u.uid}); // every enemy is Veiled
   if(s.cd)u.cds[i]=Math.max(1,s.cd-(lvl>=3?1:0));
   const foe=s.tg==='e1'||s.tg==='eA';
   if(foe&&s.m>0){
@@ -254,10 +255,11 @@ function rlAct(B,u,i,tid,power){
         if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;
         if(u.tempo)d*=1+.1*u.tempo+(s.crescendo?s.crescendo*u.tempo:0); // Tempo: +10% per beat; Crescendo spends it big
         if(rlHas(t,'mark'))d*=1.25;if(s.vsBurn&&rlHas(t,'burn'))d*=1+s.vsBurn;
-        const cr=rlEff(u,'cr')+(adv>0?15:adv<0?-15:0),crit=(s.critMark&&rlHas(t,'mark'))||Math.random()*100<cr;if(crit)d*=1+u.stats.cd/100;
+        const cr=rlEff(u,'cr')+(adv>0?15:adv<0?-15:0),crit=(s.critMark&&rlHas(t,'mark'))||(rlHas(u,'veil')&&u.kind==='hero'&&typeof RL_H!=='undefined'&&RL_H[u.id]&&RL_H[u.id].ambush)||Math.random()*100<cr; // Shadowstrike: hits from the Veil always crit
+        if(crit)d*=1+u.stats.cd/100;
         d*=.95+Math.random()*.1;
         const dealt=rlDamage(B,t,d,ev,{crit,adv});
-        if(s.splash&&h===0)for(const o2 of B.side[t.side].filter(x=>x.alive&&x!==t))rlDamage(B,o2,d*s.splash,ev,{}); // Aftershock
+        if(s.splash&&h===0)for(const o2 of B.side[t.side].filter(x=>x.alive&&x!==t&&!rlHas(x,'veil')))rlDamage(B,o2,d*s.splash,ev,{}); // Aftershock
         if(u.stats.steal)rlHeal(u,dealt*u.stats.steal/100,ev);
       }
       const preDaze=s.ring&&rlHas(t,'daze');
@@ -302,14 +304,14 @@ function rlCheck(B,ev){
 }
 /* simple tactical AI, used for enemies, arena defense and auto-battle */
 function rlAI(B,u){
-  const mine=B.side[u.side].filter(x=>x.alive),foes=B.side[1-u.side].filter(x=>x.alive),dead=B.side[u.side].some(x=>!x.alive&&!x.revived);
+  const mine=B.side[u.side].filter(x=>x.alive),foes=B.side[1-u.side].filter(x=>x.alive&&!rlHas(x,'veil')),dead=B.side[u.side].some(x=>!x.alive&&!x.revived);
   for(let i=2;i>=0;i--){if(!rlUsable(u,i))continue;const s=u.sk[i];
     const heals=s.fx.some(f=>f[0]==='heal'||f[0]==='healT');
     if(s.fx.some(f=>f[0]==='revive')&&!dead&&!mine.some(x=>x.hp/x.maxHp<.5))continue;
     if((s.tg==='a1'||s.tg==='aA')&&heals&&!s.fx.some(f=>RL_FX[f[0]]&&RL_FX[f[0]].buff)&&!mine.some(x=>x.hp/x.maxHp<.7))continue;
     let tid;
     if(s.tg==='a1'){tid=mine.slice().sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0].uid}
-    else if(s.tg==='e1'){tid=foes.slice().sort((a,b)=>(rlAdv(u.el,b.el)-rlAdv(u.el,a.el))*.4+(a.hp/a.maxHp-b.hp/b.maxHp))[0].uid}
+    else if(s.tg==='e1'){if(!foes.length)continue;tid=foes.slice().sort((a,b)=>(rlAdv(u.el,b.el)-rlAdv(u.el,a.el))*.4+(a.hp/a.maxHp-b.hp/b.maxHp))[0].uid}
     return{i,tid};
   }
   return{i:0,tid:foes[0]&&foes[0].uid};

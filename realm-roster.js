@@ -191,7 +191,17 @@ const RL_ROSTER=[
      ev:['Kestran','Kestran Jadescale','Kestran, the Emerald Bulwark'],
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
-         rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}}
+         rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Sable, the hooded wraith (chibi art). LEGENDARY. An assassin with twin sickles who slips out of reach:
+  // Quickstep Cut finishes off weakened enemies, Twin Crescent hurls two blade waves that Mark the target,
+  // and Veilstep Attack strikes, then phases him into the Veil for 2 turns, where nothing can target him.
+  // Passive, Shadowstrike: every hit he lands while Veiled is a critical hit.
+  {id:'sab',col:{c:'#9a4a86',l:'#f1dcec',d:'#2a1024'},vp:['#ffffff','#ecdcf4','#b07ac0','#4a1f45'],
+   hero:{n:'Sable',r:5,role:'atk',spd:121,it:'staff',o:'cloak',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cr',v:20},ambush:true,
+     ev:['Sable','Sable Duskveil','Sable, the Hollow Wraith'],
+     sk:[rlSk('Quickstep Cut',{m:3.7,exec:.4}),
+         rlSk('Twin Crescent',{cd:3,m:1.9,h:2,fx:[['mark',2,60]]}),
+         rlSk('Veilstep Attack',{cd:5,m:3.3,fx:[['self','veil',2]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

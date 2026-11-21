@@ -50,7 +50,8 @@ const RL_FX={
   seed:{n:'Seeded',c:'#a8dc5a',g:'❦',d:'Loses 5% HP each turn; the healing goes to the enemy team'},
   bulwark:{n:'Bulwark',buff:1,c:'#d98a4a',g:'▣',d:'Takes 25% less damage from hits'},
   guard:{n:'Guarded',buff:1,c:'#6fe0f5',g:'⛨',d:'A guardian takes 30% of the damage for it'},
-  ward:{n:'Flame Ward',buff:1,c:'#ff9a3d',g:'♨',d:'Enemies that hit it may catch fire'}
+  ward:{n:'Flame Ward',buff:1,c:'#ff9a3d',g:'♨',d:'Enemies that hit it may catch fire'},
+  veil:{n:'Veiled',buff:1,c:'#b9a3e0',g:'◐',d:'Phased out: enemies can\'t target or hit it'}
 };
 
 /* ---------- heroes ----------
