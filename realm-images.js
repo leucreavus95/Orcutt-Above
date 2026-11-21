@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Chime (porcelain bell-keeper, chibi). Frames per form are [Soundwave, Ringing Shards, Resonance Burst].
+  bell:{zoom:.45,eyeY:100,f:[{src:'art/bell-1.webp',ax:213,ay:542,h:538,w:448,ih:542,ht:1,cx:190,fy:190},{src:'art/bell-2.webp',ax:218,ay:542,h:538,w:487,ih:542,ht:1,cx:195,fy:190},{src:'art/bell-3.webp',ax:292,ay:606,h:538,w:629,ih:607,ht:2,cx:270,fy:250}],pose:'skill',
+        c:[[{src:'art/bell-1c1.webp',ax:98,ay:303,h:279,w:346,ih:304,ht:1},{src:'art/bell-1c2.webp',ax:93,ay:283,h:279,w:322,ih:284,ht:1},{src:'art/bell-1c3.webp',ax:148,ay:285,h:279,w:425,ih:310,ht:31}],
+           [{src:'art/bell-2c1.webp',ax:118,ay:341,h:279,w:418,ih:342,ht:29},{src:'art/bell-2c2.webp',ax:117,ay:290,h:279,w:416,ih:290,ht:3},{src:'art/bell-2c3.webp',ax:93,ay:354,h:279,w:400,ih:356,ht:33}],
+           [{src:'art/bell-3c1.webp',ax:150,ay:401,h:279,w:498,ih:402,ht:27},{src:'art/bell-3c2.webp',ax:128,ay:326,h:279,w:494,ih:326,ht:3},{src:'art/bell-3c3.webp',ax:116,ay:419,h:279,w:501,ih:422,ht:9}]],
+        spell:[{vp:['#ffffff','#e0fcff','#7fe3ef','#1f6f78'],hand:[150,175],support:'ring',bySkill:[{shot:'art/fx-bell-wave1.webp'},{shot:'art/fx-bell-shard1.webp'},{burst:'art/fx-bell-wave1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#e0fcff','#7fe3ef','#1f6f78'],hand:[150,175],support:'ring',bySkill:[{shot:'art/fx-bell-wave2.webp'},{shot:'art/fx-bell-shard2.webp'},{burst:'art/fx-bell-wave2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#e0fcff','#7fe3ef','#1f6f78'],hand:[150,175],support:'ring',bySkill:[{shot:'art/fx-bell-wave3.webp'},{shot:'art/fx-bell-shard3.webp'},{burst:'art/fx-bell-wave3.webp',aoe:'sweep'}]}]},
   // Tink (clockwork beetle, chibi). Frames per form are [Gear-Shot, Ricochet Volley, Cogblast].
   bug:{zoom:.4,eyeY:95,f:[{src:'art/bug-1.webp',ax:208,ay:550,h:545,w:472,ih:551,ht:2,cx:290,fy:195},{src:'art/bug-2.webp',ax:203,ay:553,h:545,w:479,ih:552,ht:3,cx:290,fy:195},{src:'art/bug-3.webp',ax:224,ay:601,h:545,w:548,ih:600,ht:2,cx:320,fy:245}],pose:'skill',
         c:[[{src:'art/bug-1c1.webp',ax:101,ay:336,h:304,w:397,ih:337,ht:2},{src:'art/bug-1c2.webp',ax:104,ay:309,h:304,w:411,ih:309,ht:2},{src:'art/bug-1c3.webp',ax:103,ay:300,h:304,w:435,ih:302,ht:3}],

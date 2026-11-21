@@ -230,6 +230,7 @@ function rlAct(B,u,i,tid,power){
         let def=rlEff(t,'def')*(1-(s.ign||0));d*=1000/(1140+3.5*RL_SQ*def);
         if(adv>0)d*=1.3;if(adv<0)d*=.75;
         if(s.exec&&t.hp<t.maxHp*.5)d*=1+s.exec; // Finisher
+        if(s.vsDaze&&rlHas(t,'daze'))d*=1+s.vsDaze;
         if(rlHas(t,'mark'))d*=1.25;if(s.vsBurn&&rlHas(t,'burn'))d*=1+s.vsBurn;
         const cr=rlEff(u,'cr')+(adv>0?15:adv<0?-15:0),crit=Math.random()*100<cr;if(crit)d*=1+u.stats.cd/100;
         d*=.95+Math.random()*.1;
@@ -237,7 +238,10 @@ function rlAct(B,u,i,tid,power){
         if(s.splash&&h===0)for(const o2 of B.side[t.side].filter(x=>x.alive&&x!==t))rlDamage(B,o2,d*s.splash,ev,{}); // Aftershock
         if(u.stats.steal)rlHeal(u,dealt*u.stats.steal/100,ev);
       }
+      const preDaze=s.ring&&rlHas(t,'daze');
       for(const f of s.fx)if(f[0]!=='self'&&f[0]!=='team')rlApplyFx(B,u,t,f,pw*bonus,ev,true);
+      // Resonance: an enemy already Dazed when the burst lands is stunned
+      if(s.ring&&t.alive&&preDaze&&!rlHas(t,'immune')){t.fx=t.fx.filter(x=>x.k!=='daze'&&x.k!=='stun');t.fx.push({k:'stun',t:1});ev.push({k:'fx',u:t.uid,f:'stun'})}
       // Foxfire: set off every Burn on the target at once (their remaining burn damage, capped)
       if(s.det&&t.alive){const bs=t.fx.filter(x=>x.k==='burn');if(bs.length){const left=bs.reduce((a,x)=>a+Math.max(1,x.t),0);t.fx=t.fx.filter(x=>x.k!=='burn');ev.push({k:'det',u:t.uid});rlDamage(B,t,Math.min(t.maxHp*.06*left,rlEff(u,'atk')*3.2)*pw,ev,{dot:true})}}
       // Flame Ward: whoever strikes a warded unit may catch fire

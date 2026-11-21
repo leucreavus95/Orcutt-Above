@@ -38,6 +38,7 @@ const RL_FX={
   burn:{n:'Burn',c:'#ff6a3d',g:'≈',d:'Takes 6% max HP each turn'},
   seal:{n:'Seal',c:'#a46bff',g:'⊘',d:'Can only use its first skill'},
   mark:{n:'Mark',c:'#ff7eb6',g:'◎',d:'Takes 25% more damage'},
+  daze:{n:'Dazed',c:'#7fe3ef',g:'♪',d:'Ringing ears: Chime\'s shards hit harder, and her Resonance Burst stuns it'},
   seed:{n:'Seeded',c:'#a8dc5a',g:'❦',d:'Loses 5% HP each turn; the healing goes to the enemy team'},
   bulwark:{n:'Bulwark',buff:1,c:'#d98a4a',g:'▣',d:'Takes 25% less damage from hits'},
   guard:{n:'Guarded',buff:1,c:'#6fe0f5',g:'⛨',d:'A guardian takes 30% of the damage for it'},

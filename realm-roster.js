@@ -53,7 +53,15 @@ const RL_ROSTER=[
      ev:['Tink','Tink Cogwright','Tink, the Brass Colossus'],
      sk:[rlSk('Gear-Shot',{m:3.5,ign:.25,fx:[['defBreak',1,30]]}),
          rlSk('Ricochet Volley',{cd:3,tg:'eA',m:1.3,bounce:4}),
-         rlSk('Cogblast',{cd:4,tg:'eA',m:2.0,fx:[['atbDown',30,60],['stun',1,20]]})]}}
+         rlSk('Cogblast',{cd:4,tg:'eA',m:2.0,fx:[['atbDown',30,60],['stun',1,20]]})]}},
+  // Chime, the porcelain bell-keeper (chibi art). Epic. A controller: the soundwave Dazes, the shards
+  // shatter harder on dazed enemies, and the resonance burst stuns every dazed enemy and speeds up the team.
+  {id:'bell',col:{c:'#4fb8c0',l:'#e0fcff',d:'#123c40'},vp:['#ffffff','#e0fcff','#7fe3ef','#1f6f78'],
+   hero:{n:'Chime',r:4,role:'sup',spd:116,it:'staff',o:'robe',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'res',v:20},
+     ev:['Chime','Chime Stillbell','Chime, the Resonant Sage'],
+     sk:[rlSk('Soundwave',{m:3.2,fx:[['daze',2,60]]}),
+         rlSk('Ringing Shards',{cd:3,m:1.3,h:3,vsDaze:.6,fx:[['atkBreak',1,35]]}),
+         rlSk('Resonance Burst',{cd:4,tg:'eA',m:1.8,ring:true,fx:[['daze',2,50],['team','spdUp',2]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){
