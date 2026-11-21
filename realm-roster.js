@@ -182,12 +182,12 @@ const RL_ROSTER=[
      sk:[rlSk('Kindled Aid',{tg:'a1',fx:[['heal',28],['atkUp',2]]}),
          rlSk('Hearthlight Rally',{cd:3,tg:'aA',fx:[['heal',16],['cleanse'],['defUp',2]]}),
          rlSk('Second Dawn',{cd:5,tg:'a1',res:true,fx:[['rez',55],['shield',20,2],['immune',1]]})]}},
-  // Kestran, the pangolin spear knight (chibi art). LEGENDARY. Breaks armor and punishes broken armor:
+  // Kestran, the pangolin spear knight (chibi art). EPIC. Breaks armor and punishes broken armor:
   // his thrust pierces and cracks armor, his sweep pushes the line back and raises his scale guard,
   // and Spearstorm rains jade spears that hit far harder on enemies with broken armor.
   // Passive, Scale Plating: takes 20% less damage while above half HP.
   {id:'pan',col:{c:'#2f9a78',l:'#d8fff0',d:'#0e2e24'},vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],
-   hero:{n:'Kestran',r:5,role:'def',spd:106,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:20},plating:.2,
+   hero:{n:'Kestran',r:4,role:'def',spd:106,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:20},plating:.2,
      ev:['Kestran','Kestran Jadescale','Kestran, the Emerald Bulwark'],
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
