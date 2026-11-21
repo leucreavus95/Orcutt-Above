@@ -17,6 +17,14 @@ const RL_ART={
   // Garrow (tortoise drake, chibi). LEGENDARY tank. Frames per form are [Shield Bash, Jade Ward, Taunt-Roar];
   // the roar's golden sigil appears over every enemy it taunts.
   // Origa (origami crane, chibi). EPIC. Frames per form are [Fold Dash, Feather Piercer, Paper Storm].
+  // Ignis (salamander arcanist, chibi). LEGENDARY. Frames per form are [Cinder Bolt, Scorching Arc, Ignition Burst].
+  sal:{f:[{src:'art/sal-1.webp',ax:247,ay:554,h:548,w:470,ih:552,ht:0},{src:'art/sal-2.webp',ax:264,ay:595,h:548,w:504,ih:594,ht:0},{src:'art/sal-3.webp',ax:321,ay:689,h:548,w:589,ih:689,ht:0}],pose:'skill',
+        c:[[{src:'art/sal-1c1.webp',ax:131,ay:333,h:362,w:418,ih:333,ht:0},{src:'art/sal-1c2.webp',ax:118,ay:387,h:362,w:414,ih:387,ht:0},{src:'art/sal-1c3.webp',ax:102,ay:307,h:362,w:416,ih:312,ht:0}],
+           [{src:'art/sal-2c1.webp',ax:126,ay:350,h:362,w:442,ih:350,ht:0},{src:'art/sal-2c2.webp',ax:123,ay:398,h:362,w:437,ih:400,ht:0},{src:'art/sal-2c3.webp',ax:206,ay:346,h:362,w:434,ih:367,ht:0}],
+           [{src:'art/sal-3c1.webp',ax:134,ay:356,h:362,w:462,ih:356,ht:0},{src:'art/sal-3c2.webp',ax:189,ay:403,h:362,w:462,ih:409,ht:0},{src:'art/sal-3c3.webp',ax:325,ay:416,h:362,w:462,ih:420,ht:0}]],
+        spell:[{vp:['#fff6d0','#ffd27a','#ff8a2a','#c2280f'],hand:[115,140],bySkill:[{shot:'art/fx-sal-bolt1.webp',sz:.7},{burst:'art/fx-sal-arc1.webp',aoe:'sweep'},{burst:'art/fx-sal-burst1.webp',aoe:'erupt',sz:.6}]},
+               {vp:['#fff6d0','#ffd27a','#ff8a2a','#c2280f'],hand:[115,140],bySkill:[{shot:'art/fx-sal-bolt2.webp',sz:.7},{burst:'art/fx-sal-arc2.webp',aoe:'sweep'},{burst:'art/fx-sal-burst2.webp',aoe:'erupt',sz:.6}]},
+               {vp:['#fff6d0','#ffd27a','#ff8a2a','#c2280f'],hand:[115,140],bySkill:[{shot:'art/fx-sal-bolt3.webp',sz:.7},{burst:'art/fx-sal-arc3.webp',aoe:'sweep'},{burst:'art/fx-sal-burst3.webp',aoe:'erupt',sz:.6}]}]},
   crane:{f:[{src:'art/crane-1.webp',ax:198,ay:465,h:461,w:470,ih:465,ht:0},{src:'art/crane-2.webp',ax:186,ay:474,h:461,w:458,ih:475,ht:0},{src:'art/crane-3.webp',ax:304,ay:506,h:461,w:615,ih:506,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'spear',
         c:[[{src:'art/crane-1c1.webp',ax:142,ay:304,h:322,w:404,ih:305,ht:0},{src:'art/crane-1c2.webp',ax:100,ay:284,h:322,w:397,ih:284,ht:0},{src:'art/crane-1c3.webp',ax:187,ay:364,h:322,w:395,ih:363,ht:0}],
            [{src:'art/crane-2c1.webp',ax:153,ay:319,h:322,w:419,ih:321,ht:0},{src:'art/crane-2c2.webp',ax:101,ay:285,h:322,w:421,ih:286,ht:0},{src:'art/crane-2c3.webp',ax:178,ay:379,h:322,w:417,ih:380,ht:0}],

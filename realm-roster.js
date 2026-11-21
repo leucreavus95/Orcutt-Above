@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Ignis, the kiln-born salamander arcanist (chibi art). LEGENDARY. A fire mage built around Burn:
+  // Cinder Bolt scorches one enemy, Scorching Arc sweeps the line and hits burning enemies harder,
+  // and Ignition Burst sets every enemy ablaze with 2 stacks of Burn (fire damage each turn for 3 turns).
+  {id:'sal',col:{c:'#ff6a2a',l:'#ffe6c8',d:'#4a120a'},vp:['#fff6d0','#ffd27a','#ff8a2a','#c2280f'],
+   hero:{n:'Ignis',r:5,role:'atk',spd:108,it:'staff',o:'cloak',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:20},
+     ev:['Ignis','Ignis Kilnborn','Ignis, the Kiln-Born Arcanist'],
+     sk:[rlSk('Cinder Bolt',{m:3.8,fx:[['burn',2,50]]}),
+         rlSk('Scorching Arc',{cd:3,tg:'eA',m:1.7,vsBurn:.4,fx:[['defBreak',1,35]]}),
+         rlSk('Ignition Burst',{cd:4,tg:'eA',m:1.5,fx:[['burn',3,90],['burn',3,65]]})]}},
   // Origa, the origami crane lancer (chibi art). Epic. A quick paper spearman: Fold Dash strikes and
   // refolds him to act sooner, Feather Piercer fires paper shards that pierce armor and crack DEF,
   // and Paper Storm whirls razor paper through the enemy line, Blinding and slowing their turns.

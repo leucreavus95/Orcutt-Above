@@ -39,6 +39,7 @@ function rlSkillText(h,s,lvl,st){
     else if(k==='blind')parts.push(`Blinds ${tgt} (${a[2]}% chance, ${turns(a[1])}): their attacks may miss`);
     else if(k==='drowsy')parts.push(`Makes ${tgt} Drowsy (${a[2]}% chance, ${turns(a[1])}): 35% chance each turn to doze off and lose it`);
     else if(k==='chill')parts.push(`Adds 1 Chill (${a[2]}% chance). At 3 Chill the enemy freezes and skips a turn`);
+    else if(k==='burn'&&s.fx.filter(x=>x[0]==='burn').length>1){if(s.fx.find(x=>x[0]==='burn')===f)parts.push(`Ignites ${tgt}: up to ${s.fx.filter(x=>x[0]==='burn').length} Burn stacks (${s.fx.filter(x=>x[0]==='burn').map(x=>x[2]+'%').join(' and ')} chance, ${turns(a[1])}). Each stack burns for 6% max HP per turn`)}
     else if(k==='taunt')parts.push(`Taunts ${tgt} (${a[2]}% chance, ${turns(a[1])}): their single-target attacks must hit ${h.n}`);
     else if(k==='veil')parts.push(`Then slips into the Veil (${turns(a[1])}): enemies can't target or hit ${tgt==='itself'?'him':tgt}`);
     else if(k==='rime')parts.push(`Rune Ward on ${tgt} (${turns(a[1])}): enemies that strike them get Chilled`);
