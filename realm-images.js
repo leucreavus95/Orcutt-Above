@@ -10,90 +10,248 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
-  halo:{f:[{src:'art/halo-1.webp',ax:99,ay:520,h:520,w:199,ih:520,ht:7,cx:99,sc:0.6582,fy:40},{src:'art/halo-2.webp',ax:106,ay:520,h:520,w:212,ih:520,ht:5,cx:102,sc:0.6484,fy:40},{src:'art/halo-3.webp',ax:123,ay:520,h:520,w:246,ih:520,ht:8,cx:138,sc:0.6168,fy:45}],
-        // the spell each form throws, matched to its casting art.
-        // hand = where the spell leaves his hand, in sprite units from his feet (x forward, y up)
-        spell:[{kind:'bolt',paint:{shot:'art/fx-halo-shot1.webp',aoe:'fan'},vp:['#ffffff','#e4ffd0','#8df06a','#2f9d3c'],hand:[68,136]},
-               {kind:'lance',paint:{shot:'art/fx-halo-shot2.webp',aoe:'fan'},vp:['#ffffff','#fff3c0','#ffd24a','#d98a12'],hand:[34,137]},
-               {kind:'shards',paint:{shot:'art/fx-halo-shot3.webp',sigil:'art/fx-halo-sigil3.webp',aoe:'fan'},vp:['#ffffff','#e6dcff','#a98bff','#5a2fd6'],hand:[58,132]}],
-        c:[[{src:'art/halo-1c1.webp',ax:218,ay:477,h:536},{src:'art/halo-1c2.webp',ax:216,ay:507,h:536},{src:'art/halo-1c3.webp',ax:190,ay:429,h:479}],
-           [{src:'art/halo-2c1.webp',ax:267,ay:514,h:536},{src:'art/halo-2c2.webp',ax:272,ay:493,h:536},{src:'art/halo-2c3.webp',ax:290,ay:416,h:479}],
-           [{src:'art/halo-3c1.webp',ax:309,ay:526,h:536},{src:'art/halo-3c2.webp',ax:250,ay:504,h:536},{src:'art/halo-3c3.webp',ax:290,ay:421,h:479}]],
-        },
-  kael:{f:[{src:'art/kael-1.webp',ax:100,ay:528,h:527,w:323,ih:550,ht:8,cx:150,fy:60},{src:'art/kael-2.webp',ax:121,ay:531,h:529,w:357,ih:552,ht:6,cx:205,fy:60},{src:'art/kael-3.webp',ax:107,ay:548,h:533,w:339,ih:567,ht:6,cx:199,fy:60}],
-        c:[[{src:'art/kael-1c1.webp',ax:320,ay:601,h:592,w:609,ih:647,ht:38,cx:386},{src:'art/kael-1c2.webp',ax:349,ay:615,h:592,w:643,ih:682,ht:72,cx:359},{src:'art/kael-1c3.webp',ax:229,ay:483,h:592,w:650,ih:528,ht:20,cx:309}],
-           [{src:'art/kael-2c1.webp',ax:227,ay:610,h:627,w:682,ih:659,ht:79,cx:385},{src:'art/kael-2c2.webp',ax:333,ay:620,h:627,w:645,ih:679,ht:38,cx:432},{src:'art/kael-2c3.webp',ax:203,ay:608,h:627,w:624,ih:648,ht:77,cx:333}],
-           [{src:'art/kael-3c1.webp',ax:264,ay:595,h:623,w:658,ih:612,ht:23,cx:368},{src:'art/kael-3c2.webp',ax:289,ay:645,h:623,w:654,ih:679,ht:27,cx:404},{src:'art/kael-3c3.webp',ax:163,ay:561,h:623,w:661,ih:602,ht:31,cx:385}]],
-        // Kael's own magic: a compass rose that charts a route (skill 1), stars falling
-        // from a constellation map (skill 3), and wind ribbons for allies (skill 2)
-        spell:[{kind:'needle',support:'paint',paint:{shot:'art/fx-kael-shot1.webp',aura:'art/fx-kael-vortex.webp',aoe:'rain',route:true},vp:['#ffffff','#dffff5','#7fe8c8','#1f8c78'],hand:[61,106]},
-               {kind:'needle',support:'paint',paint:{shot:'art/fx-kael-shot2.webp',sigil:'art/fx-kael-sigil2.webp',aura:'art/fx-kael-vortex.webp',aoe:'rain',route:true},vp:['#ffffff','#fff1c8','#ffcf5a','#3fae98'],hand:[55,125]},
-               {kind:'needle',support:'paint',paint:{shot:'art/fx-kael-shot3.webp',sigil:'art/fx-kael-sigil3.webp',aura:'art/fx-kael-vortex.webp',aoe:'rain',route:true},vp:['#ffffff','#e9defc','#b28cff','#2b1d44'],hand:[70,139]}]},
-  // Thornwick: each casting picture belongs to one skill (attack, shield, special),
-  // so he takes the pose of the skill he is using instead of playing a sequence.
-  thornwick:{f:[{src:'art/thornwick-1.webp',ax:140,ay:409,h:490,w:254,ih:422,ht:15,cx:131,fy:95},{src:'art/thornwick-2.webp',ax:199,ay:588,h:490,w:361,ih:595,ht:83,cx:210,fy:120},{src:'art/thornwick-3.webp',ax:201,ay:598,h:520,w:375,ih:604,ht:27,cx:185,fy:110}],pose:'skill',
-        c:[[{src:'art/thornwick-1c1.webp',ax:348,ay:556,h:598,w:652,ih:574,ht:72,cx:342},{src:'art/thornwick-1c2.webp',ax:240,ay:526,h:598,w:459,ih:539,ht:13,cx:258},{src:'art/thornwick-1c3.webp',ax:218,ay:508,h:598,w:613,ih:521,ht:21,cx:249}],
-           [{src:'art/thornwick-2c1.webp',ax:323,ay:603,h:560,w:613,ih:626,ht:52,cx:304},{src:'art/thornwick-2c2.webp',ax:338,ay:619,h:560,w:608,ih:636,ht:54,cx:349},{src:'art/thornwick-2c3.webp',ax:244,ay:542,h:560,w:659,ih:584,ht:50,cx:333}],
-           [{src:'art/thornwick-3c1.webp',ax:251,ay:634,h:514,w:573,ih:645,ht:56,cx:291},{src:'art/thornwick-3c2.webp',ax:317,ay:630,h:514,w:648,ih:645,ht:16,cx:321},{src:'art/thornwick-3c3.webp',ax:298,ay:622,h:514,w:658,ih:645,ht:44,cx:358}]],
-        spell:[0,1,2].map(()=>({kind:'roots',aoe:'bloom',support:'barkshield',vp:['#ffffff','#e3ffc9','#9ee35f','#3f7a23'],wood:['#8a6238','#5a3c1f'],hand:[70,150]}))},
-  // Kheprin, the desert scarab: one casting picture per skill, and painted effects per skill
-  scarab:{f:[{src:'art/scarab-1.webp',ax:144,ay:380,h:486,w:226,ih:396,ht:29,cx:148,fy:50},{src:'art/scarab-2.webp',ax:210,ay:483,h:486,w:325,ih:488,ht:29,cx:217,fy:45},{src:'art/scarab-3.webp',ax:191,ay:575,h:516,w:370,ih:582,ht:26,cx:190,fy:120}],pose:'skill',
-        c:[[{src:'art/scarab-1c1.webp',ax:286,ay:423,h:528,w:643,ih:462,ht:52,cx:273},{src:'art/scarab-1c2.webp',ax:264,ay:466,h:528,w:609,ih:505,ht:49,cx:276},{src:'art/scarab-1c3.webp',ax:210,ay:477,h:528,w:613,ih:508,ht:45,cx:206}],
-           [{src:'art/scarab-2c1.webp',ax:379,ay:497,h:579,w:700,ih:540,ht:42,cx:324},{src:'art/scarab-2c2.webp',ax:400,ay:531,h:579,w:701,ih:574,ht:57,cx:355},{src:'art/scarab-2c3.webp',ax:406,ay:517,h:579,w:703,ih:560,ht:39,cx:312}],
-           [{src:'art/scarab-3c1.webp',ax:377,ay:571,h:704,w:703,ih:615,ht:16,cx:309},{src:'art/scarab-3c2.webp',ax:372,ay:636,h:704,w:703,ih:679,ht:46,cx:347},{src:'art/scarab-3c3.webp',ax:381,ay:652,h:704,w:703,ih:694,ht:26,cx:337}]],
-        spell:[{vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],hand:[60,112],bySkill:[{shot:'art/fx-sc-arc1.webp'},{shot:'art/fx-sc-coins.webp'},{burst:'art/fx-sc-burst1.webp',aoe:'erupt'}]},
-               {vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],hand:[70,124],bySkill:[{shot:'art/fx-sc-arc2.webp'},{shot:'art/fx-sc-spear.webp'},{burst:'art/fx-sc-wave2.webp',aoe:'sweep'}]},
-               {vp:['#ffffff','#fff1c8','#f0c062','#a8661c'],hand:[70,128],bySkill:[{shot:'art/fx-sc-sun.webp'},{shot:'art/fx-sc-swirl.webp'},{shot:'art/fx-sc-sparks.webp',aoe:'fan'}]}]},
-  // Corvin, the arctic raven duelist: one casting picture per skill, painted ice effects per skill
-  raven:{f:[{src:'art/raven-1.webp',ax:154,ay:415,h:496,w:268,ih:425,ht:8,cx:150,fy:60},{src:'art/raven-2.webp',ax:180,ay:598,h:496,w:329,ih:608,ht:47,cx:179,fy:70},{src:'art/raven-3.webp',ax:174,ay:596,h:527,w:354,ih:609,ht:24,cx:171,fy:70}],pose:'skill',
-        c:[[{src:'art/raven-1c1.webp',ax:283,ay:532,h:564,w:701,ih:645,ht:135,cx:287},{src:'art/raven-1c2.webp',ax:279,ay:470,h:564,w:714,ih:556,ht:21,cx:305},{src:'art/raven-1c3.webp',ax:249,ay:501,h:564,w:696,ih:556,ht:17,cx:269}],
-           [{src:'art/raven-2c1.webp',ax:243,ay:564,h:635,w:703,ih:638,ht:36,cx:248},{src:'art/raven-2c2.webp',ax:277,ay:566,h:635,w:714,ih:623,ht:15,cx:264},{src:'art/raven-2c3.webp',ax:240,ay:563,h:635,w:696,ih:634,ht:63,cx:261}],
-           [{src:'art/raven-3c1.webp',ax:237,ay:626,h:713,w:700,ih:692,ht:49,cx:242},{src:'art/raven-3c2.webp',ax:352,ay:588,h:713,w:714,ih:657,ht:50,cx:336},{src:'art/raven-3c3.webp',ax:304,ay:634,h:713,w:696,ih:682,ht:40,cx:233}]],
-        spell:[{vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],hand:[70,110],bySkill:[{shot:'art/fx-rv-slash1.webp'},{shot:'art/fx-rv-shards.webp'},{burst:'art/fx-rv-frostburst.webp',aoe:'erupt'}]},
-               {vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],hand:[80,130],bySkill:[{shot:'art/fx-rv-crescent.webp'},{shot:'art/fx-rv-shards.webp'},{burst:'art/fx-rv-wave.webp',aoe:'sweep'}]},
-               {vp:['#ffffff','#e4f6ff','#8fd3ff','#2a6aa8'],hand:[80,135],bySkill:[{shot:'art/fx-rv-orb.webp'},{shot:'art/fx-rv-shards.webp'},{shot:'art/fx-rv-spiral.webp',aoe:'fan'}]}]},
-  // Varek, the dusk blade: one casting picture per skill, painted crimson-and-ember effects per skill
-  dusk:{f:[{src:'art/dusk-1.webp',ax:148,ay:494,h:562,w:236,ih:504,ht:7,cx:155,fy:45},{src:'art/dusk-2.webp',ax:214,ay:562,h:562,w:341,ih:573,ht:9,cx:224,fy:45},{src:'art/dusk-3.webp',ax:195,ay:602,h:597,w:358,ih:611,ht:25,cx:201,fy:65}],pose:'skill',
-        c:[[{src:'art/dusk-1c1.webp',ax:317,ay:594,h:541,w:703,ih:679,ht:150,cx:325},{src:'art/dusk-1c2.webp',ax:341,ay:489,h:541,w:692,ih:571,ht:18,cx:349},{src:'art/dusk-1c3.webp',ax:420,ay:592,h:541,w:706,ih:703,ht:159,cx:402}],
-           [{src:'art/dusk-2c1.webp',ax:324,ay:605,h:667,w:703,ih:630,ht:21,cx:313},{src:'art/dusk-2c2.webp',ax:327,ay:501,h:667,w:701,ih:595,ht:19,cx:301},{src:'art/dusk-2c3.webp',ax:355,ay:638,h:667,w:706,ih:703,ht:98,cx:387}],
-           [{src:'art/dusk-3c1.webp',ax:319,ay:678,h:715,w:697,ih:704,ht:42,cx:329},{src:'art/dusk-3c2.webp',ax:333,ay:592,h:715,w:703,ih:668,ht:32,cx:279},{src:'art/dusk-3c3.webp',ax:284,ay:651,h:715,w:704,ih:706,ht:67,cx:303}]],
-        spell:[{vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],hand:[75,120],bySkill:[{shot:'art/fx-dk-cres1.webp'},{shot:'art/fx-dk-ring2.webp'},{shot:'art/fx-dk-cres1.webp',aoe:'fan'}]},
-               {vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],hand:[85,120],bySkill:[{shot:'art/fx-dk-flame2.webp'},{shot:'art/fx-dk-ring2.webp'},{burst:'art/fx-dk-impact2.webp',aoe:'erupt'}]},
-               {vp:['#ffffff','#ffe1c2','#ff8a4a','#8e1c22'],hand:[85,130],bySkill:[{shot:'art/fx-dk-fly3.webp'},{shot:'art/fx-dk-beam3.webp'},{burst:'art/fx-dk-erupt3.webp',aoe:'erupt'}]}]},
-  // Orrin, the astral spellweaver: one casting picture per skill, painted starlight effects per skill
-  astra:{f:[{src:'art/astra-1.webp',ax:132,ay:382,h:372,w:239,ih:401,ht:5,cx:129,fy:45},{src:'art/astra-2.webp',ax:191,ay:546,h:496,w:335,ih:567,ht:54,cx:203,fy:95},{src:'art/astra-3.webp',ax:169,ay:609,h:560,w:353,ih:631,ht:11,cx:165,fy:120}],pose:'skill',
-        c:[[{src:'art/astra-1c1.webp',ax:282,ay:624,h:560,w:703,ih:703,ht:193,cx:312},{src:'art/astra-1c2.webp',ax:239,ay:486,h:560,w:700,ih:563,ht:16,cx:293},{src:'art/astra-1c3.webp',ax:293,ay:564,h:560,w:676,ih:703,ht:157,cx:343}],
-           [{src:'art/astra-2c1.webp',ax:381,ay:651,h:602,w:703,ih:708,ht:72,cx:349},{src:'art/astra-2c2.webp',ax:386,ay:580,h:602,w:708,ih:638,ht:60,cx:353},{src:'art/astra-2c3.webp',ax:232,ay:647,h:602,w:693,ih:708,ht:129,cx:243}],
-           [{src:'art/astra-3c1.webp',ax:262,ay:634,h:616,w:703,ih:701,ht:42,cx:358},{src:'art/astra-3c2.webp',ax:374,ay:643,h:616,w:708,ih:699,ht:18,cx:384},{src:'art/astra-3c3.webp',ax:303,ay:652,h:616,w:701,ih:701,ht:30,cx:298}]],
-        spell:[{vp:['#ffffff','#f1e4ff','#b98cff','#3b2385'],hand:[60,118],bySkill:[{shot:'art/fx-as-bolt1.webp'},{shot:'art/fx-as-arc1.webp'},{shot:'art/fx-as-shards1.webp',aoe:'fan'}]},
-               {vp:['#ffffff','#f1e4ff','#b98cff','#3b2385'],hand:[80,128],bySkill:[{shot:'art/fx-as-beam2.webp'},{shot:'art/fx-as-ring2.webp'},{burst:'art/fx-as-swirl2.webp',aoe:'sweep'}]},
-               {vp:['#ffffff','#f1e4ff','#b98cff','#3b2385'],hand:[80,130],bySkill:[{shot:'art/fx-as-rain3.webp'},{shot:'art/fx-as-portal3.webp'},{shot:'art/fx-as-bolt1.webp',sigil:'art/fx-as-portal3.webp',aoe:'rain'}]}]},
-  // Sylvara, the astral archer: one casting picture per skill, painted arrow effects per skill
-  sylva:{f:[{src:'art/sylva-1.webp',ax:132,ay:437,h:459,w:251,ih:447,ht:5,cx:135,fy:40},{src:'art/sylva-2.webp',ax:176,ay:522,h:533,w:335,ih:532,ht:6,cx:172,fy:45},{src:'art/sylva-3.webp',ax:166,ay:609,h:580,w:325,ih:618,ht:22,cx:147,fy:100}],pose:'skill',
-        c:[[{src:'art/sylva-1c1.webp',ax:269,ay:542,h:588,w:629,ih:591,ht:87,cx:286},{src:'art/sylva-1c2.webp',ax:269,ay:584,h:588,w:704,ih:701,ht:138,cx:290},{src:'art/sylva-1c3.webp',ax:228,ay:504,h:588,w:694,ih:584,ht:68,cx:250}],
-           [{src:'art/sylva-2c1.webp',ax:274,ay:662,h:630,w:703,ih:699,ht:111,cx:291},{src:'art/sylva-2c2.webp',ax:277,ay:616,h:630,w:708,ih:675,ht:87,cx:306},{src:'art/sylva-2c3.webp',ax:269,ay:641,h:630,w:696,ih:701,ht:127,cx:291}],
-           [{src:'art/sylva-3c1.webp',ax:233,ay:587,h:630,w:679,ih:666,ht:83,cx:267},{src:'art/sylva-3c2.webp',ax:337,ay:624,h:630,w:707,ih:686,ht:43,cx:363},{src:'art/sylva-3c3.webp',ax:233,ay:616,h:630,w:676,ih:671,ht:40,cx:257}]],
-        spell:[{vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],hand:[90,128],bySkill:[{shot:'art/fx-ar-leaf1.webp'},{shot:'art/fx-ar-twin1.webp'},{shot:'art/fx-ar-twin1.webp',aoe:'fan'}]},
-               {vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],hand:[95,135],bySkill:[{shot:'art/fx-ar-leaf2.webp'},{shot:'art/fx-ar-triple2.webp'},{shot:'art/fx-ar-gold2.webp',aoe:'fan'}]},
-               {vp:['#ffffff','#fff4cc','#9ee6a0','#2f7a4a'],hand:[95,135],bySkill:[{shot:'art/fx-ar-burst3.webp'},{shot:'art/fx-ar-star3.webp'},{shot:'art/fx-ar-star3.webp',burst:'art/fx-ar-burst3.webp',aoe:'fan'}]}]},
-  // Kairo, the waterweaver: one casting picture per skill, painted water effects per skill
-  kairo:{f:[{src:'art/tide-1.webp',ax:102,ay:308,h:347,w:159,ih:315,ht:4,cx:104,fy:20},{src:'art/tide-2.webp',ax:195,ay:410,h:446,w:304,ih:419,ht:6,cx:198,fy:30},{src:'art/tide-3.webp',ax:234,ay:608,h:580,w:456,ih:617,ht:24,cx:233,fy:100}],pose:'skill',
-        c:[[{src:'art/tide-1c1.webp',ax:377,ay:588,h:560,w:703,ih:659,ht:69,cx:391},{src:'art/tide-1c2.webp',ax:350,ay:650,h:560,w:708,ih:669,ht:80,cx:421},{src:'art/tide-1c3.webp',ax:260,ay:599,h:560,w:701,ih:700,ht:117,cx:287}],
-           [{src:'art/tide-2c1.webp',ax:249,ay:654,h:616,w:703,ih:675,ht:66,cx:335},{src:'art/tide-2c2.webp',ax:409,ay:630,h:616,w:708,ih:701,ht:93,cx:380},{src:'art/tide-2c3.webp',ax:396,ay:633,h:616,w:701,ih:708,ht:106,cx:348}],
-           [{src:'art/tide-3c1.webp',ax:297,ay:676,h:658,w:699,ih:697,ht:31,cx:250},{src:'art/tide-3c2.webp',ax:267,ay:664,h:658,w:708,ih:685,ht:33,cx:244},{src:'art/tide-3c3.webp',ax:359,ay:678,h:658,w:700,ih:697,ht:50,cx:368}]],
-        spell:[{vp:['#ffffff','#dff7ff','#5fd0e6','#0f5a6e'],hand:[70,120],bySkill:[{shot:'art/fx-wv-arc1.webp'},{shot:'art/fx-wv-swirl1.webp'},{shot:'art/fx-wv-spike1.webp',aoe:'fan'}]},
-               {vp:['#ffffff','#dff7ff','#5fd0e6','#0f5a6e'],hand:[90,130],bySkill:[{shot:'art/fx-wv-lance2.webp'},{shot:'art/fx-wv-wave2.webp'},{burst:'art/fx-wv-vortex2.webp',aoe:'sweep'}]},
-               {vp:['#ffffff','#dff7ff','#5fd0e6','#0f5a6e'],hand:[95,130],bySkill:[{shot:'art/fx-wv-spear3.webp'},{shot:'art/fx-wv-whirl3.webp'},{burst:'art/fx-wv-geyser3.webp',aoe:'erupt'}]}]},
-  // Tobin, the farmhand with a spear: no magic. He charges in for single hits (shown in his lunge pose)
-  // and sweeps the whole line with his spear for his area skill.
-  pike:{f:[{src:'art/pike-1.webp',ax:133,ay:440,h:372,w:230,ih:450},{src:'art/pike-2.webp',ax:155,ay:521,h:434,w:275,ih:530},{src:'art/pike-3.webp',ax:173,ay:581,h:496,w:296,ih:590}],melee:true,dashPose:2,
-        c:[[{src:'art/pike-1c1.webp',ax:225,ay:617,h:588,w:652,ih:634},{src:'art/pike-1c3.webp',ax:232,ay:617,h:588,w:655,ih:636},{src:'art/pike-1c2.webp',ax:248,ay:599,h:588,w:664,ih:617}],
-           [{src:'art/pike-2c1.webp',ax:221,ay:563,h:588,w:638,ih:581},{src:'art/pike-2c3.webp',ax:226,ay:563,h:588,w:643,ih:581},{src:'art/pike-2c2.webp',ax:249,ay:514,h:588,w:636,ih:532}],
-           [{src:'art/pike-3c1.webp',ax:224,ay:556,h:588,w:652,ih:608},{src:'art/pike-3c3.webp',ax:229,ay:553,h:588,w:655,ih:608},{src:'art/pike-3c2.webp',ax:241,ay:515,h:588,w:664,ih:584}]],
-        spell:[0,1,2].map(()=>({vp:['#ffffff','#f4ead0','#c9a26a','#5a4630'],hand:[95,130],bySkill:[null,null,{aoe:'spearsweep'}]}))},
+  // Kestran (pangolin spear knight, chibi). LEGENDARY. Frames per form are [Spear Thrust, Winding Sweep, Spearstorm]:
+  // the thrust is a lunge; the sweep reuses the thrust stance (the sheet's sweep crosses his legs) and draws the painted arc.
+  // Sable (hooded wraith, chibi). LEGENDARY. Frames per form are [Quickstep Cut, Twin Crescent, Veilstep Attack];
+  // fv holds the phased-out still poses he shows while Veiled.
+  // Garrow (tortoise drake, chibi). LEGENDARY tank. Frames per form are [Shield Bash, Jade Ward, Taunt-Roar];
+  // the roar's golden sigil appears over every enemy it taunts.
+  // Origa (origami crane, chibi). EPIC. Frames per form are [Fold Dash, Feather Piercer, Paper Storm].
+  // Ignis (salamander arcanist, chibi). LEGENDARY. Frames per form are [Cinder Bolt, Scorching Arc, Ignition Burst].
+  // Kael (frost owl, chibi). LEGENDARY. Frames per form are [Glacial Talon, Shardstorm, Permafrost Ring].
+  // Thorne (stag shaman, chibi). LEGENDARY support. Frames per form are [Spirit Bolt, Totem Ward, Ancestral Tempest].
+  stag:{f:[{src:'art/stag-1.webp',ax:157,ay:824,h:819,w:408,ih:825,ht:0},{src:'art/stag-2.webp',ax:219,ay:843,h:819,w:491,ih:844,ht:0},{src:'art/stag-3.webp',ax:283,ay:907,h:819,w:614,ih:907,ht:0}],pose:'skill',
+        c:[[{src:'art/stag-1c1.webp',ax:106,ay:338,h:344,w:401,ih:337,ht:0},{src:'art/stag-1c2.webp',ax:177,ay:391,h:344,w:381,ih:396,ht:0},{src:'art/stag-1c3.webp',ax:183,ay:320,h:344,w:408,ih:319,ht:0}],
+           [{src:'art/stag-2c1.webp',ax:111,ay:337,h:344,w:430,ih:336,ht:0},{src:'art/stag-2c2.webp',ax:196,ay:412,h:344,w:426,ih:414,ht:0},{src:'art/stag-2c3.webp',ax:157,ay:398,h:344,w:427,ih:398,ht:0}],
+           [{src:'art/stag-3c1.webp',ax:114,ay:338,h:344,w:445,ih:337,ht:0},{src:'art/stag-3c2.webp',ax:211,ay:420,h:344,w:444,ih:422,ht:0},{src:'art/stag-3c3.webp',ax:279,ay:451,h:344,w:447,ih:451,ht:0}]],
+        spell:[{vp:['#ffffff','#d8fff2','#5fe0c0','#2d5a3a'],hand:[150,165],support:'totem',shield:'art/fx-stag-totem1.webp',bySkill:[{shot:'art/fx-stag-bolt1.webp',sz:.7},null,{burst:'art/fx-stag-bolt1.webp',aoe:'meteor',img:'art/fx-stag-bolt1.webp'}]},
+               {vp:['#ffffff','#d8fff2','#5fe0c0','#2d5a3a'],hand:[150,165],support:'totem',shield:'art/fx-stag-totem2.webp',bySkill:[{shot:'art/fx-stag-bolt2.webp',sz:.7},null,{burst:'art/fx-stag-bolt2.webp',aoe:'meteor',img:'art/fx-stag-bolt2.webp'}]},
+               {vp:['#ffffff','#d8fff2','#5fe0c0','#2d5a3a'],hand:[150,165],support:'totem',shield:'art/fx-stag-totem3.webp',bySkill:[{shot:'art/fx-stag-bolt3.webp',sz:.7},null,{burst:'art/fx-stag-bolt3.webp',aoe:'meteor',img:'art/fx-stag-bolt3.webp'}]}]},
+  frowl:{f:[{src:'art/frowl-1.webp',ax:196,ay:684,h:679,w:428,ih:685,ht:0},{src:'art/frowl-2.webp',ax:283,ay:704,h:679,w:480,ih:702,ht:0},{src:'art/frowl-3.webp',ax:327,ay:812,h:679,w:638,ih:810,ht:0}],pose:'skill',
+        c:[[{src:'art/frowl-1c1.webp',ax:126,ay:327,h:340,w:410,ih:327,ht:0},{src:'art/frowl-1c2.webp',ax:129,ay:322,h:340,w:404,ih:323,ht:0},{src:'art/frowl-1c3.webp',ax:177,ay:256,h:340,w:394,ih:385,ht:0}],
+           [{src:'art/frowl-2c1.webp',ax:133,ay:336,h:340,w:438,ih:336,ht:0},{src:'art/frowl-2c2.webp',ax:132,ay:332,h:340,w:430,ih:332,ht:0},{src:'art/frowl-2c3.webp',ax:180,ay:258,h:340,w:431,ih:396,ht:0}],
+           [{src:'art/frowl-3c1.webp',ax:144,ay:395,h:340,w:448,ih:395,ht:0},{src:'art/frowl-3c2.webp',ax:140,ay:375,h:340,w:461,ih:375,ht:0},{src:'art/frowl-3c3.webp',ax:206,ay:309,h:340,w:462,ih:440,ht:0}]],
+        spell:[{vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave1.webp',sz:.6},{shot:'art/fx-frowl-shards1.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-ring1.webp'}]},
+               {vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave2.webp',sz:.6},{shot:'art/fx-frowl-shards2.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-ring2.webp'}]},
+               {vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave3.webp',sz:.6},{shot:'art/fx-frowl-shards3.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-ring3.webp'}]}]},
+  sal:{f:[{src:'art/sal-1.webp',ax:247,ay:554,h:548,w:470,ih:552,ht:0},{src:'art/sal-2.webp',ax:264,ay:595,h:548,w:504,ih:594,ht:0},{src:'art/sal-3.webp',ax:321,ay:689,h:548,w:589,ih:689,ht:0}],pose:'skill',
+        c:[[{src:'art/sal-1c1.webp',ax:131,ay:333,h:362,w:418,ih:333,ht:0},{src:'art/sal-1c2.webp',ax:118,ay:387,h:362,w:414,ih:387,ht:0},{src:'art/sal-1c3.webp',ax:102,ay:307,h:362,w:416,ih:312,ht:0}],
+           [{src:'art/sal-2c1.webp',ax:126,ay:350,h:362,w:442,ih:350,ht:0},{src:'art/sal-2c2.webp',ax:123,ay:398,h:362,w:437,ih:400,ht:0},{src:'art/sal-2c3.webp',ax:206,ay:346,h:362,w:434,ih:367,ht:0}],
+           [{src:'art/sal-3c1.webp',ax:134,ay:356,h:362,w:462,ih:356,ht:0},{src:'art/sal-3c2.webp',ax:189,ay:403,h:362,w:462,ih:409,ht:0},{src:'art/sal-3c3.webp',ax:325,ay:416,h:362,w:462,ih:420,ht:0}]],
+        spell:[{vp:['#fff6d0','#ffd27a','#ff8a2a','#c2280f'],hand:[115,140],bySkill:[{shot:'art/fx-sal-bolt1.webp',sz:.7},{burst:'art/fx-sal-arc1.webp',aoe:'sweep'},{aoe:'meteor',img:'art/fx-sal-bolt1.webp'}]},
+               {vp:['#fff6d0','#ffd27a','#ff8a2a','#c2280f'],hand:[115,140],bySkill:[{shot:'art/fx-sal-bolt2.webp',sz:.7},{burst:'art/fx-sal-arc2.webp',aoe:'sweep'},{aoe:'meteor',img:'art/fx-sal-bolt2.webp'}]},
+               {vp:['#fff6d0','#ffd27a','#ff8a2a','#c2280f'],hand:[115,140],bySkill:[{shot:'art/fx-sal-bolt3.webp',sz:.7},{burst:'art/fx-sal-arc3.webp',aoe:'sweep'},{aoe:'meteor',img:'art/fx-sal-bolt3.webp'}]}]},
+  crane:{f:[{src:'art/crane-1.webp',ax:198,ay:465,h:461,w:470,ih:465,ht:0},{src:'art/crane-2.webp',ax:186,ay:474,h:461,w:458,ih:475,ht:0},{src:'art/crane-3.webp',ax:304,ay:506,h:461,w:615,ih:506,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'spear',
+        c:[[{src:'art/crane-1c1.webp',ax:142,ay:304,h:322,w:404,ih:305,ht:0},{src:'art/crane-1c2.webp',ax:100,ay:284,h:322,w:397,ih:284,ht:0},{src:'art/crane-1c3.webp',ax:187,ay:364,h:322,w:395,ih:363,ht:0}],
+           [{src:'art/crane-2c1.webp',ax:153,ay:319,h:322,w:419,ih:321,ht:0},{src:'art/crane-2c2.webp',ax:101,ay:285,h:322,w:421,ih:286,ht:0},{src:'art/crane-2c3.webp',ax:178,ay:379,h:322,w:417,ih:380,ht:0}],
+           [{src:'art/crane-3c1.webp',ax:201,ay:322,h:322,w:473,ih:324,ht:0},{src:'art/crane-3c2.webp',ax:189,ay:287,h:322,w:475,ih:288,ht:0},{src:'art/crane-3c3.webp',ax:142,ay:413,h:322,w:469,ih:414,ht:0}]],
+        spell:[{vp:['#ffffff','#fbefe6','#d8453a','#7a1f1a'],hand:[125,118],bySkill:[null,{shot:'art/fx-crane-shard1.webp',sz:.55},{shot:'art/fx-crane-shard1.webp',aoe:'fan',sz:.5}]},
+               {vp:['#ffffff','#fbefe6','#d8453a','#7a1f1a'],hand:[125,118],bySkill:[null,{shot:'art/fx-crane-shard2.webp',sz:.55},{shot:'art/fx-crane-shard2.webp',aoe:'fan',sz:.5}]},
+               {vp:['#ffffff','#fbefe6','#d8453a','#7a1f1a'],hand:[125,118],bySkill:[null,{shot:'art/fx-crane-shard3.webp',sz:.55},{shot:'art/fx-crane-shard3.webp',aoe:'fan',sz:.5}]}]},
+  tort:{f:[{src:'art/tort-1.webp',ax:275,ay:694,h:688,w:498,ih:694,ht:0},{src:'art/tort-2.webp',ax:265,ay:695,h:688,w:489,ih:695,ht:0},{src:'art/tort-3.webp',ax:277,ay:737,h:688,w:519,ih:737,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
+        c:[[{src:'art/tort-1c1.webp',ax:162,ay:374,h:413,w:425,ih:375,ht:0},{src:'art/tort-1c2.webp',ax:193,ay:385,h:413,w:405,ih:390,ht:0},{src:'art/tort-1c3.webp',ax:202,ay:472,h:413,w:409,ih:497,ht:0}],
+           [{src:'art/tort-2c1.webp',ax:166,ay:375,h:413,w:431,ih:376,ht:0},{src:'art/tort-2c2.webp',ax:200,ay:391,h:413,w:412,ih:396,ht:0},{src:'art/tort-2c3.webp',ax:206,ay:480,h:413,w:411,ih:504,ht:0}],
+           [{src:'art/tort-3c1.webp',ax:176,ay:393,h:427,w:453,ih:393,ht:0},{src:'art/tort-3c2.webp',ax:217,ay:405,h:427,w:456,ih:411,ht:0},{src:'art/tort-3c3.webp',ax:217,ay:486,h:427,w:443,ih:514,ht:0}]],
+        spell:[{vp:['#ffffff','#d9fff0','#5fd9b0','#1e6a52'],hand:[60,120],support:'flameward',bySkill:[null,null,{burst:'art/fx-tort-sigil.webp',aoe:'erupt',sz:.45}]},
+               {vp:['#ffffff','#d9fff0','#5fd9b0','#1e6a52'],hand:[60,120],support:'flameward',bySkill:[null,null,{burst:'art/fx-tort-sigil.webp',aoe:'erupt',sz:.45}]},
+               {vp:['#ffffff','#d9fff0','#5fd9b0','#1e6a52'],hand:[60,120],support:'flameward',bySkill:[null,null,{burst:'art/fx-tort-sigil.webp',aoe:'erupt',sz:.45}]}]},
+  sab:{f:[{src:'art/sab-1.webp',ax:229,ay:552,h:547,w:454,ih:553,ht:0},{src:'art/sab-2.webp',ax:240,ay:556,h:547,w:472,ih:556,ht:0},{src:'art/sab-3.webp',ax:294,ay:606,h:547,w:574,ih:607,ht:0}],
+        fv:[{src:'art/sab-v1.webp',ax:227,ay:559,h:547,w:452,ih:560,ht:0},{src:'art/sab-v2.webp',ax:245,ay:560,h:547,w:477,ih:561,ht:0},{src:'art/sab-v3.webp',ax:292,ay:633,h:547,w:572,ih:633,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'dusk',
+        c:[[{src:'art/sab-1c1.webp',ax:102,ay:287,h:364,w:386,ih:290,ht:0},{src:'art/sab-1c2.webp',ax:152,ay:340,h:364,w:403,ih:342,ht:0},{src:'art/sab-1c3.webp',ax:60,ay:312,h:364,w:398,ih:324,ht:0}],
+           [{src:'art/sab-2c1.webp',ax:124,ay:308,h:358,w:410,ih:311,ht:0},{src:'art/sab-2c2.webp',ax:162,ay:340,h:358,w:421,ih:342,ht:0},{src:'art/sab-2c3.webp',ax:46,ay:320,h:358,w:419,ih:329,ht:0}],
+           [{src:'art/sab-3c1.webp',ax:139,ay:320,h:383,w:446,ih:322,ht:0},{src:'art/sab-3c2.webp',ax:184,ay:340,h:383,w:450,ih:342,ht:0},{src:'art/sab-3c3.webp',ax:50,ay:345,h:383,w:453,ih:348,ht:0}]],
+        spell:[{vp:['#ffffff','#ecdcf4','#b07ac0','#4a1f45'],hand:[70,112],bySkill:[null,{shot:'art/fx-sab-cres.webp',sz:.72},null]},
+               {vp:['#ffffff','#ecdcf4','#b07ac0','#4a1f45'],hand:[70,112],bySkill:[null,{shot:'art/fx-sab-cres.webp',sz:.72},null]},
+               {vp:['#ffffff','#ecdcf4','#b07ac0','#4a1f45'],hand:[70,112],bySkill:[null,{shot:'art/fx-sab-cres.webp',sz:.72},null]}]},
+  pan:{f:[{src:'art/pan-1.webp',ax:200,ay:607,h:587,w:408,ih:606,ht:0},{src:'art/pan-2.webp',ax:208,ay:615,h:595,w:423,ih:614,ht:0},{src:'art/pan-3.webp',ax:250,ay:618,h:598,w:489,ih:617,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
+        c:[[{src:'art/pan-1c1.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c2.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c3.webp',ax:140,ay:371,h:359,w:346,ih:371,ht:0}],
+           [{src:'art/pan-2c1.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c2.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c3.webp',ax:144,ay:391,h:379,w:311,ih:391,ht:0}],
+           [{src:'art/pan-3c1.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c2.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c3.webp',ax:147,ay:401,h:389,w:349,ih:401,ht:0}]],
+        spell:[{vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc1.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear1.webp'}]},
+               {vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc2.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear2.webp'}]},
+               {vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc3.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear3.webp'}]}]},
+  // Brenna (lantern medic, chibi). LEGENDARY healer. Frames per form are [Kindled Aid, Hearthlight Rally, Second Dawn];
+  // all three land on allies, and Second Dawn can raise a fallen ally.
+  med:{f:[{src:'art/med-1.webp',ax:173,ay:713,h:690,w:469,ih:712,ht:0},{src:'art/med-2.webp',ax:178,ay:739,h:714,w:464,ih:737,ht:0},{src:'art/med-3.webp',ax:203,ay:789,h:763,w:501,ih:787,ht:0}],pose:'skill',
+        c:[[{src:'art/med-1c1.webp',ax:88,ay:346,h:333,w:241,ih:344,ht:0},{src:'art/med-1c2.webp',ax:121,ay:362,h:353,w:260,ih:364,ht:0},{src:'art/med-1c3.webp',ax:83,ay:351,h:342,w:220,ih:353,ht:0}],
+           [{src:'art/med-2c1.webp',ax:98,ay:348,h:335,w:231,ih:346,ht:0},{src:'art/med-2c2.webp',ax:114,ay:376,h:366,w:255,ih:378,ht:0},{src:'art/med-2c3.webp',ax:91,ay:338,h:329,w:242,ih:340,ht:0}],
+           [{src:'art/med-3c1.webp',ax:151,ay:402,h:387,w:304,ih:399,ht:0},{src:'art/med-3c2.webp',ax:136,ay:383,h:373,w:267,ih:385,ht:0},{src:'art/med-3c3.webp',ax:131,ay:354,h:345,w:280,ih:356,ht:0}]],
+        spell:[{vp:['#ffffff','#fff3c8','#ffc65a','#b5501e'],hand:[95,215],support:'lantern',beam:'art/fx-med-beam1.webp'},
+               {vp:['#ffffff','#fff3c8','#ffc65a','#b5501e'],hand:[95,215],support:'lantern',beam:'art/fx-med-beam2.webp'},
+               {vp:['#ffffff','#fff3c8','#ffc65a','#b5501e'],hand:[95,215],support:'lantern',beam:'art/fx-med-beam3.webp'}]},
+  // Aurelle (moon deer healer, chibi). LEGENDARY. Frames per form are [Moonwell Mend, Dewfall Blessing, Sanctuary Bloom];
+  // every spell lands on her allies.
+  deer:{f:[{src:'art/deer-1.webp',ax:229,ay:564,h:545,w:476,ih:562,ht:0},{src:'art/deer-2.webp',ax:233,ay:580,h:561,w:498,ih:579,ht:0},{src:'art/deer-3.webp',ax:255,ay:608,h:587,w:546,ih:606,ht:0}],pose:'skill',
+        c:[[{src:'art/deer-1c1.webp',ax:110,ay:302,h:293,w:276,ih:303,ht:0},{src:'art/deer-1c2.webp',ax:85,ay:332,h:323,w:247,ih:334,ht:0},{src:'art/deer-1c3.webp',ax:163,ay:265,h:262,w:273,ih:271,ht:0}],
+           [{src:'art/deer-2c1.webp',ax:127,ay:331,h:322,w:316,ih:332,ht:0},{src:'art/deer-2c2.webp',ax:105,ay:349,h:341,w:290,ih:352,ht:0},{src:'art/deer-2c3.webp',ax:178,ay:276,h:273,w:293,ih:282,ht:0}],
+           [{src:'art/deer-3c1.webp',ax:139,ay:358,h:349,w:324,ih:360,ht:0},{src:'art/deer-3c2.webp',ax:120,ay:359,h:352,w:303,ih:363,ht:0},{src:'art/deer-3c3.webp',ax:155,ay:294,h:289,w:286,ih:298,ht:0}]],
+        spell:[{vp:['#ffffff','#e6fbff','#8fe6f0','#2a8a96'],hand:[120,175],support:'moonwell'},
+               {vp:['#ffffff','#e6fbff','#8fe6f0','#2a8a96'],hand:[120,175],support:'moonwell'},
+               {vp:['#ffffff','#e6fbff','#8fe6f0','#2a8a96'],hand:[120,175],support:'moonwell'}]},
+  // Vexis (basilisk, chibi). LEGENDARY. Frames per form are [Venom Fang, Twin Toxin Crescents, Caustic Mireburst].
+  bas:{zoom:.42,eyeY:100,f:[{src:'art/bas-1.webp',ax:249,ay:654,h:648,w:467,ih:652,ht:3,cx:285,fy:230},{src:'art/bas-2.webp',ax:250,ay:668,h:648,w:488,ih:666,ht:3,cx:290,fy:240},{src:'art/bas-3.webp',ax:285,ay:701,h:648,w:539,ih:699,ht:1,cx:330,fy:270}],pose:'skill',
+        c:[[{src:'art/bas-1c1.webp',ax:184,ay:374,h:385,w:419,ih:375,ht:0},{src:'art/bas-1c2.webp',ax:155,ay:391,h:385,w:413,ih:391,ht:0},{src:'art/bas-1c3.webp',ax:160,ay:352,h:385,w:350,ih:352,ht:0}],
+           [{src:'art/bas-2c1.webp',ax:170,ay:384,h:385,w:405,ih:383,ht:0},{src:'art/bas-2c2.webp',ax:159,ay:393,h:385,w:422,ih:393,ht:0},{src:'art/bas-2c3.webp',ax:147,ay:362,h:385,w:322,ih:361,ht:0}],
+           [{src:'art/bas-3c1.webp',ax:200,ay:390,h:385,w:453,ih:394,ht:0},{src:'art/bas-3c2.webp',ax:162,ay:397,h:385,w:439,ih:396,ht:0},{src:'art/bas-3c3.webp',ax:155,ay:368,h:385,w:308,ih:367,ht:0}]],
+        spell:[{vp:['#ffffff','#eaffb0','#b6e83a','#4a1a2e'],hand:[175,150],bySkill:[{shot:'art/fx-bas-fang1.webp',sz:.75},{shot:'art/fx-bas-cres1.webp',sz:.55},{burst:'art/fx-bas-mire1.webp',aoe:'erupt',sz:.65}]},
+               {vp:['#ffffff','#eaffb0','#b6e83a','#4a1a2e'],hand:[175,150],bySkill:[{shot:'art/fx-bas-fang2.webp',sz:.75},{shot:'art/fx-bas-cres2.webp',sz:.55},{burst:'art/fx-bas-mire2.webp',aoe:'erupt',sz:.65}]},
+               {vp:['#ffffff','#eaffb0','#b6e83a','#4a1a2e'],hand:[175,150],bySkill:[{shot:'art/fx-bas-fang3.webp',sz:.75},{shot:'art/fx-bas-cres3.webp',sz:.55},{burst:'art/fx-bas-mire3.webp',aoe:'erupt',sz:.65}]}]},
+  // Solenne (phoenix archer, chibi). LEGENDARY. Frames per form are [Sunflare Arrow, Feather Volley, Phoenix Rain].
+  phx:{zoom:.42,eyeY:95,f:[{src:'art/phx-1.webp',ax:217,ay:514,h:509,w:492,ih:512,ht:2,cx:200,fy:140},{src:'art/phx-2.webp',ax:189,ay:545,h:509,w:479,ih:543,ht:5,cx:200,fy:170},{src:'art/phx-3.webp',ax:237,ay:593,h:509,w:526,ih:591,ht:4,cx:240,fy:200}],pose:'skill',
+        c:[[{src:'art/phx-1c1.webp',ax:116,ay:292,h:294,w:375,ih:293,ht:2},{src:'art/phx-1c2.webp',ax:122,ay:299,h:294,w:397,ih:300,ht:2},{src:'art/phx-1c3.webp',ax:95,ay:298,h:294,w:402,ih:299,ht:18}],
+           [{src:'art/phx-2c1.webp',ax:134,ay:310,h:294,w:408,ih:311,ht:2},{src:'art/phx-2c2.webp',ax:129,ay:306,h:294,w:410,ih:307,ht:3},{src:'art/phx-2c3.webp',ax:104,ay:312,h:294,w:431,ih:313,ht:24}],
+           [{src:'art/phx-3c1.webp',ax:169,ay:358,h:294,w:482,ih:358,ht:3},{src:'art/phx-3c2.webp',ax:154,ay:341,h:294,w:490,ih:342,ht:3},{src:'art/phx-3c3.webp',ax:126,ay:346,h:294,w:488,ih:346,ht:16}]],
+        spell:[{vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow1.webp'},{shot:'art/fx-phx-feather1.webp',aoe:'fan'},{burst:'art/fx-phx-rain1.webp',aoe:'erupt',sz:.62,up:'art/fx-phx-feather1.webp',hand:[60,215]}]},
+               {vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow2.webp'},{shot:'art/fx-phx-feather2.webp',aoe:'fan'},{burst:'art/fx-phx-rain2.webp',aoe:'erupt',sz:.62,up:'art/fx-phx-feather2.webp',hand:[60,215]}]},
+               {vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow3.webp'},{shot:'art/fx-phx-feather3.webp',aoe:'fan'},{burst:'art/fx-phx-rain3.webp',aoe:'erupt',sz:.62,up:'art/fx-phx-feather3.webp',hand:[60,215]}]}]},
+  // Aster (astral sorcerer, chibi). LEGENDARY. Frames per form are [Astral Lance, Sigil-Bolt Volley, Rift Sweep].
+  star:{zoom:.46,eyeY:95,f:[{src:'art/star-1.webp',ax:203,ay:560,h:555,w:416,ih:560,ht:2,cx:215,fy:175},{src:'art/star-2.webp',ax:235,ay:633,h:555,w:453,ih:633,ht:1,cx:255,fy:250},{src:'art/star-3.webp',ax:264,ay:696,h:555,w:553,ih:696,ht:3,cx:320,fy:320}],pose:'skill',
+        c:[[{src:'art/star-1c1.webp',ax:139,ay:338,h:291,w:421,ih:339,ht:3},{src:'art/star-1c2.webp',ax:140,ay:332,h:275,w:422,ih:334,ht:1},{src:'art/star-1c3.webp',ax:119,ay:311,h:254,w:418,ih:314,ht:12}],
+           [{src:'art/star-2c1.webp',ax:145,ay:371,h:295,w:439,ih:373,ht:3},{src:'art/star-2c2.webp',ax:143,ay:348,h:280,w:438,ih:350,ht:2},{src:'art/star-2c3.webp',ax:185,ay:330,h:258,w:439,ih:333,ht:3}],
+           [{src:'art/star-3c1.webp',ax:137,ay:415,h:308,w:500,ih:417,ht:2},{src:'art/star-3c2.webp',ax:135,ay:387,h:289,w:489,ih:388,ht:2},{src:'art/star-3c3.webp',ax:190,ay:381,h:281,w:512,ih:387,ht:3}]],
+        spell:[{vp:['#ffffff','#ece4ff','#a98bff','#2a1f5a'],hand:[165,150],bySkill:[{shot:'art/fx-star-lance1.webp'},{shot:'art/fx-star-bolt1.webp',sz:.6},{burst:'art/fx-star-rift1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#ece4ff','#a98bff','#2a1f5a'],hand:[165,150],bySkill:[{shot:'art/fx-star-lance2.webp'},{shot:'art/fx-star-bolt2.webp',sz:.6},{burst:'art/fx-star-rift2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#ece4ff','#a98bff','#2a1f5a'],hand:[165,150],bySkill:[{shot:'art/fx-star-lance3.webp'},{shot:'art/fx-star-bolt3.webp',sz:.6},{burst:'art/fx-star-rift3.webp',aoe:'sweep'}]}]},
+  // Brontos (storm hammer knight, chibi). LEGENDARY. Frames per form are [Lightning Cleave, Chain-Bolt Volley, Tempest Drive]:
+  // the cleave and the drive are lunges in their own swing poses (the lightning arcs are part of the art).
+  thun:{zoom:.5,eyeY:85,f:[{src:'art/thun-1.webp',ax:203,ay:510,h:504,w:454,ih:511,ht:3,cx:235,fy:140},{src:'art/thun-2.webp',ax:246,ay:560,h:504,w:494,ih:561,ht:2,cx:278,fy:140},{src:'art/thun-3.webp',ax:260,ay:580,h:504,w:577,ih:581,ht:4,cx:300,fy:150}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],
+        c:[[{src:'art/thun-1c1.webp',ax:123,ay:309,h:275,w:451,ih:310,ht:3},{src:'art/thun-1c2.webp',ax:112,ay:280,h:275,w:435,ih:280,ht:2},{src:'art/thun-1c3.webp',ax:234,ay:336,h:275,w:455,ih:341,ht:20}],
+           [{src:'art/thun-2c1.webp',ax:144,ay:333,h:275,w:441,ih:355,ht:4},{src:'art/thun-2c2.webp',ax:111,ay:281,h:275,w:437,ih:281,ht:2},{src:'art/thun-2c3.webp',ax:179,ay:364,h:275,w:433,ih:366,ht:0}],
+           [{src:'art/thun-3c1.webp',ax:209,ay:385,h:275,w:511,ih:406,ht:4},{src:'art/thun-3c2.webp',ax:125,ay:315,h:275,w:513,ih:316,ht:4},{src:'art/thun-3c3.webp',ax:259,ay:396,h:275,w:520,ih:398,ht:0}]],
+        spell:[{vp:['#ffffff','#fff3b0','#ffd23a','#2a4fbf'],hand:[180,130],bySkill:[null,{shot:'art/fx-thun-bolt1.webp',sz:.6},null]},
+               {vp:['#ffffff','#fff3b0','#ffd23a','#2a4fbf'],hand:[180,130],bySkill:[null,{shot:'art/fx-thun-bolt2.webp',sz:.6},null]},
+               {vp:['#ffffff','#fff3b0','#ffd23a','#2a4fbf'],hand:[180,130],bySkill:[null,{shot:'art/fx-thun-bolt3.webp',sz:.6},null]}]},
+  // Thalos (manta knight, chibi). LEGENDARY. Frames per form are [Coral-Lance Thrust, Water-Blade Volley, Deep Current].
+  ray:{zoom:.36,eyeY:90,f:[{src:'art/ray-1.webp',ax:226,ay:485,h:479,w:473,ih:485,ht:3,cx:245,fy:150},{src:'art/ray-2.webp',ax:209,ay:513,h:479,w:475,ih:512,ht:3,cx:250,fy:150},{src:'art/ray-3.webp',ax:304,ay:551,h:479,w:601,ih:552,ht:3,cx:330,fy:175}],pose:'skill',
+        c:[[{src:'art/ray-1c1.webp',ax:108,ay:273,h:275,w:443,ih:272,ht:0},{src:'art/ray-1c2.webp',ax:122,ay:281,h:275,w:454,ih:279,ht:3},{src:'art/ray-1c3.webp',ax:237,ay:308,h:275,w:488,ih:313,ht:15}],
+           [{src:'art/ray-2c1.webp',ax:134,ay:285,h:275,w:455,ih:285,ht:3},{src:'art/ray-2c2.webp',ax:194,ay:315,h:275,w:439,ih:316,ht:3},{src:'art/ray-2c3.webp',ax:104,ay:337,h:275,w:453,ih:352,ht:7}],
+           [{src:'art/ray-3c1.webp',ax:171,ay:352,h:275,w:494,ih:352,ht:3},{src:'art/ray-3c2.webp',ax:244,ay:355,h:275,w:487,ih:355,ht:3},{src:'art/ray-3c3.webp',ax:207,ay:413,h:275,w:494,ih:418,ht:7}]],
+        spell:[{vp:['#ffffff','#d8f4ff','#5cc4f0','#1a4f8a'],hand:[190,110],support:'ring',bySkill:[{shot:'art/fx-ray-lance1.webp'},{shot:'art/fx-ray-blade1.webp',sz:.7},{burst:'art/fx-ray-wave1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#d8f4ff','#5cc4f0','#1a4f8a'],hand:[190,110],support:'ring',bySkill:[{shot:'art/fx-ray-lance2.webp'},{shot:'art/fx-ray-blade2.webp',sz:.7},{burst:'art/fx-ray-wave2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#d8f4ff','#5cc4f0','#1a4f8a'],hand:[190,110],support:'ring',bySkill:[{shot:'art/fx-ray-lance3.webp'},{shot:'art/fx-ray-blade3.webp',sz:.7},{burst:'art/fx-ray-wave3.webp',aoe:'sweep'}]}]},
+  // Wick (candle sprite, chibi). Frames per form are [Wax Glob, Ember Spit, Flame Flick].
+  wick:{zoom:.22,eyeY:135,f:[{src:'art/wick-1.webp',ax:191,ay:578,h:482,w:491,ih:583,ht:93,cx:265,fy:370},{src:'art/wick-2.webp',ax:189,ay:600,h:482,w:499,ih:604,ht:115,cx:268,fy:390},{src:'art/wick-3.webp',ax:187,ay:598,h:482,w:481,ih:602,ht:113,cx:268,fy:390}],pose:'skill',
+        c:[[{src:'art/wick-1c1.webp',ax:122,ay:406,h:347,w:416,ih:409,ht:69},{src:'art/wick-1c2.webp',ax:122,ay:422,h:347,w:353,ih:423,ht:72},{src:'art/wick-1c3.webp',ax:122,ay:413,h:347,w:404,ih:416,ht:70}],
+           [{src:'art/wick-2c1.webp',ax:128,ay:406,h:347,w:427,ih:409,ht:69},{src:'art/wick-2c2.webp',ax:129,ay:424,h:347,w:376,ih:425,ht:73},{src:'art/wick-2c3.webp',ax:129,ay:414,h:347,w:426,ih:417,ht:71}],
+           [{src:'art/wick-3c1.webp',ax:130,ay:398,h:347,w:467,ih:400,ht:59},{src:'art/wick-3c2.webp',ax:129,ay:407,h:347,w:390,ih:408,ht:56},{src:'art/wick-3c3.webp',ax:130,ay:416,h:347,w:428,ih:418,ht:72}]],
+        spell:[{vp:['#ffffff','#fff0c8','#ffa040','#c84a18'],hand:[115,153],bySkill:[{shot:'art/fx-wick-wax1.webp',sz:.55},{shot:'art/fx-wick-ember1.webp',sz:.45,hand:[100,125]},{shot:'art/fx-wick-flick1.webp',aoe:'fan',sz:.8}]},
+               {vp:['#ffffff','#fff0c8','#ffa040','#c84a18'],hand:[115,153],bySkill:[{shot:'art/fx-wick-wax2.webp',sz:.55},{shot:'art/fx-wick-ember2.webp',sz:.45,hand:[100,125]},{shot:'art/fx-wick-flick2.webp',aoe:'fan',sz:.8}]},
+               {vp:['#ffffff','#fff0c8','#ffa040','#c84a18'],hand:[115,153],bySkill:[{shot:'art/fx-wick-wax3.webp',sz:.55},{shot:'art/fx-wick-ember3.webp',sz:.45,hand:[100,125]},{shot:'art/fx-wick-flick3.webp',aoe:'fan',sz:.8}]}]},
+  // Digby (mole digger, chibi). Frames per form are [Shovel Jab, Dirt-Clod Toss, Burrow Burst]:
+  // the jab and the burrow are lunges (each in its own pose); the burrow erupts dirt under the target.
+  mole:{zoom:.3,eyeY:110,release:[false,true,false],f:[{src:'art/mole-1.webp',ax:199,ay:471,h:466,w:483,ih:473,ht:2,cx:285,fy:190},{src:'art/mole-2.webp',ax:203,ay:479,h:466,w:488,ih:481,ht:2,cx:290,fy:190},{src:'art/mole-3.webp',ax:201,ay:477,h:466,w:481,ih:479,ht:2,cx:285,fy:190}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'dirt',
+        impactSk:[null,null,true],
+        c:[[{src:'art/mole-1c1.webp',ax:136,ay:330,h:327,w:365,ih:332,ht:2},{src:'art/mole-1c2.webp',ax:137,ay:333,h:327,w:392,ih:334,ht:3},{src:'art/mole-1c3.webp',ax:173,ay:223,h:327,w:366,ih:226,ht:3}],
+           [{src:'art/mole-2c1.webp',ax:138,ay:334,h:327,w:373,ih:336,ht:2},{src:'art/mole-2c2.webp',ax:141,ay:335,h:327,w:400,ih:336,ht:3},{src:'art/mole-2c3.webp',ax:195,ay:224,h:327,w:387,ih:227,ht:3}],
+           [{src:'art/mole-3c1.webp',ax:142,ay:339,h:327,w:384,ih:340,ht:1},{src:'art/mole-3c2.webp',ax:147,ay:338,h:327,w:418,ih:339,ht:2},{src:'art/mole-3c3.webp',ax:200,ay:236,h:327,w:399,ih:239,ht:3}]],
+        spell:[{vp:['#fff1d6','#e0b07a','#9a6a3a','#4a2e18'],hand:[170,150],bySkill:[null,{shot:'art/fx-mole-clod1.webp',sz:.7,hand:[-60,150],arc:-110},null]},
+               {vp:['#fff1d6','#e0b07a','#9a6a3a','#4a2e18'],hand:[170,150],bySkill:[null,{shot:'art/fx-mole-clod2.webp',sz:.7,hand:[-60,150],arc:-110},null]},
+               {vp:['#fff1d6','#e0b07a','#9a6a3a','#4a2e18'],hand:[170,150],bySkill:[null,{shot:'art/fx-mole-clod3.webp',sz:.7,hand:[-60,150],arc:-110},null]}]},
+  // Pip (mushroom scout, chibi). Frames per form are [Pebble Flick, Spore Puff, Spore Burst].
+  shroom:{zoom:.26,eyeY:125,f:[{src:'art/shroom-1.webp',ax:215,ay:530,h:525,w:477,ih:531,ht:2,cx:270,fy:280},{src:'art/shroom-2.webp',ax:213,ay:533,h:525,w:471,ih:534,ht:2,cx:270,fy:280},{src:'art/shroom-3.webp',ax:236,ay:538,h:525,w:498,ih:539,ht:2,cx:290,fy:285}],pose:'skill',
+        c:[[{src:'art/shroom-1c1.webp',ax:133,ay:359,h:345,w:389,ih:360,ht:2},{src:'art/shroom-1c2.webp',ax:132,ay:351,h:345,w:386,ih:351,ht:3},{src:'art/shroom-1c3.webp',ax:111,ay:327,h:345,w:390,ih:327,ht:2}],
+           [{src:'art/shroom-2c1.webp',ax:137,ay:360,h:345,w:332,ih:361,ht:1},{src:'art/shroom-2c2.webp',ax:132,ay:354,h:345,w:384,ih:354,ht:3},{src:'art/shroom-2c3.webp',ax:115,ay:338,h:345,w:380,ih:336,ht:1}],
+           [{src:'art/shroom-3c1.webp',ax:151,ay:367,h:345,w:458,ih:367,ht:2},{src:'art/shroom-3c2.webp',ax:149,ay:356,h:345,w:434,ih:355,ht:1},{src:'art/shroom-3c3.webp',ax:131,ay:343,h:345,w:456,ih:342,ht:2}]],
+        spell:[{vp:['#ffffff','#f6ead2','#d9b98a','#8a5a30'],hand:[170,120],bySkill:[{shot:'art/fx-shroom-pebble1.webp',sz:.3},{shot:'art/fx-shroom-puff1.webp',sz:.75},{burst:'art/fx-shroom-burst1.webp',aoe:'erupt'}]},
+               {vp:['#ffffff','#f6ead2','#d9b98a','#8a5a30'],hand:[170,120],bySkill:[{shot:'art/fx-shroom-pebble2.webp',sz:.3},{shot:'art/fx-shroom-puff2.webp',sz:.75},{burst:'art/fx-shroom-burst2.webp',aoe:'erupt'}]},
+               {vp:['#ffffff','#f6ead2','#d9b98a','#8a5a30'],hand:[170,120],bySkill:[{shot:'art/fx-shroom-pebble3.webp',sz:.3},{shot:'art/fx-shroom-puff3.webp',sz:.75},{burst:'art/fx-shroom-burst3.webp',aoe:'erupt'}]}]},
+  // Milo (spear farmhand, chibi). Frames per form are [Spear Thrust, Winding Sweep, Skycharge]:
+  // thrust and skycharge are lunges (each in its own pose), the sweep swings across the enemy line.
+  lance:{zoom:.55,eyeY:95,f:[{src:'art/lance-1.webp',ax:206,ay:587,h:583,w:486,ih:588,ht:1,cx:240,fy:140},{src:'art/lance-2.webp',ax:211,ay:587,h:583,w:488,ih:588,ht:1,cx:245,fy:140},{src:'art/lance-3.webp',ax:211,ay:587,h:583,w:520,ih:588,ht:1,cx:245,fy:140}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'spear',
+        c:[[{src:'art/lance-1c1.webp',ax:123,ay:338,h:337,w:408,ih:338,ht:2},{src:'art/lance-1c2.webp',ax:149,ay:342,h:337,w:412,ih:342,ht:2},{src:'art/lance-1c3.webp',ax:185,ay:333,h:337,w:425,ih:339,ht:2}],
+           [{src:'art/lance-2c1.webp',ax:134,ay:342,h:337,w:421,ih:342,ht:1},{src:'art/lance-2c2.webp',ax:156,ay:343,h:337,w:425,ih:343,ht:1},{src:'art/lance-2c3.webp',ax:185,ay:334,h:337,w:438,ih:340,ht:2}],
+           [{src:'art/lance-3c1.webp',ax:136,ay:342,h:337,w:455,ih:342,ht:1},{src:'art/lance-3c2.webp',ax:159,ay:343,h:337,w:438,ih:343,ht:3},{src:'art/lance-3c3.webp',ax:185,ay:337,h:337,w:448,ih:343,ht:2}]],
+        spell:[{vp:['#ffffff','#eef2e6','#b8c4a8','#4a5a3a'],hand:[150,140],bySkill:[null,{burst:'art/fx-lance-sweep1.webp',aoe:'sweep'},null]},
+               {vp:['#ffffff','#eef2e6','#b8c4a8','#4a5a3a'],hand:[150,140],bySkill:[null,{burst:'art/fx-lance-sweep2.webp',aoe:'sweep'},null]},
+               {vp:['#ffffff','#eef2e6','#b8c4a8','#4a5a3a'],hand:[150,140],bySkill:[null,{burst:'art/fx-lance-sweep3.webp',aoe:'sweep'},null]}]},
+  // Wren (ranger, chibi). Frames per form are [Charged Arrow, Triple-Shot, Arrow Rain].
+  bow:{zoom:.55,eyeY:95,f:[{src:'art/bow-1.webp',ax:222,ay:551,h:545,w:471,ih:550,ht:3,cx:215,fy:140},{src:'art/bow-2.webp',ax:218,ay:559,h:545,w:496,ih:560,ht:4,cx:215,fy:140},{src:'art/bow-3.webp',ax:271,ay:582,h:545,w:598,ih:583,ht:3,cx:300,fy:150}],pose:'skill',
+        c:[[{src:'art/bow-1c1.webp',ax:156,ay:370,h:354,w:470,ih:370,ht:2},{src:'art/bow-1c2.webp',ax:156,ay:360,h:354,w:470,ih:359,ht:3},{src:'art/bow-1c3.webp',ax:214,ay:369,h:354,w:453,ih:374,ht:3}],
+           [{src:'art/bow-2c1.webp',ax:152,ay:380,h:354,w:466,ih:380,ht:2},{src:'art/bow-2c2.webp',ax:150,ay:368,h:354,w:450,ih:367,ht:2},{src:'art/bow-2c3.webp',ax:214,ay:370,h:354,w:435,ih:376,ht:3}],
+           [{src:'art/bow-3c1.webp',ax:182,ay:388,h:354,w:514,ih:388,ht:3},{src:'art/bow-3c2.webp',ax:206,ay:376,h:354,w:543,ih:376,ht:2},{src:'art/bow-3c3.webp',ax:254,ay:395,h:354,w:514,ih:408,ht:12}]],
+        spell:[{vp:['#ffffff','#fff1c8','#f0b050','#3f6a4a'],hand:[190,175],bySkill:[{shot:'art/fx-bow-arrow1.webp'},{shot:'art/fx-bow-arrow1.webp',aoe:'fan'},{burst:'art/fx-bow-rain1.webp',aoe:'erupt'}]},
+               {vp:['#ffffff','#fff1c8','#f0b050','#3f6a4a'],hand:[190,175],bySkill:[{shot:'art/fx-bow-arrow2.webp'},{shot:'art/fx-bow-arrow2.webp',aoe:'fan'},{burst:'art/fx-bow-rain2.webp',aoe:'erupt'}]},
+               {vp:['#ffffff','#fff1c8','#f0b050','#3f6a4a'],hand:[190,175],bySkill:[{shot:'art/fx-bow-arrow3.webp'},{shot:'art/fx-bow-arrow3.webp',aoe:'fan'},{burst:'art/fx-bow-rain3.webp',aoe:'erupt'}]}]},
+  // Rio (drummer duelist, chibi). Frames per form are [Rapid Lunge, Sonic Note Volley, Rhythm Burst].
+  drum:{zoom:.62,eyeY:92,f:[{src:'art/drum-1.webp',ax:211,ay:551,h:545,w:486,ih:552,ht:3,cx:225,fy:110},{src:'art/drum-2.webp',ax:211,ay:552,h:545,w:576,ih:553,ht:2,cx:225,fy:110},{src:'art/drum-3.webp',ax:331,ay:552,h:545,w:680,ih:553,ht:2,cx:345,fy:110}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'note',
+        c:[[{src:'art/drum-1c1.webp',ax:134,ay:378,h:377,w:397,ih:382,ht:1},{src:'art/drum-1c2.webp',ax:134,ay:382,h:377,w:375,ih:386,ht:2},{src:'art/drum-1c3.webp',ax:134,ay:388,h:377,w:385,ih:392,ht:18}],
+           [{src:'art/drum-2c1.webp',ax:144,ay:384,h:377,w:449,ih:387,ht:3},{src:'art/drum-2c2.webp',ax:147,ay:385,h:377,w:433,ih:389,ht:2},{src:'art/drum-2c3.webp',ax:148,ay:417,h:377,w:449,ih:422,ht:47}],
+           [{src:'art/drum-3c1.webp',ax:170,ay:382,h:377,w:473,ih:387,ht:2},{src:'art/drum-3c2.webp',ax:163,ay:401,h:377,w:473,ih:405,ht:3},{src:'art/drum-3c3.webp',ax:165,ay:440,h:377,w:473,ih:454,ht:3}]],
+        spell:[{vp:['#ffffff','#ffe2e6','#ff8fa3','#8e1c3a'],hand:[150,150],bySkill:[null,{shot:'art/fx-drum-note1.webp'},{burst:'art/fx-drum-wave1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#ffe2e6','#ff8fa3','#8e1c3a'],hand:[150,150],bySkill:[null,{shot:'art/fx-drum-note2.webp'},{burst:'art/fx-drum-wave2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#ffe2e6','#ff8fa3','#8e1c3a'],hand:[150,150],bySkill:[null,{shot:'art/fx-drum-note3.webp'},{burst:'art/fx-drum-wave3.webp',aoe:'sweep'}]}]},
+  // Arlo (frost knight, chibi). Frames per form are [Frost Cleave, Ice-Lance Burst, Rune Ward].
+  ice:{zoom:.55,eyeY:95,f:[{src:'art/ice-1.webp',ax:192,ay:572,h:569,w:484,ih:573,ht:0,cx:205,fy:135},{src:'art/ice-2.webp',ax:196,ay:572,h:569,w:511,ih:573,ht:1,cx:215,fy:135},{src:'art/ice-3.webp',ax:260,ay:573,h:569,w:635,ih:573,ht:1,cx:285,fy:135}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'ice',
+        c:[[{src:'art/ice-1c1.webp',ax:99,ay:355,h:308,w:397,ih:355,ht:29},{src:'art/ice-1c2.webp',ax:141,ay:314,h:308,w:464,ih:315,ht:3},{src:'art/ice-1c3.webp',ax:31,ay:421,h:308,w:382,ih:425,ht:3}],
+           [{src:'art/ice-2c1.webp',ax:111,ay:365,h:308,w:446,ih:367,ht:39},{src:'art/ice-2c2.webp',ax:154,ay:314,h:308,w:513,ih:314,ht:3},{src:'art/ice-2c3.webp',ax:44,ay:440,h:308,w:408,ih:444,ht:4}],
+           [{src:'art/ice-3c1.webp',ax:125,ay:399,h:308,w:483,ih:400,ht:72},{src:'art/ice-3c2.webp',ax:164,ay:368,h:308,w:552,ih:369,ht:56},{src:'art/ice-3c3.webp',ax:142,ay:449,h:308,w:489,ih:471,ht:7}]],
+        spell:[{vp:['#ffffff','#e2f2ff','#7cc4ff','#1f4f9a'],hand:[150,140],support:'ring',bySkill:[null,{shot:'art/fx-ice-lance1.webp'},null]},
+               {vp:['#ffffff','#e2f2ff','#7cc4ff','#1f4f9a'],hand:[150,140],support:'ring',bySkill:[null,{shot:'art/fx-ice-lance2.webp'},null]},
+               {vp:['#ffffff','#e2f2ff','#7cc4ff','#1f4f9a'],hand:[150,140],support:'ring',bySkill:[null,{shot:'art/fx-ice-lance2.webp'},null]}]},
+  // Chime (porcelain bell-keeper, chibi). Frames per form are [Soundwave, Ringing Shards, Resonance Burst].
+  bell:{zoom:.45,eyeY:100,f:[{src:'art/bell-1.webp',ax:213,ay:542,h:538,w:448,ih:542,ht:1,cx:190,fy:190},{src:'art/bell-2.webp',ax:218,ay:542,h:538,w:487,ih:542,ht:1,cx:195,fy:190},{src:'art/bell-3.webp',ax:292,ay:606,h:538,w:629,ih:607,ht:2,cx:270,fy:250}],pose:'skill',
+        c:[[{src:'art/bell-1c1.webp',ax:98,ay:303,h:279,w:346,ih:304,ht:1},{src:'art/bell-1c2.webp',ax:93,ay:283,h:279,w:322,ih:284,ht:1},{src:'art/bell-1c3.webp',ax:148,ay:285,h:279,w:425,ih:310,ht:31}],
+           [{src:'art/bell-2c1.webp',ax:118,ay:341,h:279,w:418,ih:342,ht:29},{src:'art/bell-2c2.webp',ax:117,ay:290,h:279,w:416,ih:290,ht:3},{src:'art/bell-2c3.webp',ax:93,ay:354,h:279,w:400,ih:356,ht:33}],
+           [{src:'art/bell-3c1.webp',ax:150,ay:401,h:279,w:498,ih:402,ht:27},{src:'art/bell-3c2.webp',ax:128,ay:326,h:279,w:494,ih:326,ht:3},{src:'art/bell-3c3.webp',ax:116,ay:419,h:279,w:501,ih:422,ht:9}]],
+        spell:[{vp:['#ffffff','#e0fcff','#7fe3ef','#1f6f78'],hand:[150,175],support:'ring',bySkill:[{shot:'art/fx-bell-wave1.webp'},{shot:'art/fx-bell-shard1.webp'},{burst:'art/fx-bell-wave1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#e0fcff','#7fe3ef','#1f6f78'],hand:[150,175],support:'ring',bySkill:[{shot:'art/fx-bell-wave2.webp'},{shot:'art/fx-bell-shard2.webp'},{burst:'art/fx-bell-wave2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#e0fcff','#7fe3ef','#1f6f78'],hand:[150,175],support:'ring',bySkill:[{shot:'art/fx-bell-wave3.webp'},{shot:'art/fx-bell-shard3.webp'},{burst:'art/fx-bell-wave3.webp',aoe:'sweep'}]}]},
+  // Tink (clockwork beetle, chibi). Frames per form are [Gear-Shot, Ricochet Volley, Cogblast].
+  bug:{zoom:.4,eyeY:95,f:[{src:'art/bug-1.webp',ax:208,ay:550,h:545,w:472,ih:551,ht:2,cx:290,fy:195},{src:'art/bug-2.webp',ax:203,ay:553,h:545,w:479,ih:552,ht:3,cx:290,fy:195},{src:'art/bug-3.webp',ax:224,ay:601,h:545,w:548,ih:600,ht:2,cx:320,fy:245}],pose:'skill',
+        c:[[{src:'art/bug-1c1.webp',ax:101,ay:336,h:304,w:397,ih:337,ht:2},{src:'art/bug-1c2.webp',ax:104,ay:309,h:304,w:411,ih:309,ht:2},{src:'art/bug-1c3.webp',ax:103,ay:300,h:304,w:435,ih:302,ht:3}],
+           [{src:'art/bug-2c1.webp',ax:108,ay:338,h:304,w:429,ih:338,ht:3},{src:'art/bug-2c2.webp',ax:112,ay:315,h:304,w:444,ih:316,ht:3},{src:'art/bug-2c3.webp',ax:101,ay:300,h:304,w:460,ih:301,ht:1}],
+           [{src:'art/bug-3c1.webp',ax:123,ay:374,h:304,w:484,ih:375,ht:3},{src:'art/bug-3c2.webp',ax:168,ay:343,h:304,w:545,ih:343,ht:7},{src:'art/bug-3c3.webp',ax:116,ay:364,h:304,w:541,ih:422,ht:47}]],
+        spell:[{vp:['#ffffff','#d6fff2','#5fe0c0','#8a4a1e'],hand:[170,150],bySkill:[{shot:'art/fx-bug-gear1.webp'},{shot:'art/fx-bug-gear1.webp'},{burst:'art/fx-bug-blast1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#d6fff2','#5fe0c0','#8a4a1e'],hand:[170,150],bySkill:[{shot:'art/fx-bug-gear2.webp'},{shot:'art/fx-bug-gear2.webp'},{burst:'art/fx-bug-blast2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#d6fff2','#5fe0c0','#8a4a1e'],hand:[170,150],bySkill:[{shot:'art/fx-bug-gear3.webp'},{shot:'art/fx-bug-gear3.webp'},{burst:'art/fx-bug-blast3.webp',aoe:'sweep'}]}]},
+  // Fern (grove sprite, chibi). Frames per form are [Root Snare, Seedburst, Rejuvenation Bloom].
+  tree:{zoom:.5,eyeY:100,f:[{src:'art/tree-1.webp',ax:220,ay:564,h:559,w:509,ih:564,ht:2,cx:215,fy:120},{src:'art/tree-2.webp',ax:205,ay:565,h:559,w:491,ih:565,ht:3,cx:210,fy:120},{src:'art/tree-3.webp',ax:230,ay:613,h:559,w:603,ih:613,ht:2,cx:250,fy:165}],pose:'skill',
+        c:[[{src:'art/tree-1c1.webp',ax:129,ay:322,h:305,w:472,ih:323,ht:3},{src:'art/tree-1c2.webp',ax:135,ay:314,h:305,w:471,ih:314,ht:6},{src:'art/tree-1c3.webp',ax:140,ay:397,h:305,w:433,ih:439,ht:10}],
+           [{src:'art/tree-2c1.webp',ax:143,ay:330,h:305,w:472,ih:331,ht:2},{src:'art/tree-2c2.webp',ax:120,ay:349,h:305,w:439,ih:349,ht:21},{src:'art/tree-2c3.webp',ax:155,ay:405,h:305,w:424,ih:438,ht:2}],
+           [{src:'art/tree-3c1.webp',ax:124,ay:356,h:305,w:504,ih:360,ht:1},{src:'art/tree-3c2.webp',ax:124,ay:366,h:305,w:503,ih:374,ht:10},{src:'art/tree-3c3.webp',ax:170,ay:405,h:305,w:463,ih:448,ht:1}]],
+        spell:[{vp:['#ffffff','#f4ffd0','#a8dc5a','#3d6e1e'],hand:[150,140],support:'ring',bySkill:[{shot:'art/fx-tree-root1.webp'},{shot:'art/fx-tree-seed1.webp',aoe:'fan'},null]},
+               {vp:['#ffffff','#f4ffd0','#a8dc5a','#3d6e1e'],hand:[150,140],support:'ring',bySkill:[{shot:'art/fx-tree-root2.webp'},{shot:'art/fx-tree-seed2.webp',aoe:'fan'},null]},
+               {vp:['#ffffff','#f4ffd0','#a8dc5a','#3d6e1e'],hand:[150,140],support:'ring',bySkill:[{shot:'art/fx-tree-root3.webp'},{shot:'art/fx-tree-seed3.webp',aoe:'fan'},null]}]},
+  // Nyx (moth, chibi). Frames per form are [Dusk Dash, Wingblade Volley, Nightfall Burst]:
+  // a dashing dagger strike, a volley of painted wing-blades, and a crescent of night that sweeps the line.
+  moth:{zoom:.5,eyeY:100,f:[{src:'art/moth-1.webp',ax:244,ay:522,h:517,w:500,ih:522,ht:2,cx:320,fy:99},{src:'art/moth-2.webp',ax:235,ay:522,h:517,w:480,ih:522,ht:2,cx:310,fy:99},{src:'art/moth-3.webp',ax:319,ay:560,h:517,w:596,ih:561,ht:2,cx:360,fy:132}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'night',
+        c:[[{src:'art/moth-1c1.webp',ax:134,ay:318,h:311,w:400,ih:318,ht:3},{src:'art/moth-1c2.webp',ax:117,ay:317,h:311,w:407,ih:318,ht:3},{src:'art/moth-1c3.webp',ax:110,ay:352,h:311,w:450,ih:384,ht:24}],
+           [{src:'art/moth-2c1.webp',ax:146,ay:312,h:311,w:421,ih:313,ht:3},{src:'art/moth-2c2.webp',ax:130,ay:318,h:311,w:423,ih:318,ht:3},{src:'art/moth-2c3.webp',ax:115,ay:350,h:311,w:413,ih:399,ht:17}],
+           [{src:'art/moth-3c1.webp',ax:188,ay:377,h:311,w:515,ih:379,ht:3},{src:'art/moth-3c2.webp',ax:182,ay:333,h:311,w:558,ih:334,ht:1},{src:'art/moth-3c3.webp',ax:165,ay:402,h:311,w:552,ih:457,ht:8}]],
+        spell:[{vp:['#ffffff','#e6dcff','#a98bff','#3b2385'],hand:[150,125],bySkill:[null,{shot:'art/fx-moth-blade1.webp'},{burst:'art/fx-moth-moon1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#e6dcff','#a98bff','#3b2385'],hand:[150,125],bySkill:[null,{shot:'art/fx-moth-blade2.webp'},{burst:'art/fx-moth-moon2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#e6dcff','#a98bff','#3b2385'],hand:[150,125],bySkill:[null,{shot:'art/fx-moth-blade3.webp'},{burst:'art/fx-moth-moon3.webp',aoe:'sweep'}]}]},
+  // Crag (ram, chibi). Frames per form are [Seismic Strike, Crystal Burst, Earthen Bulwark]:
+  // the strike is a hammer lunge that bursts rock spikes under the target, the burst throws painted crystals.
+  ram:{zoom:.42,eyeY:112,f:[{src:'art/ram-1.webp',ax:347,ay:858,h:853,w:920,ih:857,ht:2,cx:500,fy:258,sc:2.8721},{src:'art/ram-2.webp',ax:130,ay:297,h:297,w:262,ih:304,ht:2,cx:175,fy:97},{src:'art/ram-3.webp',ax:145,ay:307,h:297,w:338,ih:317,ht:2,cx:200,fy:118}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,
+        impact:['art/fx-ram-rock1.webp','art/fx-ram-rock2.webp','art/fx-ram-rock3.webp'],
+        c:[[{src:'art/ram-1c1.webp',ax:110,ay:300,h:297,w:405,ih:321,ht:2},{src:'art/ram-1c2.webp',ax:105,ay:297,h:297,w:425,ih:303,ht:2},{src:'art/ram-1c3.webp',ax:115,ay:377,h:297,w:388,ih:388,ht:2}],
+           [{src:'art/ram-2c1.webp',ax:125,ay:318,h:297,w:436,ih:334,ht:3},{src:'art/ram-2c2.webp',ax:130,ay:297,h:297,w:427,ih:304,ht:2},{src:'art/ram-2c3.webp',ax:120,ay:392,h:297,w:408,ih:412,ht:1}],
+           [{src:'art/ram-3c1.webp',ax:155,ay:392,h:297,w:516,ih:433,ht:67},{src:'art/ram-3c2.webp',ax:145,ay:307,h:297,w:520,ih:317,ht:2},{src:'art/ram-3c3.webp',ax:155,ay:430,h:297,w:501,ih:447,ht:1}]],
+        spell:[{vp:['#fff6e0','#f3d9a8','#d98a4a','#5a3a22'],hand:[150,120],support:'ring',bySkill:[null,{shot:'art/fx-ram-shard1.webp'},null]},
+               {vp:['#fff6e0','#f3d9a8','#d98a4a','#5a3a22'],hand:[150,120],support:'ring',bySkill:[null,{shot:'art/fx-ram-shard2.webp'},null]},
+               {vp:['#fff6e0','#f3d9a8','#d98a4a','#5a3a22'],hand:[150,120],support:'ring',bySkill:[null,{shot:'art/fx-ram-shard3.webp'},null]}]},
+  // Kai (sea turtle, chibi). Frames per form are [Tidal Thrust, Shellspin Wave, Guardian Current]:
+  // the thrust fires the painted water spear, the wave rolls across the enemy line, the current rings his allies.
+  turtle:{zoom:.5,eyeY:100,f:[{src:'art/turtle-1.webp',ax:223,ay:430,h:425,w:485,ih:431,ht:2,cx:270,fy:100},{src:'art/turtle-2.webp',ax:228,ay:430,h:425,w:474,ih:431,ht:3,cx:270,fy:95},{src:'art/turtle-3.webp',ax:264,ay:568,h:425,w:616,ih:567,ht:2,cx:345,fy:205}],pose:'skill',
+        c:[[{src:'art/turtle-1c1.webp',ax:117,ay:266,h:262,w:435,ih:267,ht:1},{src:'art/turtle-1c2.webp',ax:107,ay:318,h:262,w:366,ih:318,ht:56},{src:'art/turtle-1c3.webp',ax:156,ay:370,h:262,w:360,ih:398,ht:54}],
+           [{src:'art/turtle-2c1.webp',ax:138,ay:267,h:262,w:430,ih:268,ht:2},{src:'art/turtle-2c2.webp',ax:118,ay:317,h:262,w:406,ih:322,ht:53},{src:'art/turtle-2c3.webp',ax:163,ay:372,h:262,w:390,ih:407,ht:62}],
+           [{src:'art/turtle-3c1.webp',ax:169,ay:330,h:262,w:543,ih:330,ht:8},{src:'art/turtle-3c2.webp',ax:171,ay:361,h:262,w:533,ih:380,ht:38},{src:'art/turtle-3c3.webp',ax:206,ay:405,h:262,w:506,ih:487,ht:88}]],
+        spell:[{vp:['#ffffff','#dffaff','#6fe0f5','#1a7fa8'],hand:[160,152],support:'ring',bySkill:[{shot:'art/fx-tt-spear1.webp',burst:'art/fx-tt-wave1.webp'},{burst:'art/fx-tt-wave1.webp',aoe:'sweep'},null]},
+               {vp:['#ffffff','#dffaff','#6fe0f5','#1a7fa8'],hand:[160,152],support:'ring',bySkill:[{shot:'art/fx-tt-spear2.webp',burst:'art/fx-tt-wave2.webp'},{burst:'art/fx-tt-wave2.webp',aoe:'sweep'},null]},
+               {vp:['#ffffff','#dffaff','#6fe0f5','#1a7fa8'],hand:[160,152],support:'ring',bySkill:[{shot:'art/fx-tt-spear3.webp',burst:'art/fx-tt-wave3.webp'},{burst:'art/fx-tt-wave3.webp',aoe:'sweep'},null]}]},
+  // Ren (fire fox, chibi). Frames per form are [Ember Slash, Foxfire Bolt, Flame Ward];
+  // the slash is a lunge, the bolt throws the painted fireball, the ward rings every ally in fire.
+  fox:{zoom:.48,eyeY:100,f:[{src:'art/fox-1.webp',ax:253,ay:554,h:549,w:486,ih:555,ht:2,cx:305,fy:205},{src:'art/fox-2.webp',ax:243,ay:554,h:549,w:488,ih:554,ht:2,cx:295,fy:205},{src:'art/fox-3.webp',ax:231,ay:554,h:549,w:493,ih:555,ht:2,cx:283,fy:205}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'fire',
+        c:[[{src:'art/fox-1c1.webp',ax:173,ay:382,h:377,w:418,ih:383,ht:2},{src:'art/fox-1c2.webp',ax:180,ay:393,h:388,w:407,ih:393,ht:2},{src:'art/fox-1c3.webp',ax:172,ay:397,h:373,w:370,ih:397,ht:21}],
+           [{src:'art/fox-2c1.webp',ax:180,ay:386,h:382,w:434,ih:385,ht:1},{src:'art/fox-2c2.webp',ax:186,ay:394,h:389,w:445,ih:395,ht:2},{src:'art/fox-2c3.webp',ax:195,ay:425,h:374,w:464,ih:444,ht:48}],
+           [{src:'art/fox-3c1.webp',ax:192,ay:392,h:386,w:488,ih:392,ht:3},{src:'art/fox-3c2.webp',ax:189,ay:396,h:390,w:510,ih:396,ht:3},{src:'art/fox-3c3.webp',ax:219,ay:449,h:376,w:492,ih:491,ht:70}]],
+        spell:[{vp:['#ffffff','#fff0b8','#ffb347','#e0461c'],hand:[118,92],support:'flameward',bySkill:[null,{shot:'art/fx-fox-ball1.webp',burst:'art/fx-fox-ball1.webp'},null]},
+               {vp:['#ffffff','#fff0b8','#ffb347','#e0461c'],hand:[118,92],support:'flameward',bySkill:[null,{shot:'art/fx-fox-ball2.webp',burst:'art/fx-fox-ball2.webp'},null]},
+               {vp:['#ffffff','#fff0b8','#ffb347','#e0461c'],hand:[118,92],support:'flameward',bySkill:[null,{shot:'art/fx-fox-ball3.webp',burst:'art/fx-fox-ball3.webp'},null]}]},
 };
 (function(){
-  const preload=()=>{for(const id in RL_ART)RL_ART[id].f.forEach(f=>{const i=new Image();i.src=f.src})};preload();
+  const preload=()=>{if(typeof RL_CUT!=='undefined')for(const id in RL_CUT)for(const st in RL_CUT[id])for(const k in RL_CUT[id][st]){const c=RL_CUT[id][st][k];if(c.b){const i=new Image();i.src=c.b;(window.__rlPre=window.__rlPre||[]).push(i)}}for(const id in RL_ART)[...RL_ART[id].f,...(RL_ART[id].fv||[])].forEach(f=>{const i=new Image();i.decoding='async';i.src=f.src;(window.__rlPre=window.__rlPre||[]).push(i)})};preload();
   const lvOf=(id,o)=>o.lv!=null?o.lv:(o.stage!=null?[1,CR_EVO[0],CR_EVO[1]][o.stage]:crLv(id));
   const oldPort=rlHeroSVG,oldBody=rlHeroBody;
   // card portrait: element backdrop, figure shown head to knees
@@ -101,7 +259,7 @@ const RL_ART={
     const o=opt||{},h=RL_H[id],E=RL_EL[h.el],lv=lvOf(id,o),s=crStage(lv),F=A.f[s],u='ra'+id+s;
     // zoom to head-to-knees, but never wider than the card, and centre the whole picture
     // (body plus any floating effects) so nothing gets cut off at the sides
-    const R=A.f[1]||F,L=Math.max(40,(R.ay-(R.fy!=null?R.fy:R.ht||0))/(R.sc||1)),kk=320/L/(F.sc||1),W=F.w*kk,H=F.ih*kk,x=100-(F.cx!=null?F.cx:F.ax)*kk,y=58-(F.fy!=null?F.fy:(F.ht||0)+40)*kk; // one zoom per hero; every form's eyes sit on the same line
+    const kk=Math.min(186/F.ih,188/F.w),W=F.w*kk,H=F.ih*kk,x=100-W/2,y=208-H; // whole figure, same fit rule for every creature: feet on the card's floor, centred // one zoom per hero; every form's eyes sit on the same line
     const motes=o.motes===false?'':[[.1,.2,2.6,0],[.16,.7,2,1.2],[.86,.16,2.2,.6],[.08,.48,1.6,2],[.9,.66,1.8,1.6]].map(m=>`<circle class="rl-mote" cx="${m[0]*200}" cy="${m[1]*220}" r="${m[2]*1.3}" fill="${E.l}" style="animation-delay:-${m[3]}s"/>`).join('');
     return`<svg class="rl-port cr-port rl-art" viewBox="0 0 200 220" role="img" aria-label="${esc(crName(id,lv))}"><defs><radialGradient id="${u}bg" cx=".55" cy=".42" r=".8"><stop offset="0" stop-color="${E.l}" stop-opacity=".6"/><stop offset=".45" stop-color="${E.c}" stop-opacity=".55"/><stop offset="1" stop-color="${E.d}"/></radialGradient></defs><rect class="crbg" width="200" height="220" fill="#0f0d14"/><rect class="crbg" width="200" height="220" fill="url(#${u}bg)"/><g class="crbg" opacity=".2" stroke="${E.l}" fill="none"><circle cx="104" cy="110" r="84" stroke-width="1.2"/></g>${motes}<image href="${F.src}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${W.toFixed(1)}" height="${H.toFixed(1)}" preserveAspectRatio="none"/></svg>`};
   // battle sprite: a canvas the motion loop below draws into
@@ -120,7 +278,7 @@ const RL_ART={
 const ART_IMG={};
 function artImg(src){let i=ART_IMG[src];if(!i){i=ART_IMG[src]=new Image();i.src=src}return i.complete&&i.naturalWidth?i:null}
 const ART_ST=new WeakMap();let artRaf=0;
-const AX0=-60,AY0=-80,AW=420,AH=330,STRIPS=72;
+const AX0=-140,AY0=-80,AW=560,AH=330,STRIPS=72;
 const CAST_T=[0,70,260,320,480,520,950,1100,1150]; // reach in, hold, to charge, hold, to release (spell fires at 500), hold, back out, end
 function rlArtLead(id){const A=RL_ART[id];return A&&A.c&&A.c.some(x=>x&&x.length)?260:0}
 const aEase=k=>k<0?0:k>1?1:k*k*(3-2*k),aBack=k=>{k=Math.min(1,Math.max(0,k));const c=1.7;return 1+(c+1)*Math.pow(k-1,3)+c*Math.pow(k-1,2)};
@@ -129,9 +287,14 @@ function artPose(st,now,speed){ // the figure's shape at this moment
   if(!STILL){P.chest=.014*Math.sin(t*2.2);P.sy=1+.007*Math.sin(t*2.2);P.sway=1.7;P.drift=1.3*Math.sin(t*.8)}
   if(st.cast>=0&&st.frames&&st.mode==='skill'){const T=(now-st.cast)*speed,i=Math.max(0,Math.min(2,st.sk|0));
     if(T>=1150)st.cast=-1;else{const fi=Math.min(1,T/90),fo=T>1000?Math.min(1,(T-1000)/150):0;
-      P.seq=fo>0?[[i,1-fo],[-1,fo]]:fi<1?[[-1,1-fi],[i,fi]]:[[i,1]];P.pulse=T>200&&T<700?.02*Math.sin((T-200)/40):0;P.kick=T>480&&T<900?Math.exp(-(T-480)/140):0;
+      P.seq=fo>0?[[i,1-fo],[-1,fo]]:fi<1?[[-1,1-fi],[i,fi]]:[[i,1]];
+      // throw follow-through: snap from the wind-up frame to the standing pose with a forward lunge as the shot leaves
+      const CT=st.cut&&st.cut[i];
+      if(CT&&CT.b&&T>=470&&fo<=0){const r=Math.min(1,(T-470)/80);P.seq=r<1?[[i+10,1],[i,1-r]]:[[i+10,1]]}
+      else if(CT&&CT.b&&fo>0)P.seq=[[i+10,1-fo],[-1,fo]];
+      if(((st.rel&&st.rel[i])||(CT&&CT.snap))&&T>=440){const r=Math.min(1,(T-440)/70);P.seq=r<1?[[i,1-r],[-1,r]]:[[-1,1]];P.lean+=(STILL?0:22)*Math.exp(-(T-440)/160)}P.pulse=T>200&&T<700?.02*Math.sin((T-200)/40):0;P.kick=T>480&&T<900?Math.exp(-(T-480)/140):0;
       P.ring=Math.min(1,T/120)*(1-fo);P.glow=0}}
-  else if(st.dashOn&&st.frames&&st.dashPose!=null){P.seq=[[st.dashPose,1]];P.lean=0}
+  else if(st.dashOn&&st.frames&&st.dashPose!=null){P.seq=[[Array.isArray(st.dashPose)?st.dashPose[st.sk||0]:st.dashPose,1]];P.lean=0}
   else if(st.cast>=0&&st.frames){const T=(now-st.cast)*speed,C=CAST_T;
     if(T>=C[8])st.cast=-1;else{const seg=(a,b)=>Math.min(1,Math.max(0,(T-C[a])/(C[b]-C[a])));
       P.seq=T<C[1]?[[-1,1-seg(0,1)],[0,seg(0,1)]]:T<C[2]?[[0,1]]:T<C[3]?[[0,1-seg(2,3)],[1,seg(2,3)]]:T<C[4]?[[1,1]]:T<C[5]?[[1,1-seg(4,5)],[2,seg(4,5)]]:T<C[6]?[[2,1]]:T<C[7]?[[2,1-seg(6,7)],[-1,seg(6,7)]]:[[-1,1]];
@@ -149,7 +312,8 @@ function artPose(st,now,speed){ // the figure's shape at this moment
   return P}
 function artDraw(cv,now){
   const box=cv.parentNode,id=box.dataset.id,s=+box.dataset.s,A=RL_ART[id];if(!A)return;
-  const F0=A.f[s],img=artImg(F0.src);if(!img)return;const FR=A.c&&A.c[s]&&A.c[s].length?A.c[s]:null;if(FR)FR.forEach(f=>artImg(f.src));
+  const unit0=cv.closest('.rlb-u'),veil=!!(A.fv&&unit0&&unit0.classList.contains('veiled')); // Veiled: the phased-out still pose
+  const F0=(veil?A.fv:A.f)[s],img=artImg(F0.src);if(!img)return;if(A.fv)artImg(A.fv[s].src);const FR=A.c&&A.c[s]&&A.c[s].length?A.c[s]:null;if(FR)FR.forEach(f=>artImg(f.src));
   const dpr=Math.min(2,window.devicePixelRatio||1),cw=Math.round(cv.clientWidth*dpr),ch=Math.round(cv.clientHeight*dpr);if(!cw||!ch)return;
   if(cv.width!==cw||cv.height!==ch){cv.width=cw;cv.height=ch}
   const spr=cv.closest('.rlb-spr'),unit=cv.closest('.rlb-u'),b=typeof rlUI==='function'&&rlUI().b,speed=b&&b.speed||1,dir=unit&&unit.classList.contains('e')?-1:1;
@@ -157,7 +321,7 @@ function artDraw(cv,now){
     // the battle re-adds these classes within one frame, so watch each change
     const watch=(el,cls,key)=>{if(!el)return;new MutationObserver(rs=>{for(const r of rs)if(!(r.oldValue||'').split(' ').includes(cls)&&el.classList.contains(cls)){st[key]=performance.now();break}}).observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true})};
     watch(spr,'cast','cast');new MutationObserver(()=>{if(spr&&spr.dataset.sk!=null)st.sk=+spr.dataset.sk}).observe(spr,{attributes:true,attributeFilter:['data-sk']});if(spr&&spr.dataset.sk!=null)st.sk=+spr.dataset.sk;watch(unit,'hit','hit');watch(spr,'dash','dash')}
-  st.dashOn=!!(spr&&spr.classList.contains('dash'));st.mode=A.pose||'seq';st.dashPose=A.dashPose;st.frames=!!(FR&&FR.every(f=>artImg(f.src)));
+  st.dashOn=!!(spr&&spr.classList.contains('dash'));st.mode=A.pose||'seq';st.dashPose=A.dashPose;st.rel=A.release;st.cut=typeof RL_CUT!=='undefined'&&RL_CUT[id]&&RL_CUT[id][s]||null;st.frames=!!(FR&&FR.every(f=>artImg(f.src)));
   const P=artPose(st,now,speed),E=RL_EL[RL_H[id].el],t=(now+st.ph)/1000;
   const sc=cw/AW,buf=st.buf;if(buf.width!==cw||buf.height!==ch){buf.width=cw;buf.height=ch}
   const g=buf.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cw,ch);g.setTransform(sc,0,0,sc,-AX0*sc,-AY0*sc);
@@ -168,24 +332,24 @@ function artDraw(cv,now){
       cape=v<.55?Math.sin(Math.PI*v/.55):0,off=dir*P.lean*Math.pow(Math.min(v,1.2),1.3)+P.sway*Math.sin(t*1.7+v*4)*cape+P.drift*v*v,
       sx=P.sx*(1+P.chest*Math.exp(-Math.pow((v-.68)/.12,2)));
       g.drawImage(im,0,sy0,iw,sy1-sy0+.6,120-ax*k*sx+off,y0,iw*k*sx,y1-y0+.7)}};
-  const Hs=s===2?238:224,frame=(f,al)=>{const im=artImg(f.src),k=Hs/f.h*(1+(P.pulse||0));g.save();g.globalAlpha=al;g.translate(120-dir*7*(P.kick||0),228);g.scale(dir*k,k);g.drawImage(im,-f.ax,-f.ay);g.restore()};
-  if(P.seq)P.seq.forEach(([i,al])=>{if(al<=0)return;if(i<0)strips(img,al);else frame(FR[i],al)});else strips(img,1);g.globalAlpha=1;
+  const Hs=s===2?238:224,frame=(f,al,fi)=>{const im=artImg(f.src),k=Hs/f.h*(1+(P.pulse||0));g.save();g.globalAlpha=al*(veil&&fi!==2?.5:1);g.translate(120-dir*7*(P.kick||0),228);g.scale(dir*k,k);g.drawImage(im,-f.ax,-f.ay);g.restore()};
+  if(P.seq)P.seq.forEach(([i,al])=>{if(al<=0)return;if(i<0)strips(img,al);else if(i>=10){const C=st.cut&&st.cut[i-10],F=FR[i-10];if(C&&C.b){const im=artImg(C.b);if(im)frame(Object.assign({},F,{src:C.b}),al,i-10);else frame(F,al,i-10)}}else frame(FR[i],al,i)});else strips(img,1);g.globalAlpha=1;
   const c=cv.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cw,ch);
   if(P.ring>0){c.setTransform(sc,0,0,sc,-AX0*sc,-AY0*sc);c.save();c.translate(120,229);c.scale(1,.24);{const rg=c.createRadialGradient(0,0,0,0,0,80);rg.addColorStop(0,E.l);rg.addColorStop(.5,E.c);rg.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.45*P.ring;c.fillStyle=rg;c.beginPath();c.arc(0,0,80,0,7);c.fill()}c.globalAlpha=P.ring;c.strokeStyle=E.l;c.shadowColor=E.c;c.shadowBlur=14;
     const r=46+20*Math.min(1,P.ring*1.3);c.lineWidth=4.5;c.beginPath();c.arc(0,0,r,0,7);c.stroke();c.lineWidth=1.6;c.setLineDash([10,7]);c.rotate(t*2.4);c.beginPath();c.arc(0,0,r*.74,0,7);c.stroke();c.setLineDash([]);
     for(let k=0;k<8;k++){const a=k/8*6.283-t*1.6;c.beginPath();c.arc(Math.cos(a)*r*.88,Math.sin(a)*r*.88,2.6,0,7);c.fillStyle=E.l;c.fill()}c.restore();c.setTransform(1,0,0,1,0,0)}
   if(P.glow>0){c.save();c.shadowColor=E.c;c.shadowBlur=26*P.glow*sc;c.drawImage(buf,0,0);c.restore();c.globalCompositeOperation='lighter';c.globalAlpha=.22*P.glow;c.drawImage(buf,0,0);c.globalCompositeOperation='source-over';c.globalAlpha=1}
-  else c.drawImage(buf,0,0)}
+  else{if(veil)c.globalAlpha=.8+.12*Math.sin(t*3.1);c.drawImage(buf,0,0);c.globalAlpha=1}}
 function artLoop(){if(artRaf)return;const step=now=>{const cvs=document.querySelectorAll('.rl-artcv');if(!cvs.length){artRaf=0;return}cvs.forEach(cv=>{try{artDraw(cv,now)}catch(e){}});artRaf=requestAnimationFrame(step)};artRaf=requestAnimationFrame(step)}
 (function(){const st=document.createElement('style');st.textContent=`
 .rl-artbox{position:relative;width:100%;height:100%}
-.rl-artcv{position:absolute;left:-25%;top:-33.333%;width:175%;height:137.5%;pointer-events:none}
+.rl-artcv{position:absolute;left:-58.333%;top:-33.333%;width:233.333%;height:137.5%;pointer-events:none}
 .rlb-u.a .rlb-spr:has(.rl-artbox){animation:none}
 .rlb-spr.cast:has(.rl-artbox){animation:none!important}`;document.head.appendChild(st)})();
 
 /* ---------- spells that match the art ---------- */
 function rlArtSpell(u){const A=RL_ART[u.id];if(!A||!A.spell)return null;const st=crStage(u.lv||crLv(u.id)),S=A.spell[st];if(!S)return null;
-  const key='art_'+u.id+st;if(!RL_VP[key])RL_VP[key]=S.vp;return Object.assign({key,uid:u.uid,side:u.side,big:st===2},S)}
+  const key='art_'+u.id+st;if(!RL_VP[key])RL_VP[key]=S.vp;return Object.assign({key,uid:u.uid,side:u.side,big:st===2,hid:u.id,st},S)}
 function rlArtHand(S){const f=rlbPt(S.uid,'foot');if(!f)return null;const d=S.side?-1:1,k=f.w/240;return{x:f.x+d*S.hand[0]*k,y:f.y-(12+S.hand[1])*k,d,k}}
 async function rlArtFire(S,e,sk,ult){const h=rlArtHand(S);if(!h)return;const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;
   if(sk.tg==='eA'&&S.aoe==='starfall')return vfxStarfall(h,pts,S);
@@ -266,7 +430,7 @@ function vfxStarfall(h,pts,S){const P=S.vp,sp=vSp(),K=Math.max(1,h.k*2.2),sky=pt
           for(let j=0;j<16;j++){const an=-Math.PI*vR(.1,.9),v=vR(120,300)*K;vfxP({x:q.x,y:q.y,vx:Math.cos(an)*v,vy:Math.sin(an)*v,ay:600,life:vR(.35,.7),s:vR(2,4)*K,c:rlRand(P),shape:'star',vr:8})}}});
       c.restore();if(hit>=sky.length&&fade<=0){this.done=true}if(hit>=sky.length&&!this.r){this.r=1;res()}}})})}
 // skill 2: wind ribbons wrap each ally, with a compass ring at their feet
-function rlArtSupport(S,e,sk){if(S.support==='barkshield')return rlArtSupportBark(S,e);const P=S.vp,sp=vSp();e.t.forEach((uid,n)=>{const q=rlbPt(uid,'foot');if(!q)return;const K=q.w/240,cx=q.x,base=q.y,top=q.y-q.h*.85;let t=-n*.06/sp;
+function rlArtSupport(S,e,sk){if(S.support==='barkshield'||S.support==='totem')return rlArtSupportBark(S,e);const P=S.vp,sp=vSp();e.t.forEach((uid,n)=>{const q=rlbPt(uid,'foot');if(!q)return;const K=q.w/240,cx=q.x,base=q.y,top=q.y-q.h*.85;let t=-n*.06/sp;
   VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const life=.85/sp,k=t/life;if(k>=1){this.done=true;return}const a=Math.sin(Math.PI*Math.min(1,k));
     c.save();c.globalCompositeOperation='lighter';
     c.globalAlpha=.7*a;c.strokeStyle=P[2];c.lineWidth=2*K;c.save();c.translate(cx,base);c.scale(1,.28);c.beginPath();c.arc(0,0,62*K,0,6.283);c.stroke();c.rotate(-t*3);c.fillStyle=P[1];for(let i=0;i<4;i++){c.rotate(Math.PI/2);c.beginPath();c.moveTo(0,-74*K);c.lineTo(6*K,-56*K);c.lineTo(-6*K,-56*K);c.closePath();c.fill()}c.restore();
@@ -319,7 +483,7 @@ var rlArtSupportBark=function(S,e){const P=S.vp,W=S.wood,sp=vSp();e.t.forEach((u
 
 /* ---------- Thornwick, painted effects (cut from his own casting sheet) ---------- */
 const TH_FX={roots:'art/fx-th-roots.webp',ring:'art/fx-th-ring.webp',shield:'art/fx-th-shield.webp',beam:'art/fx-th-beam.webp'};
-Object.values(TH_FX).forEach(artImg);
+
 const thImg=k=>artImg(TH_FX[k]);
 const glow=(c,x,y,r,col,a)=>{c.save();c.globalCompositeOperation='lighter';c.globalAlpha=a;const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'#f6ffd8');g.addColorStop(.3,col);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,6.283);c.fill();c.restore()};
 // Thornroot: a dark crack runs along the ground, then gnarled roots tear up around the enemy
@@ -336,7 +500,7 @@ vfxRoots=function(h,uid,tid,S){const P=S.vp,W=S.wood,sp=vSp(),a=rlbPt(uid,'foot'
       if(img){const w=b.w*1.55,hh=w*img.naturalHeight/img.naturalWidth,H=hh*g*(1-sink*.6);c.save();c.globalAlpha=1-sink;c.drawImage(img,b.x-w/2,b.y+hh*.12-H,w,H);c.restore()}
       if(t2>grow+hold+back)this.done=true}}})})};
 // Barkward: the crystal leaf-shield from his art forms in front of each ally
-rlArtSupportBark=function(S,e){const P=S.vp,sp=vSp(),img=thImg('shield');e.t.forEach((uid,n)=>{const q=rlbPt(uid);if(!q)return;const cx=q.x+q.w*.24,cy=q.y+q.h*.05;let t=-n*.08/sp;
+rlArtSupportBark=function(S,e){const P=S.vp,sp=vSp(),img=S.shield?artImg(S.shield):thImg('shield');e.t.forEach((uid,n)=>{const q=rlbPt(uid);if(!q)return;const cx=q.x+q.w*.24,cy=q.y+q.h*.05;let t=-n*.08/sp;
   const leaves=Array.from({length:10},()=>({a:vR(0,6.283),r:vR(80,140)*q.w/240}));
   VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const gather=.22/sp,hold=.7/sp,out=.25/sp;if(t>gather+hold+out){this.done=true;return}
     if(t<gather){const k=t/gather;for(const L of leaves){const r=L.r*(1-k);vfxP({x:cx+Math.cos(L.a+k*3)*r,y:cy+Math.sin(L.a+k*3)*r*.8,life:.08,s:4,c:P[2],shape:'leaf',rot:L.a})}return}
@@ -371,7 +535,7 @@ function paintBurst(x,y,S,K,big){const P=S.vp,p=S.paint,img=p.burst&&artImg(p.bu
   VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/life),a=k<.25?k/.25:1-(k-.25)/.75,s=.55+.65*(1-Math.pow(1-k,3));c.save();c.globalCompositeOperation='lighter';c.globalAlpha=Math.max(0,a);c.translate(x,y);
     if(img){const w=110*K*s*(big?1.2:1),h=w*img.naturalHeight/img.naturalWidth;c.drawImage(img,-w/2,-h/2,w,h)}
     else if(sig&&big){c.rotate(t*1.5);const w=120*K*s;c.drawImage(sig,-w/2,-w/2,w,w)}
-    else if(shot){c.rotate(t*.8);const L=70*K*s,H=L*shot.naturalHeight/shot.naturalWidth;for(let i=0;i<3;i++){c.rotate(2.094);c.drawImage(shot,0,-H/2,L,H)}}
+    else if(shot){c.rotate(t*.8);const L=70*K*s*(p.sz||1),H=L*shot.naturalHeight/shot.naturalWidth;for(let i=0;i<3;i++){c.rotate(2.094);c.drawImage(shot,0,-H/2,L,H)}}
     c.restore();if(k>=1)this.done=true}});
   for(let i=0;i<14;i++){const a=Math.random()*6.283,v=vR(90,260)*K;vfxP({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,drag:.88,life:vR(.25,.5),s:vR(2,4)*K,c:rlRand(P)})}}
 function paintShot(x0,y0,x1,y1,S,K,big,arc){const p=S.paint,img=artImg(p.shot),P=S.vp,sp=vSp(),dur=(big?.34:.28)/sp,trail=[];let t=0;
@@ -379,7 +543,7 @@ function paintShot(x0,y0,x1,y1,S,K,big,arc){const p=S.paint,img=artImg(p.shot),P
       dx=(x1-x0)+bend*Math.PI*Math.cos(Math.PI*e)*0,ang=Math.atan2((y1-y0)+bend*Math.PI*Math.cos(Math.PI*e),x1-x0);trail.push([x,y]);
     c.save();if(p.route&&trail.length>1){c.setLineDash([6*K,7*K]);c.lineWidth=2*K;c.strokeStyle=P[2];c.globalAlpha=.8;c.beginPath();trail.forEach(([a,b],i)=>i?c.lineTo(a,b):c.moveTo(a,b));c.stroke();c.setLineDash([])}
     c.globalCompositeOperation='lighter';c.globalAlpha=1;
-    if(img){const L=(big?130:105)*K,H=L*img.naturalHeight/img.naturalWidth;c.translate(x,y);c.rotate(ang);c.drawImage(img,-L*.85,-H/2,L,H)}
+    if(img){const L=(big?130:105)*K*(p.sz||1),H=L*img.naturalHeight/img.naturalWidth;c.translate(x,y);c.rotate(ang);c.drawImage(img,-L*.85,-H/2,L,H)}
     c.restore();if(Math.random()<.8)vfxP({x,y,vx:-Math.cos(ang)*80+vR(-30,30),vy:-Math.sin(ang)*80+vR(-30,30),life:vR(.2,.4),s:vR(2,4)*K,c:rlRand(P)});
     if(k>=1){this.done=true;paintBurst(x1,y1,S,K,big);res()}}})})}
 function paintRain(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),K=paintScale(h),sig=p.sigil&&artImg(p.sigil),shot=artImg(p.shot),open=.3/sp,fall=.18/sp,hold=.25/sp;
@@ -399,7 +563,7 @@ function paintSupport(S,e){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.aura||p.
 (function(){const oFire=rlArtFire,oShot=vfxArtShot,oSup=rlArtSupport;
   rlArtFire=async function(S,e,sk,ult){if(!S.paint)return oFire(S,e,sk,ult);const h=rlArtHand(S);if(!h)return;const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;const K=paintScale(h),sp=vSp();
     if(sk.tg==='eA'&&S.paint.aoe==='rain')return paintRain(h,pts,S);
-    const n=sk.tg==='eA'?1:Math.min(3,sk.h||1),arc=S.paint.route?-60:-18;
+    const n=sk.tg==='eA'?1:Math.min(3,sk.h||1),arc=S.paint.arc!=null?S.paint.arc:S.paint.route?-60:-18;
     await Promise.all(pts.flatMap((q,j)=>Array.from({length:n},(_,i)=>new Promise(r=>setTimeout(()=>paintShot(h.x,h.y,q.x,q.y,S,K,sk.tg==='eA'||ult,arc*(j%2?-1:1)).then(r),(i*120+j*70)/sp)))))};
   vfxArtShot=function(h,tp,S,big){return S.paint?paintShot(h.x,h.y,tp.x,tp.y,S,paintScale(h),big,-18):oShot(h,tp,S,big)};
   rlArtSupport=function(S,e,sk){return S.paint&&(S.paint.aura||S.paint.sigil)?paintSupport(S,e):oSup(S,e,sk)};
@@ -412,7 +576,7 @@ function paintErupt(pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst||p
   return Promise.all(pts.map((q,i)=>new Promise(res=>{let t=-i*.08/sp,hit=false;const life=.7/sp,foot=q.y+q.h*.45;
     VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}const g=Math.min(1,k/.25),a=k<.6?1:1-(k-.6)/.4;
       if(!hit&&k>.15){hit=true;for(let j=0;j<16;j++)vfxP({x:q.x+vR(-q.w/3,q.w/3),y:foot,vx:vR(-120,120),vy:vR(-320,-120),ay:700,life:vR(.4,.7),s:vR(2,5),c:rlRand(P),shape:'sq',vr:8,glow:false});res()}
-      if(img){const w=q.w*1.3,H=w*img.naturalHeight/img.naturalWidth*(1-Math.pow(1-g,3));c.save();c.globalAlpha=a;c.drawImage(img,q.x-w/2,foot-H,w,H);c.restore()}}})})))}
+      if(img){const w=q.w*1.3*(p.sz||1),H=w*img.naturalHeight/img.naturalWidth*(1-Math.pow(1-g,3));c.save();c.globalAlpha=a;c.drawImage(img,q.x-w/2,foot-H,w,H);c.restore()}}})})))}
 function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst||p.shot),x0=Math.min(...pts.map(q=>q.x-q.w)),x1=Math.max(...pts.map(q=>q.x+q.w)),yb=Math.max(...pts.map(q=>q.y+q.h*.45)),Hh=Math.max(...pts.map(q=>q.h))*1.25,dur=.6/sp;
   return new Promise(res=>{let t=0;const hit=new Set();VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/dur),x=x0+(x1-x0)*k,a=k<.8?1:1-(k-.8)/.2;
     if(img){const w=Hh*img.naturalWidth/img.naturalHeight;c.save();c.globalAlpha=a;c.drawImage(img,x-w/2,yb-Hh,w,Hh);c.restore()}
@@ -420,11 +584,14 @@ function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst|
     pts.forEach((q,i)=>{if(!hit.has(i)&&x>=q.x){hit.add(i);paintBurst(q.x,q.y,Object.assign({},S,{paint:{shot:p.burst||p.shot}}),1.2,false)}});
     if(hit.size>=pts.length&&!this.r){this.r=1;res()}if(k>=1){this.done=true;if(!this.r)res()}}})})}
 (function(){const prev=rlArtFire,prevSup=rlArtSupport;
-  rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0]||{};S=Object.assign({},S,{paint:p,bySkill:null});
+  rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0]||{},C=typeof RL_CUT!=='undefined'&&RL_CUT[S.hid]&&RL_CUT[S.hid][S.st]&&RL_CUT[S.hid][S.st][e.s];S=Object.assign({},S,{paint:p,bySkill:null},p.hand?{hand:p.hand}:{},C&&C.hand&&p.shot&&!p.up?{hand:C.hand}:{});
+      if(p.aoe==='spearrain'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxSpearRain(pts,S,p.img)}
+      if(p.aoe==='permafrost'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxPermafrost(pts,S,p.img)}
+      if(p.aoe==='meteor'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxMeteor(pts,S,p.img)}
       if(p.aoe==='spearsweep'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxSpearSweep(pts,S)}
-      if(sk.tg==='eA'&&(p.aoe==='erupt'||p.aoe==='sweep')){const h=rlArtHand(S);const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;return p.aoe==='erupt'?paintErupt(pts,S):paintSweep(h,pts,S)}}
+      if(sk.tg==='eA'&&(p.aoe==='erupt'||p.aoe==='sweep')){const h=rlArtHand(S);const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;if(p.up&&h){await vfxShootUp(h,S,p.up);}return p.aoe==='erupt'?paintErupt(pts,S):paintSweep(h,pts,S)}}
     return prev(S,e,sk,ult)};
-  Object.values(RL_ART).forEach(A=>(A.spell||[]).forEach(S=>S&&S.bySkill&&S.bySkill.forEach(p=>p&&['shot','burst','sigil','aura'].forEach(k=>p[k]&&artImg(p[k])))));
+  Object.values(RL_ART).forEach(A=>(A.spell||[]).forEach(S=>S&&S.bySkill&&S.bySkill.forEach(p=>p&&['shot','burst','sigil','aura','img','up'].forEach(k=>p[k]&&artImg(p[k])))));
 })();
 
 /* a broad spear sweep across the enemy line: silver slash arcs, dust and a shove */
@@ -437,3 +604,120 @@ function vfxSpearSweep(pts,S){if(!pts.length)return Promise.resolve();const P=S.
       c.restore();
       if(!hit&&k>.35){hit=true;rlbShake&&rlbShake(false);for(let j=0;j<14;j++)vfxP({x:q.x+vR(-q.w/3,q.w/3),y:q.y+q.h*.4,vx:vR(-160,160),vy:vR(-260,-80),ay:700,life:vR(.35,.6),s:vR(3,6),c:rlRand(['#8a6a4a','#c9a26a','#5a4630']),shape:'sq',vr:8,glow:false});
         vfxP({x:q.x,y:q.y,life:.3,s:6,grow:150,c:'#f4ead0',shape:'shock'});res()}}})})))}
+
+/* ---------- Ren (fire fox): a fire crescent where his blade lands, and a ring of fire for Flame Ward ---------- */
+function rlArtMelee(u,tp,big,si){const A=RL_ART[u.id];
+  if(A&&A.impactSk&&A.impactSk[si]){const P=RL_VP[u.id],foot=tp.y+tp.h*.42;let t=0;const life=.7/vSp();
+    VFX.items.push({step(dt,c){t+=dt;const k=t/life;if(k>=1){this.done=true;return}const g=Math.min(1,k/.2),a=k<.6?1:1-(k-.6)/.4;c.save();c.globalAlpha=a;
+      for(let i=0;i<7;i++){const ox=(i-3)*tp.w*.13,r=tp.w*(.12+.05*Math.sin(i*1.7))*g;c.fillStyle=i%2?P[2]:P[3];c.beginPath();c.ellipse(tp.x+ox,foot-r*.35,r,r*.7,0,Math.PI,0);c.fill()}
+      c.restore()}});for(let i=0;i<26;i++)vfxP({x:tp.x+vR(-tp.w/3,tp.w/3),y:tp.y+tp.h*.4,vx:vR(-160,160),vy:vR(-380,-140),ay:800,life:vR(.4,.8),s:vR(3,7),c:rlRand(P),shape:'sq',vr:8,glow:false});rlbShake(true);return true}if(A&&A.impact){const st=crStage(u.lv||crLv(u.id));paintErupt([tp],{vp:RL_VP[u.id],paint:{burst:A.impact[st]}});rlbShake(true);return true}
+  if(!A||!A.slash)return false;const st=crStage(u.lv||crLv(u.id)),sp=vSp(),d=u.side?-1:1,R=tp.h*.55*(1+.12*st),P=RL_VP[u.id]||RL_VP.fox;let t=0;const life=.42/sp;
+  VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/life),sw=-1.9+3.2*Math.min(1,k/.45),a=k<.45?1:1-(k-.45)/.55;c.save();c.translate(tp.x,tp.y);c.scale(d,1);c.globalCompositeOperation='lighter';
+    for(let i=0;i<3;i++){const w=[26,15,6][i]*(1+.3*st),col=[P[3],P[2],P[0]][i];c.globalAlpha=a*[.55,.8,1][i];c.strokeStyle=col;c.lineWidth=w;c.lineCap='round';c.beginPath();c.arc(-R*.25,0,R,-1.9,Math.max(-1.89,sw));c.stroke()}
+    c.restore();if(k<.5)for(let i=0;i<3;i++){const an=-1.9+3.2*Math.min(1,k/.45)+vR(-.2,.2);vfxP({x:tp.x+d*(Math.cos(an)*R-R*.25),y:tp.y+Math.sin(an)*R,vx:d*vR(20,140),vy:vR(-160,-40),ay:200,life:vR(.3,.6),s:vR(2,5),c:rlRand(P)})}
+    if(k>=1)this.done=true}});
+  vfxP({x:tp.x,y:tp.y,life:.3,s:8,grow:200,c:P[2],shape:'shock'});for(let i=0;i<18;i++){const a=Math.random()*6.283,v=vR(80,260);vfxP({x:tp.x,y:tp.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-60,drag:.9,life:vR(.3,.6),s:vR(2,5),c:rlRand(P)})}
+  return true}
+function vfxFlameWard(S,e){const P=S.vp,sp=vSp(),big=S.big;e.t.forEach((uid,n)=>{const q=rlbPt(uid);if(!q)return;let t=-n*.08/sp;const life=1/sp,R=q.h*.62;
+  VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}const g=Math.min(1,k/.3),a=k<.7?1:1-(k-.7)/.3;c.save();c.globalCompositeOperation='lighter';c.translate(q.x,q.y);
+    c.globalAlpha=a*.25;c.fillStyle=P[2];c.beginPath();c.ellipse(0,0,R*.8*g,R*g,0,0,6.283);c.fill();
+    for(let i=0;i<3;i++){c.globalAlpha=a*[.5,.8,1][i];c.strokeStyle=[P[3],P[2],P[1]][i];c.lineWidth=[12,7,3][i];c.beginPath();c.ellipse(0,0,R*.8*g,R*g,0,0,6.283);c.stroke()}
+    c.restore();const fl=big?5:3;for(let i=0;i<fl;i++){const an=Math.random()*6.283;vfxP({x:q.x+Math.cos(an)*R*.8*g,y:q.y+Math.sin(an)*R*g,vy:vR(-150,-60),life:vR(.3,.6),s:vR(3,7),c:rlRand(P),shape:i%2?'c':'dia',vr:4})}}})})}
+(function(){const prev=rlArtSupport;rlArtSupport=function(S,e,sk){if(S.support==='lantern')return vfxLantern(S,e,sk);if(S.support==='moonwell')return vfxMoonwell(S,e,sk);if(S.support==='flameward'||S.support==='ring')return vfxFlameWard(S,e);return prev(S,e,sk)}})();
+
+/* volley fired skyward before an arrow rain lands: flaming arrows streak up off the top of the stage */
+/* Permafrost Ring: a frost ring races out under each enemy and ice crystals spear up around them */
+function vfxPermafrost(pts,S,src){const img=artImg(src),P=S.vp,sp=vSp();rlbShake(true);
+  return Promise.all(pts.map((q,j)=>new Promise(res=>{let t=-j*.07/sp,hit=false;const life=1.2/sp,foot=q.y+q.h*.45;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}if(k>.28&&!hit){hit=true;res()}
+      if(!img)return;const g=Math.min(1,k/.28),e=1-Math.pow(1-g,3),sy=.25+.75*e,a=k<.72?Math.min(1,g*1.6):1-(k-.72)/.28;
+      // the ring from the art, rising out of the ground under the enemy (its centre sits ~72% down the picture)
+      const W=q.w*1.45*(.8+.2*e),H=W*img.naturalHeight/img.naturalWidth;c.save();c.globalAlpha=a;c.translate(q.x,foot);c.scale(1,sy);c.drawImage(img,-W/2,-H*.72,W,H);c.restore();
+      if(Math.random()<.5)vfxP({x:q.x+vR(-W*.4,W*.4),y:foot-vR(0,q.h*.5),vx:vR(-15,15),vy:vR(-50,-10),life:vR(.4,.8),s:vR(2,3),c:rlRand(P),shape:'dia',vr:3})}})})))}
+
+/* Ignition Burst: fireballs fly up off the staff, then drop straight onto each enemy and blossom into flame */
+function vfxMeteor(pts,S,src){const img=artImg(src),P=S.vp,sp=vSp();
+  return Promise.all(pts.map((q,j)=>new Promise(res=>{let t=-j*.08/sp,hit=false;const life=.36/sp,x1=q.x,y1=q.y+q.h*.18,x0=x1-q.h*.35,y0=y1-q.h*2.2,ang=Math.atan2(y1-y0,x1-x0),L=q.h*1.05;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=Math.min(1,t/life),e=k*k,x=x0+(x1-x0)*e,y=y0+(y1-y0)*e;
+      if(img){const H=L*img.naturalHeight/img.naturalWidth;c.save();c.globalCompositeOperation='lighter';c.translate(x,y);c.rotate(ang);c.drawImage(img,-L*.88,-H/2,L,H);c.restore()}
+      if(Math.random()<.9)vfxP({x:x+vR(-6,6),y:y-vR(0,20),vx:vR(-30,30),vy:vR(-90,-30),life:vR(.2,.45),s:vR(2,5),c:rlRand(P)});
+      if(k>=1&&!hit){hit=true;this.done=true;vfxIgnite(q,P);res()}}})})))}
+function vfxIgnite(q,P){const sp=vSp(),life=.7/sp,R=q.w*.62,foot=q.y+q.h*.42;let t=0;rlbShake(true);
+  VFX.items.push({step(dt,c){t+=dt;const k=t/life;if(k>=1){this.done=true;return}const g=1-Math.pow(1-Math.min(1,k/.35),3),a=k<.45?1:1-(k-.45)/.55;
+    c.save();c.globalCompositeOperation='lighter';
+    // ground ring
+    c.save();c.translate(q.x,foot);c.scale(1,.3);c.globalAlpha=a*.9;c.strokeStyle=P[2];c.lineWidth=6;c.beginPath();c.arc(0,0,R*1.15*g,0,6.283);c.stroke();c.globalAlpha=a*.45;c.fillStyle=P[3];c.beginPath();c.arc(0,0,R*1.1*g,0,6.283);c.fill();c.restore();
+    // fireball bloom
+    const cy=q.y+q.h*.1,rg=c.createRadialGradient(q.x,cy,0,q.x,cy,R*g);rg.addColorStop(0,P[0]);rg.addColorStop(.35,P[1]);rg.addColorStop(.7,P[2]);rg.addColorStop(1,'rgba(0,0,0,0)');
+    c.globalAlpha=a*.95;c.fillStyle=rg;c.beginPath();c.arc(q.x,cy,R*g,0,6.283);c.fill();
+    // petals of flame
+    for(let i=0;i<8;i++){const an=i/8*6.283+k*1.2,r0=R*.35*g,r1=R*(.8+.25*Math.sin(i*2.3))*g;c.globalAlpha=a*.85;c.fillStyle=i%2?P[2]:P[1];c.beginPath();
+      c.moveTo(q.x+Math.cos(an-.22)*r0,cy+Math.sin(an-.22)*r0);c.quadraticCurveTo(q.x+Math.cos(an)*r1*1.1,cy+Math.sin(an)*r1*1.1,q.x+Math.cos(an+.22)*r0,cy+Math.sin(an+.22)*r0);c.fill()}
+    c.restore()}});
+  for(let i=0;i<22;i++)vfxP({x:q.x+vR(-q.w*.35,q.w*.35),y:foot-vR(0,q.h*.3),vx:vR(-60,60),vy:vR(-360,-140),ay:-60,drag:.96,life:vR(.45,.85)/sp,s:vR(3,7),c:rlRand(P),shape:i%3?'c':'dia',vr:4});
+  for(let i=0;i<14;i++){const an=Math.random()*6.283,v=vR(120,300);vfxP({x:q.x,y:q.y+q.h*.1,vx:Math.cos(an)*v,vy:Math.sin(an)*v-80,ay:400,life:vR(.3,.6),s:vR(2,4),c:rlRand(P)})}}
+
+function vfxShootUp(h,S,src){const img=artImg(src),P=S.vp,sp=vSp(),n=5;
+  return new Promise(res=>{let done=0;for(let i=0;i<n;i++){let t=-i*.06/sp;const life=.42/sp,ang=-Math.PI/2+h.d*(.22+i*.06),L=60*Math.max(1,h.k*1.7);
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=Math.min(1,t/life),e=k*k,x=h.x+Math.cos(ang)*900*e,y=h.y+Math.sin(ang)*900*e;
+      c.save();c.globalCompositeOperation='lighter';c.globalAlpha=k<.8?1:1-(k-.8)/.2;c.translate(x,y);c.rotate(ang);
+      if(img){const H=L*img.naturalHeight/img.naturalWidth;c.drawImage(img,-L/2,-H/2,L,H)}c.restore();
+      if(Math.random()<.8)vfxP({x,y,vx:vR(-30,30),vy:vR(40,120),life:vR(.2,.45),s:vR(2,5),c:rlRand(P)});
+      if(k>=1){this.done=true;if(++done===n)res()}}})}
+    vfxP({x:h.x,y:h.y,life:.3,s:8,grow:180,c:P[2],shape:'shock'})}).then(()=>new Promise(r=>setTimeout(r,60/sp)))}
+
+/* Aurelle: healing that flows onto allies. 0 = a moonwater stream arcs from her staff to one ally;
+   1 = dew rains down on every ally; 2 = a crescent moon rises and a sanctuary dome closes over the team */
+const DEER_FX={stream:'art/fx-deer-stream.webp',dew:'art/fx-deer-dew.webp',moon:'art/fx-deer-moon.webp'};
+function vfxMoonwell(S,e,sk){const P=S.vp,sp=vSp(),h=rlArtHand(S),pts=e.t.map(t=>({uid:t,q:rlbPt(t)})).filter(o=>o.q);if(!pts.length)return;const glow=(x,y,R)=>vfxP({x,y,life:.45,s:R*.3,grow:R*3,c:P[1],shape:'shock'});
+  const sparkle=q=>{for(let i=0;i<18;i++)vfxP({x:q.x+vR(-q.w/3,q.w/3),y:q.y+vR(-q.h/3,q.h/2),vy:vR(-110,-40),life:vR(.5,.9),s:vR(2,5),c:rlRand(P),shape:i%3?'c':'star',vr:3});vfxHeal(q.x,q.y)};
+  if(h)glow(h.x,h.y,14);
+  if(e.s===0){const q=pts[0].q;if(!h){sparkle(q);return}
+    return paintShot(h.x,h.y,q.x,q.y-q.h*.1,Object.assign({},S,{paint:{shot:DEER_FX.stream}}),Math.max(1,h.k*1.6),true,-90).then(()=>{sparkle(q);glow(q.x,q.y,20)})}
+  if(e.s===1){const img=artImg(DEER_FX.dew);return Promise.all(pts.map(({q},i)=>new Promise(res=>{let t=-i*.08/sp,hit=false;const life=.7/sp,w=q.w*.95;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}const y=q.y-q.h*1.3+q.h*1.1*Math.min(1,k/.5),a=k<.55?Math.min(1,k/.15):1-(k-.55)/.45;
+      if(img){const H=w*img.naturalHeight/img.naturalWidth;c.save();c.globalAlpha=a*.7;c.drawImage(img,q.x-w/2,y-H*.75,w,H);c.restore()}
+      if(Math.random()<.7)vfxP({x:q.x+vR(-w/2,w/2),y:y,vy:vR(120,260),life:vR(.2,.4),s:vR(2,4),c:rlRand(P)});
+      if(!hit&&k>.45){hit=true;sparkle(q);res()}}})})))}
+  // Sanctuary Bloom
+  const img=artImg(DEER_FX.moon),xs=pts.map(o=>o.q.x),cx=(Math.min(...xs)+Math.max(...xs))/2,top=Math.min(...pts.map(o=>o.q.y-o.q.h*.9)),bot=Math.max(...pts.map(o=>o.q.y+o.q.h*.5)),
+    rx=(Math.max(...xs)-Math.min(...xs))/2+pts[0].q.w*1.1,ry=(bot-top)*.75,cy=bot,life=1.3/sp;let t=0;
+  return new Promise(res=>{let hit=false;VFX.items.push({step(dt,c){t+=dt;const k=t/life;if(k>=1){this.done=true;return}const g=Math.min(1,k/.35),a=k<.75?1:1-(k-.75)/.25;
+    c.save();c.globalAlpha=a*.28*g;c.fillStyle=P[2];c.beginPath();c.ellipse(cx,cy,rx*g,ry*g,0,Math.PI,0);c.fill();
+    c.globalAlpha=a*.9;c.strokeStyle=P[1];c.lineWidth=4;c.beginPath();c.ellipse(cx,cy,rx*g,ry*g,0,Math.PI,0);c.stroke();
+    c.globalAlpha=a*.5;c.lineWidth=10;c.strokeStyle=P[2];c.beginPath();c.ellipse(cx,cy,rx*g*1.04,ry*.18*g,0,0,6.283);c.stroke();
+    if(img){const w=60*Math.max(1,(h?h.k:1)*1.5)*(.6+.4*g),my=cy-ry*g-w*.35;c.globalAlpha=a;c.drawImage(img,cx-w/2,my-w/2,w,w)}c.restore();
+    if(Math.random()<.8)vfxP({x:cx+vR(-rx,rx)*g,y:cy-vR(0,ry)*g,vy:vR(-60,-20),life:vR(.5,.9),s:vR(2,4),c:rlRand(P),shape:'star',vr:2});
+    if(!hit&&k>.4){hit=true;pts.forEach(o=>sparkle(o.q));res()}}})})}
+Object.values(DEER_FX).forEach(artImg);
+
+/* Brenna: lantern light on allies. 0 = a star-beam from her lantern to one ally; 1 = golden rings rise
+   around every ally; 2 = a pillar of dawn light and a rune circle raise the chosen ally */
+function vfxLantern(S,e,sk){const P=S.vp,sp=vSp(),h=rlArtHand(S),pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;
+  const sparkle=q=>{for(let i=0;i<16;i++)vfxP({x:q.x+vR(-q.w/3,q.w/3),y:q.y+vR(-q.h/3,q.h/2),vy:vR(-110,-40),life:vR(.5,.9),s:vR(2,5),c:rlRand(P),shape:i%3?'c':'star',vr:3});vfxHeal(q.x,q.y)};
+  if(h)vfxP({x:h.x,y:h.y,life:.45,s:6,grow:160,c:P[2],shape:'shock'});
+  if(e.s===0){const q=pts[0];if(!h){sparkle(q);return}return paintShot(h.x,h.y,q.x,q.y-q.h*.1,Object.assign({},S,{paint:{shot:S.beam}}),Math.max(1,h.k*1.6),false,-40).then(()=>sparkle(q))}
+  if(e.s===1)return Promise.all(pts.map((q,i)=>new Promise(res=>{let t=-i*.07/sp,hit=false;const life=.9/sp,foot=q.y+q.h*.42;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}const a=k<.7?1:1-(k-.7)/.3;c.save();c.globalCompositeOperation='lighter';
+      for(let j=0;j<3;j++){const kk=Math.max(0,Math.min(1,k*1.4-j*.18)),y=foot-q.h*.75*kk,rx=q.w*(.55+.1*j);c.globalAlpha=a*(1-kk*.6);c.strokeStyle=j%2?P[1]:P[2];c.lineWidth=5;c.beginPath();c.ellipse(q.x,y,rx,rx*.22,0,0,6.283);c.stroke()}
+      c.restore();if(!hit&&k>.4){hit=true;sparkle(q);res()}}})})));
+  // Second Dawn: pillar of light + rune circle on the chosen ally
+  const q=pts[0],foot=q.y+q.h*.45,life=1.2/sp;let t=0;
+  return new Promise(res=>{let hit=false;VFX.items.push({step(dt,c){t+=dt;const k=t/life;if(k>=1){this.done=true;return}const g=Math.min(1,k/.25),a=k<.75?1:1-(k-.75)/.25;
+    c.save();c.globalCompositeOperation='lighter';c.globalAlpha=a;
+    const w=q.w*.8*g,gr=c.createLinearGradient(q.x-w,0,q.x+w,0);gr.addColorStop(0,'rgba(255,200,90,0)');gr.addColorStop(.5,'rgba(255,240,190,.85)');gr.addColorStop(1,'rgba(255,200,90,0)');
+    c.fillStyle=gr;c.fillRect(q.x-w,0,w*2,foot);
+    c.strokeStyle=P[2];c.lineWidth=4;c.beginPath();c.ellipse(q.x,foot,q.w*.9*g,q.w*.22*g,0,0,6.283);c.stroke();
+    c.lineWidth=2;c.strokeStyle=P[1];c.beginPath();c.ellipse(q.x,foot,q.w*.65*g,q.w*.15*g,0,0,6.283);c.stroke();
+    c.beginPath();for(let i=0;i<8;i++){const an=i*Math.PI/4+t;c.moveTo(q.x,foot);c.lineTo(q.x+Math.cos(an)*q.w*.65*g,foot+Math.sin(an)*q.w*.15*g)}c.stroke();c.restore();
+    if(Math.random()<.9)vfxP({x:q.x+vR(-w,w),y:foot-vR(0,q.h),vy:vR(-140,-60),life:vR(.4,.8),s:vR(2,5),c:rlRand(P),shape:'star',vr:3});
+    if(!hit&&k>.35){hit=true;sparkle(q);res()}}})})}
+
+/* Kestran: a storm of jade spears slams down diagonally onto every enemy */
+function vfxSpearRain(pts,S,src){const img=artImg(src),P=S.vp,sp=vSp();
+  return Promise.all(pts.map((q,j)=>Promise.all([0,1,2].map(i=>new Promise(res=>{let t=-(i*.09+j*.05)/sp,hit=false;const life=.32/sp,w=q.w*.55,
+      x1=q.x+vR(-q.w*.25,q.w*.25),y1=q.y+vR(-q.h*.1,q.h*.3),x0=x1-q.h*1.1,y0=y1-q.h*1.6;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=Math.min(1,t/life),x=x0+(x1-x0)*k,y=y0+(y1-y0)*k;
+      if(img){const H=w*img.naturalHeight/img.naturalWidth;c.save();c.globalAlpha=k<.9?1:1-(k-.9)/.1;c.translate(x,y);c.drawImage(img,-w*.8,-H*.8,w,H);c.restore()}
+      if(Math.random()<.6)vfxP({x,y,vx:vR(-30,30),vy:vR(-60,-20),life:vR(.2,.4),s:vR(2,4),c:rlRand(P)});
+      if(k>=1&&!hit){hit=true;this.done=true;vfxP({x:x1,y:y1,life:.3,s:6,grow:150,c:P[2],shape:'shock'});for(let n=0;n<8;n++)vfxP({x:x1,y:y1,vx:vR(-150,150),vy:vR(-200,-40),ay:500,life:vR(.3,.6),s:vR(2,4),c:rlRand(P),shape:'dia',vr:6});res()}}})})))))}

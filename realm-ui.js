@@ -9,28 +9,55 @@ const rlNum=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?Math.round(n/1e3)+'k':String
 const RL_ICON={gems:'<i class="rl-gem"></i>',gold:'<i class="rl-gold"></i>',energy:'<i class="rl-en"></i>',tomes:'<i class="rl-tome"></i>'};
 
 /* ---------- skill text ---------- */
+// Rarity by base stars: 1 common (white), 2 uncommon (green), 3 rare (blue), 4 epic (purple), 5 legendary (orange)
+const RL_RAR={1:['Common','#e8e8ee'],2:['Uncommon','#5fd36a'],3:['Rare','#4aa8ff'],4:['Epic','#b970ff'],5:['Legendary','#ff8a1f']};
+function rlRarTag(r){const R=RL_RAR[r]||RL_RAR[3];return`<span class="rl-rar" style="color:${R[1]};border-color:${R[1]}">${R[0]}</span>`}
 function rlSkillText(h,s,lvl,st){
   if(!st){const p=typeof P_==='function'?P_():null;st=p&&p.heroes&&p.heroes[h.id]?rlHeroStats(p,h.id):rlBaseStats(h.id,1,h.r)}
   if(s.pas)return({counter:`Passive: sometimes strikes back when hit (${s.v}% chance).`,lifesteal:`Passive: heals itself with ${s.v}% of the damage it deals.`,firstStrike:'Passive: gets a head start every battle.'}[s.pas]||'Passive.');
-  const who={e1:'one enemy',eA:'all enemies',a1:'one ally',aA:'all allies',self:'itself'}[s.tg]||'one enemy',bonus=1+.1*((lvl||1)-1);
+  const who={e1:'one enemy',eA:'all enemies',a1:'one ally',aA:'all allies',self:'itself'}[s.tg]||'one enemy',who2=s.bounce?`random enemies (${s.bounce} ricochets)`:null,bonus=1+.1*((lvl||1)-1);
   const parts=[];const turns=t=>`${t} turn${t>1?'s':''}`;
   if(s.m>0){const base=s.sc==='def'?st.def:s.sc==='hp'?st.hp*2:st.atk,v=base*s.m*bonus,lo=Math.max(1,Math.round(v*.95)),hi=Math.max(lo,Math.round(v*1.05));
-    parts.push(`Deals ${lo}–${hi} damage to ${who}${s.h>1?`, ${s.h} times`:''}`)}
-  if(s.ign)parts.push('Pierces armor');if(s.vsBurn)parts.push('Extra damage to burning enemies');
+    parts.push(`Deals ${lo}–${hi} damage to ${who2||who}${s.h>1?`, ${s.h} times`:''}`)}
+  if(s.ign)parts.push('Pierces armor');if(s.vsBurn)parts.push('Extra damage to burning enemies');if(s.opener)parts.push(`Deals ${Math.round(s.opener*100)}% more damage to an enemy at full HP`);if(s.vsBreak)parts.push(`Deals ${Math.round(s.vsBreak*100)}% more damage to enemies with DEF Break`);if(s.vsPoison)parts.push(`Deals ${Math.round(s.vsPoison*100)}% more damage per Poison stack on the target`);if(s.pburst)parts.push('Every Poison stack on each enemy bursts at once for instant damage');if(s.rift)parts.push(`Detonates every Sigil: +${Math.round(s.rift*100)}% damage per Sigil on the target`);if(s.vsStatic)parts.push(`Deals ${Math.round(s.vsStatic*100)}% more damage to enemies with Static`);if(s.discharge)parts.push('Then discharges Static on every enemy for heavy lightning damage');if(s.vsSoak)parts.push(`Deals ${Math.round(s.vsSoak*100)}% more damage to Soaked enemies`);if(s.undertow)parts.push('Undertow: drags every enemy\'s turn back (much further for Soaked enemies)');if(s.waxBurn)parts.push('Slowed (waxed) enemies catch a second Burn');if(s.critMark)parts.push('Always a critical hit on Marked enemies');if(s.tempo)parts.push('Adds 1 Tempo (max 3). Each Tempo makes Rio\'s attacks deal 10% more');if(s.crescendo)parts.push(`Crescendo: spends all Tempo for +${Math.round(s.crescendo*100)}% damage per beat`);if(s.vsChill)parts.push(`Deals ${Math.round(s.vsChill*100)}% more damage for each Chill on the target`);if(s.vsDaze)parts.push(`Deals ${Math.round(s.vsDaze*100)}% more damage to Dazed enemies`);if(s.ring)parts.push('Stuns every enemy that was already Dazed');if(s.exec)parts.push(`Deals ${Math.round(s.exec*100)}% more damage to enemies under half HP`);if(s.again)parts.push('If it defeats the target, she acts again right away');if(s.splash)parts.push(`Aftershock: ${Math.round(s.splash*100)}% of the damage also hits every other enemy`);if(s.det)parts.push('Sets off all of the target\'s Burns at once');
   s.fx.forEach(f=>{let tgt=who,k=f[0],a=f;if(k==='self'||k==='team'){tgt=k==='self'?'itself':'all allies';a=f.slice(1);k=a[0]}
     const F=RL_FX[k];
     if(k==='heal')parts.push(`Heals ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP`);
     else if(k==='healT')parts.push(`Heals ${tgt} for about ${Math.round(st.hp*a[1]/100*bonus)} HP`);
     else if(k==='cleanse')parts.push(`Removes debuffs from ${tgt}`);
-    else if(k==='strip')parts.push('Removes enemy buffs');
+    else if(k==='strip')parts.push(a[1]===1?'Washes away 1 buff from each enemy':'Removes enemy buffs');
     else if(k==='atb')parts.push(`${tgt==='itself'?'Acts':'Allies act'} sooner`);
     else if(k==='atbDown')parts.push(`Delays enemy turns (${a[2]}% chance)`);
     else if(k==='revive')parts.push('Revives fallen allies');
+    else if(k==='rez')parts.push(`Raises the chosen fallen ally with ${a[1]}% HP (a living ally is healed instead)`);
     else if(k==='shield')parts.push(`Shields ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP (${turns(a[2])})`);
+    else if(k==='poison')parts.push(`Poisons ${tgt}: ${a[3]||1} stack${(a[3]||1)>1?'s':''} (${a[2]}% chance, ${turns(a[1])}). Each stack deals 4% max HP per turn, up to 5`);
+    else if(k==='sigil')parts.push(`Brands ${tgt} with a Sigil (${a[2]}% chance, stacks up to 3)`);
+    else if(k==='cdDown')parts.push(`Your team's skill cooldowns tick down by ${a[1]}`);
+    else if(k==='static')parts.push(`Charges ${tgt} with Static (${a[2]}% chance, ${turns(a[1])})`);
+    else if(k==='soak')parts.push(`Soaks ${tgt} (${a[2]}% chance, ${turns(a[1])})`);
+    else if(k==='blind')parts.push(`Blinds ${tgt} (${a[2]}% chance, ${turns(a[1])}): their attacks may miss`);
+    else if(k==='drowsy')parts.push(`Makes ${tgt} Drowsy (${a[2]}% chance, ${turns(a[1])}): 35% chance each turn to doze off and lose it`);
+    else if(k==='chill')parts.push(`Adds 1 Chill (${a[2]}% chance). At 3 Chill the enemy freezes and skips a turn`);
+    else if(k==='burn'&&s.fx.filter(x=>x[0]==='burn').length>1){if(s.fx.find(x=>x[0]==='burn')===f)parts.push(`Ignites ${tgt}: up to ${s.fx.filter(x=>x[0]==='burn').length} Burn stacks (${s.fx.filter(x=>x[0]==='burn').map(x=>x[2]+'%').join(' and ')} chance, ${turns(a[1])}). Each stack burns for 6% max HP per turn`)}
+    else if(k==='immune')parts.push(`Wards ${tgt} (${turns(a[1])}): no debuffs can be applied to them`);
+    else if(k==='freeze')parts.push(`Freezes ${tgt} solid (${a[2]}% chance, ${turns(a[1])}): they skip their turns until they thaw`);
+    else if(k==='taunt')parts.push(`Taunts ${tgt} (${a[2]}% chance, ${turns(a[1])}): their single-target attacks must hit ${h.n}`);
+    else if(k==='veil')parts.push(`Then slips into the Veil (${turns(a[1])}): enemies can't target or hit ${tgt==='itself'?'him':tgt}`);
+    else if(k==='rime')parts.push(`Rune Ward on ${tgt} (${turns(a[1])}): enemies that strike them get Chilled`);
+    else if(k==='daze')parts.push(`Dazes ${tgt} (${a[2]}% chance, ${turns(a[1])})`);
+    else if(k==='seed')parts.push(`Plants a seed (${a[2]}% chance, ${turns(a[1])}): drains 5% HP each turn to heal your most hurt ally`);
+    else if(k==='regen')parts.push(`Regrowth for ${tgt}: heals 12% HP each turn (${turns(a[1])})`);
+    else if(k==='bulwark')parts.push(`Raises a stone wall: ${tgt} take 25% less damage from hits (${turns(a[1])})`);
+    else if(k==='guard')parts.push(`${h.n} takes 30% of the damage aimed at ${tgt} (${turns(a[1])})`);
+    else if(k==='ward')parts.push(`Wards ${tgt} for ${turns(a[1])}: enemies that strike a warded ally may catch fire`);
     else if(F&&F.buff)parts.push(`${F.n} for ${tgt} (${turns(a[1])})`);
     else if(F)parts.push(`${k==='stun'?'Stun':F.n} (${a[2]}% chance, ${turns(a[1])})`)});
   return parts.join('. ')+'.';
 }
+function rlAmbushText(h){return h.ambush?`Passive, Shadowstrike: every hit ${h.n} lands while Veiled is a critical hit.`:''}
+function rlPlatingText(h){return h.plating?`Passive, Scale Plating: ${h.n} takes ${Math.round(h.plating*100)}% less damage from hits while above half HP.`:''}
+function rlRebirthText(h){return h.rebirth?`Passive, Rebirth: the first time ${h.n} falls in a battle, she rises again with ${Math.round(h.rebirth*100)}% HP.`:''}
 function rlLeadText(h){if(!h.ld)return'';return`Leader: +${h.ld.v}% ${RL_STAT[h.ld.s].n} for every ally while this creature leads the team.`}
 
 /* ---------- entry ---------- */
@@ -177,12 +204,12 @@ function rlHeroDetail(s,p,id){
   const gear=[0,1,2,3,4,5].map(i=>{const g=p.gear.find(x=>x.i===m.g[i]);return`<button class="rl-gslot${g?' '+g.r:''}" data-a="rlGearSlot" data-v="${i}">${g?`<span class="rl-gs-set" style="color:${RL_SETS[g.set].c}">${RL_SETS[g.set].n}</span><b>${RL_SLOTS[i].n} +${g.lv}</b><span class="muted">${RL_STAT[g.m].n} +${rlGearVal(g)}${RL_STAT[g.m].p?'%':''}</span>`:`<b class="muted">${RL_SLOTS[i].n}</b><span class="muted">Empty</span>`}</button>`}).join('');
   return`<div class="rl-sec"><button class="btn sm" data-a="rlHeroBack">← All creatures</button></div>
   <div class="rl-hd"><div class="rl-hd-art"><div class="showcase"><div class="float"><div class="rl-pframe big r${h.r} live">${rlHeroSVG(id)}</div></div></div></div>
-  <div class="stack"><div class="panel stack"><div class="row" style="justify-content:space-between"><div><h2 class="rl-hname">${esc(crName(id,m.lv))}</h2><p class="muted">${RL_ROLE[h.role]} · ${rlStars(m.st)}</p></div><div style="text-align:right"><p class="muted">Power</p><p class="big num">${rlNum(rlPower(st))}</p></div></div>
+  <div class="stack"><div class="panel stack"><div class="row" style="justify-content:space-between"><div><h2 class="rl-hname">${esc(crName(id,m.lv))}</h2><p class="muted">${rlRarTag(h.r)} ${RL_ROLE[h.role]} · ${rlStars(m.st)}</p></div><div style="text-align:right"><p class="muted">Power</p><p class="big num">${rlNum(rlPower(st))}</p></div></div>
     <div><div class="row" style="justify-content:space-between;margin-bottom:6px"><span class="lv">Level ${m.lv} / ${mx}</span><span class="muted num">${m.lv>=mx?'Max level':`${m.xp} / ${need} XP`}</span></div><div class="bar"><i style="width:${m.lv>=mx?100:m.xp/need*100}%"></i></div></div>${crEvoPath(id,m.lv)}
     <div class="row"><button class="btn" data-a="rlTome" ${p.tomes&&m.lv<mx?'':'disabled'}>Use study tome (${p.tomes})</button>${m.st<6?`<button class="btn ${m.lv>=mx?'pri':''}" data-a="rlPromote" ${m.lv>=mx&&p.ess.any>=pc.ess&&p.gold>=pc.gold?'':'disabled'}>Promote to ${m.st+1}★ · ${pc.ess} essence (have ${p.ess.any||0}) + ${rlNum(pc.gold)} gold</button>`:''}<button class="btn ${inTeam?'danger':'pri'}" data-a="rlTeamToggle" data-v="${id}">${inTeam?'Remove from team':'Add to team'}</button>${inTeam&&p.team[0]!==id?`<button class="btn" data-a="rlLead" data-v="${id}">Make leader</button>`:''}</div>
     ${m.lv>=mx&&m.st<6?`<p class="muted">Max level reached. Promote to raise the cap to ${rlMaxLv(m.st+1)} and boost all stats by 10%.</p>`:''}</div>
    <div class="rl-hd-cols"><div class="panel"><h3 style="margin-bottom:8px">Stats</h3><div class="rl-stats">${rlStatRows(st,base)}</div>${st.sets.length?`<p class="muted" style="margin-top:8px">Active sets: ${st.sets.map(k=>`<b style="color:${RL_SETS[k].c}">${RL_SETS[k].n}</b> (${RL_SETS[k].d})`).join(', ')}</p>`:''}</div>
-   <div class="panel"><h3 style="margin-bottom:8px">Skills</h3><div class="stack" style="gap:10px">${h.sk.map((k,i)=>`<div class="rl-skill"><div class="row" style="justify-content:space-between"><b>${esc(k.n)}</b><span class="muted">${k.pas?'Passive':k.cd?`Cooldown ${Math.max(1,k.cd-(m.sk[i]>=3?1:0))}`:'Basic'} · Lv ${m.sk[i]}/${rlSkMax(id,i)}</span></div><p class="muted">${esc(rlSkillText(h,k,m.sk[i],st))}${i>0&&!k.pas?' <span class="rl-mathtag">Answer a question for full power</span>':''}</p></div>`).join('')}${h.ld?`<div class="rl-skill lead"><b>Leader skill</b><p class="muted">${esc(rlLeadText(h))}</p></div>`:''}<p class="muted">Summoning ${esc(h.n)} again levels up a skill.</p></div></div></div>
+   <div class="panel"><h3 style="margin-bottom:8px">Skills</h3><div class="stack" style="gap:10px">${h.sk.map((k,i)=>`<div class="rl-skill${!k.pas?' ic':''}">${k.pas?'':rlSkIcon(id,m.lv,i)}<div class="row" style="justify-content:space-between"><b>${esc(k.n)}</b><span class="muted">${k.pas?'Passive':k.cd?`Cooldown ${Math.max(1,k.cd-(m.sk[i]>=3?1:0))}`:'Basic'} · Lv ${m.sk[i]}/${rlSkMax(id,i)}</span></div><p class="muted">${esc(rlSkillText(h,k,m.sk[i],st))}${i>0&&!k.pas?' <span class="rl-mathtag">Answer a question for full power</span>':''}</p></div>`).join('')}${h.plating?`<div class="rl-skill lead"><b>Scale Plating</b><p class="muted">${esc(rlPlatingText(h))}</p></div>`:''}${h.ambush?`<div class="rl-skill lead"><b>Shadowstrike</b><p class="muted">${esc(rlAmbushText(h))}</p></div>`:''}${h.rebirth?`<div class="rl-skill lead"><b>Rebirth</b><p class="muted">${esc(rlRebirthText(h))}</p></div>`:''}${h.ld?`<div class="rl-skill lead"><b>Leader skill</b><p class="muted">${esc(rlLeadText(h))}</p></div>`:''}<p class="muted">Summoning ${esc(h.n)} again levels up a skill.</p></div></div></div>
    <div class="panel"><h3 style="margin-bottom:8px">Gear</h3><div class="rl-gslots">${gear}</div></div></div></div>`;
 }
 
@@ -279,12 +306,24 @@ function rlbSync(){const b=rlUI().b;if(!b)return;const B=b.B;
   const o=document.getElementById('rlb-order');if(o){const live=B.all().filter(u=>u.alive).map(u=>({u,t:(100-u.atb)/rlEff(u,'spd')})).sort((a,c)=>a.t-c.t).slice(0,8);const key=live.map(x=>x.u.uid).join(',');
     if(o.dataset.k!==key){o.dataset.k=key;o.innerHTML=`<span class="muted">Next</span>`+live.map(x=>`<span class="rlb-oc ${x.u.side?'e':'a'}" title="${esc(x.u.name)}">${rlPort(x.u)}</span>`).join('')}}
 }
+// a question sheet left open when the battle view goes away (tab switch, retreat) is cleared
+setInterval(()=>{const o=document.getElementById('rlb-mathov');if(o&&(!document.getElementById('rlb')||!(rlUI().b&&rlUI().b.math)))o.remove()},500);
 function rlbPanel(){const R=rlUI(),b=R.b,el=document.getElementById('rlb-panel');if(!el||!b)return;const B=b.B;
-  if(b.res){el.innerHTML=rlbResult(b);return}
-  if(b.math){const m=b.math;el.innerHTML=`<div class="rlb-math"><p class="rl-kicker">Power up ${esc(m.sk.n)}</p><div class="q"><small>${esc(m.q.topic)}</small>${m.q.q}</div><div class="rlb-mt"><i id="rlb-mt" style="width:100%"></i></div><div class="choices">${m.q.choices.map((c,i)=>`<button class="choice" data-a="rlbAns" data-v="${i}"><kbd>${i+1}</kbd>${esc(c)}</button>`).join('')}</div><p class="muted">Correct: full power. Wrong or out of time: half power, and its harmful effects won't land.</p></div>`;if(!STILL)el.scrollIntoView({behavior:'smooth',block:'nearest'});return}
+  const stage=document.getElementById('rlb-stage');let ov=document.getElementById('rlb-mathov');
+  if(!b.math&&ov)ov.remove();
+  if(b.res){el.classList.remove('skillbar');el.innerHTML=rlbResult(b);if(!STILL)el.scrollIntoView({behavior:'smooth',block:'nearest'});return}
+  el.classList.add('skillbar');
+  if(b.math){const m=b.math,html=`<div class="rlb-math"><p class="rl-kicker">Power up ${esc(m.sk.n)}</p><div class="q"><small>${esc(m.q.topic)}</small>${m.q.q}</div><div class="rlb-mt"><i id="rlb-mt" style="width:100%"></i></div><div class="choices">${m.q.choices.map((c,i)=>`<button class="choice" data-a="rlbAns" data-v="${i}"><kbd>${i+1}</kbd>${esc(c)}</button>`).join('')}</div><p class="muted">Correct: full power. Wrong or out of time: half power, and its harmful effects won't land.</p></div>`;
+    // the question floats over the battlefield, so nothing below has to be scrolled to
+    if(stage){const sheet=innerWidth<=700;if(!ov){ov=document.createElement('div');ov.id='rlb-mathov';ov.className='rlb-mathov'+(sheet?' sheet':'');(sheet?document.body:stage).appendChild(ov)}if(ov.dataset.k!==String(m.t0)){ov.dataset.k=String(m.t0);ov.innerHTML=html}
+      el.innerHTML=`<div class="rlb-hint wide"><b>⚡ ${esc(m.sk.n)}</b><span>Answer the question on the battlefield for full power.</span></div>`}
+    else el.innerHTML=html;return}
   const u=b.phase==='pick'&&B.find(b.actor);
-  if(!u){el.innerHTML=`<p class="muted rlb-wait">${b.auto?'Auto battle: skills fire at half power without questions.':'…'}</p>`;return}
-  el.innerHTML=`<div class="rlb-actor"><div class="rl-pframe r${RL_H[u.id].r}">${rlHeroSVG(u.id,{motes:false})}</div><div><b>${esc(u.name)}'s turn</b><p class="muted">${b.pick!=null?`Choose a target for ${esc(u.sk[b.pick].n)}.`:'Choose a skill.'}</p></div></div><div class="rlb-skills">${u.sk.map((k,i)=>{if(k.pas)return`<div class="rlb-sk pas"><b>${esc(k.n)}</b><span>Passive</span></div>`;const ok=rlUsable(u,i);return`<button class="rlb-sk${b.pick===i?' on':''}" data-a="rlbSkill" data-v="${i}" ${ok?'':'disabled'} title="${esc(rlSkillText(RL_H[u.id],k,u.skl[i],u.stats))}"><b>${esc(k.n)}</b><span>${!ok?(rlHas(u,'seal')&&i>0?'Sealed':`Ready in ${u.cds[i]}`):i===0?'Basic':rlCfg().mathSkills?'⚡ Question':'Skill'}</span><small>${esc(rlSkillText(RL_H[u.id],k,u.skl[i],u.stats))}</small></button>`}).join('')}</div>`;
+  if(!u){const a=b.actor!=null&&B.find(b.actor);el.innerHTML=`<div class="rlb-hint wide"><span>${b.auto?'Auto battle: skills fire at half power without questions.':a&&a.alive?`${esc(a.name)} is acting…`:'…'}</span></div>`;return}
+  const H=RL_H[u.id],tip=i=>esc(rlSkillText(H,u.sk[i],u.skl[i],u.stats)),pk=b.pick;
+  el.innerHTML=`<div class="rlb-who"><div class="rl-pframe r${H.r}">${rlHeroSVG(u.id,{motes:false})}</div><div class="rlb-hint"><b>${esc(u.name)}'s turn</b><span id="rlb-hint">${pk!=null?`Tap a target for ${esc(u.sk[pk].n)}.`:'Choose a skill.'}</span></div></div>
+   <div class="rlb-skills">${u.sk.map((k,i)=>{if(k.pas)return`<div class="rlb-sk pas"><b>${esc(k.n)}</b><span class="st">Passive</span></div>`;const ok=rlUsable(u,i),st=!ok?(rlHas(u,'seal')&&i>0?'Sealed':`Ready in ${u.cds[i]}`):i===0?'Basic':rlCfg().mathSkills?'⚡ Question':'Skill';
+     return`<button class="rlb-sk${pk===i?' on':''}${ok?'':' cd'}${rlSkIcon(u.id,u.lv,i)?' ic':''}" data-a="rlbSkill" data-v="${i}" ${ok?'':'disabled'} aria-label="${esc(k.n)}: ${tip(i)}">${rlSkIcon(u.id,u.lv,i)}<kbd>${'QWE'[i]}</kbd><b>${esc(k.n)}</b><span class="st">${st}</span><span class="tip" role="tooltip">${tip(i)}</span></button>`}).join('')}</div>`;
 }
 function rlbDelay(ms){const b=rlUI().b;return new Promise(r=>setTimeout(r,STILL?0:ms/(b?b.speed:1)))}
 function rlbFloat(uid,text,cls){const el=document.getElementById('rlu-'+uid);if(!el)return;const f=document.createElement('span');f.className='rlb-float '+(cls||'');f.textContent=text;f.style.left=(30+Math.random()*40)+'%';el.appendChild(f);setTimeout(()=>f.remove(),1100)}
@@ -406,12 +445,12 @@ const REALM_ACTIONS={
   rlbSpeed(d){const R=rlUI();R.b.speed=+d.v;R.lastSpeed=+d.v;document.querySelectorAll('[data-a="rlbSpeed"]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===d.v))},
   rlbAuto(el){const b=rlUI().b;b.auto=!b.auto;const btn=document.querySelector('[data-a="rlbAuto"]');if(btn){btn.textContent='Auto '+(b.auto?'on':'off');btn.classList.toggle('pri',b.auto)}if(b.auto&&b.phase==='pick'){b.phase='go';rlbPanel();rlbStep()}else rlbPanel()},
   rlbSkill(d){const b=rlUI().b;if(b.phase!=='pick')return;const u=b.B.find(b.actor),i=+d.v,s=u.sk[i];if(!rlUsable(u,i))return;
-    if(s.tg==='e1'||s.tg==='a1'){b.pick=i;rlbPanel();document.querySelectorAll('[id^="rlu-"]').forEach(x=>x.classList.remove('targetable'));const side=s.tg==='e1'?1-u.side:u.side;b.B.side[side].filter(x=>x.alive).forEach(x=>{const e=document.getElementById('rlu-'+x.uid);if(e)e.classList.add('targetable')});return}
+    if(s.tg==='e1'||s.tg==='a1'){b.pick=i;rlbPanel();document.querySelectorAll('[id^="rlu-"]').forEach(x=>x.classList.remove('targetable'));const side=s.tg==='e1'?1-u.side:u.side;b.B.side[side].filter(x=>x.alive||(s.res&&b.B.side[side].some(y=>!y.alive))?(s.res?!x.alive||!b.B.side[side].some(y=>!y.alive):x.alive):false).filter(x=>x.side===u.side||!rlHas(x,'veil')).filter(x=>{const tn=u.fx.find(f=>f.k==='taunt');return x.side===u.side||!tn||!b.B.side[x.side].some(y=>y.uid===tn.src&&y.alive&&!rlHas(y,'veil'))||x.uid===tn.src}).forEach(x=>{const e=document.getElementById('rlu-'+x.uid);if(e)e.classList.add('targetable')});return}
     b.phase='busy';rlbUse(i)},
-  rlbTarget(d){const b=rlUI().b;if(!b||b.phase!=='pick'||b.pick==null)return;const u=b.B.find(b.actor),s=u.sk[b.pick],t=b.B.find(+d.v);if(!t||!t.alive)return;
+  rlbTarget(d){const b=rlUI().b;if(!b||b.phase!=='pick'||b.pick==null)return;const u=b.B.find(b.actor),s=u.sk[b.pick],t=b.B.find(+d.v);if(!t||(!t.alive&&!s.res))return;if(t.side!==u.side&&rlHas(t,'veil'))return;
     if((s.tg==='e1'&&t.side===u.side)||(s.tg==='a1'&&t.side!==u.side))return;document.querySelectorAll('[id^="rlu-"]').forEach(x=>x.classList.remove('targetable'));const i=b.pick;b.phase='busy';rlbUse(i,t.uid)},
   rlbAns(d){rlbAnswer(+d.v)},
-  rlbQuit(){const R=rlUI(),b=R.b;if(!b)return;if(!b.res&&!b.ctx.arenaVs){confirmBox('Retreat from battle?','You keep nothing from this battle, and the energy is not refunded.','Retreat',()=>{R.b=null})}else if(!b.res&&b.ctx.arenaVs){confirmBox('Forfeit this arena battle?','It counts as a loss.','Forfeit',()=>{b.B.status='lose';rlbEnd();R.b=null})}else{R.b=null;R.v=b.ctx.arenaVs?'arena':'world';render()}},
+  rlbQuit(){const R=rlUI(),b=R.b;if(!b)return;{const o=document.getElementById('rlb-mathov');if(o&&b.res)o.remove()}if(!b.res&&!b.ctx.arenaVs){confirmBox('Retreat from battle?','You keep nothing from this battle, and the energy is not refunded.','Retreat',()=>{R.b=null})}else if(!b.res&&b.ctx.arenaVs){confirmBox('Forfeit this arena battle?','It counts as a loss.','Forfeit',()=>{b.B.status='lose';rlbEnd();R.b=null})}else{R.b=null;R.v=b.ctx.arenaVs?'arena':'world';render()}},
   rlbAgain(){const R=rlUI(),b=R.b;const node=b.ctx.node;R.b=null;rlLaunch(node)},
   // teacher
   rlTGiveHero(){const id=document.getElementById('rlt-hero').value,f=+document.getElementById('rlt-form').value,who=document.getElementById('rlt-hwho').value;if(!RL_H[id])return;
@@ -472,7 +511,8 @@ const REALM_TCHANGE={
 .rl-port{display:block;width:100%;height:auto}
 .rl-pframe{border-radius:10px;overflow:hidden;padding:2px;background:#3a3545;position:relative}
 .rl-pframe svg{border-radius:8px}
-.rl-pframe.r3{background:linear-gradient(160deg,#6fa8ff,#2a4a8a)}.rl-pframe.r4{background:linear-gradient(160deg,#d9a8ff,#6a2ab5);box-shadow:0 0 14px -4px #b970ff}.rl-pframe.r5{background:conic-gradient(from var(--ang,0deg),#ffd60a,#ff8a1f,#fff3b0,#ff8a1f,#ffd60a);box-shadow:0 0 20px -4px #ff8a1f;animation:spin 6s linear infinite}
+.rl-rar{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid;border-radius:999px;padding:1px 8px;margin-right:4px}
+.rl-pframe.r1{background:linear-gradient(160deg,#f4f4f6,#9a9aa6)}.rl-pframe.r2{background:linear-gradient(160deg,#8fe08a,#2c7a35)}.rl-pframe.r3{background:linear-gradient(160deg,#6fa8ff,#2a4a8a)}.rl-pframe.r4{background:linear-gradient(160deg,#d9a8ff,#6a2ab5);box-shadow:0 0 14px -4px #b970ff}.rl-pframe.r5{background:conic-gradient(from var(--ang,0deg),#ffd60a,#ff8a1f,#fff3b0,#ff8a1f,#ffd60a);box-shadow:0 0 20px -4px #ff8a1f;animation:spin 6s linear infinite}
 .live .rl-mote{animation:rlMote 4s ease-in-out infinite}@keyframes rlMote{0%,100%{transform:translateY(0);opacity:.25}50%{transform:translateY(-14px);opacity:.9}}
 .live .rl-float,.rl-float{animation:rlFloat 3s ease-in-out infinite}@keyframes rlFloat{50%{transform:translateY(-5px)}}
 .rl-spin{animation:rlSpin 6s linear infinite}@keyframes rlSpin{to{transform:rotate(360deg)}}
@@ -542,7 +582,8 @@ const REALM_TCHANGE={
 .rl-core{position:absolute;inset:36%;border-radius:50%;background:radial-gradient(circle,#fff,#d9c2ff 30%,#7a3cff 60%,transparent 72%);animation:rlGlow 2s ease-in-out infinite}
 .rl-sumres{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
 .rl-reveal{display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;animation:rlReveal .6s cubic-bezier(.2,1.4,.4,1) both}
-.rl-reveal .rl-pframe{width:100%}.rl-reveal.r5 .rl-pframe{box-shadow:0 0 40px #ff8a1f}
+.rl-reveal .rl-pframe{width:100%}
+.rl-reveal{background:#1a1722;border-radius:14px;padding:8px 8px 10px;border:2px solid #3a3545}.rl-reveal.r1{border-color:#c9c9d3}.rl-reveal.r2{border-color:#5fd36a}.rl-reveal.r3{border-color:#4aa8ff}.rl-reveal.r4{border-color:#b970ff;box-shadow:0 0 16px -6px #b970ff}.rl-reveal.r5{border-color:#ff8a1f;box-shadow:0 0 22px -6px #ff8a1f}.rl-reveal.r5 .rl-pframe{box-shadow:0 0 40px #ff8a1f}
 @keyframes rlReveal{from{transform:rotateY(90deg) scale(.7);opacity:0}}
 .rl-arena{display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:16px;align-items:start}@media(max-width:900px){.rl-arena{grid-template-columns:1fr}}
 .rl-rank{text-align:center;background:radial-gradient(80% 60% at 50% 0%,color-mix(in srgb,var(--tc) 30%,transparent),transparent 70%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01)),#1a1721}
@@ -585,14 +626,34 @@ const REALM_TCHANGE={
 .rlb-float.crit{color:#ffb800;font-size:30px}.rlb-float.dmg{color:#fff}.rlb-float.dot{color:#ff8a3d;font-size:18px}.rlb-float.heal{color:#5ef0b0}.rlb-float.buff{color:#7ab8ff;font-size:15px}.rlb-float.debuff{color:#ff7a8f;font-size:15px}.rlb-float.adv{color:#ffd60a;font-size:13px;top:40%}.rlb-float.weak{color:#a69fb0;font-size:13px;top:40%}.rlb-float.muted{color:#a69fb0;font-size:14px}.rlb-float.name{color:#ffd60a;font-size:15px;top:-6px;font-family:var(--body);font-weight:800}
 @keyframes rlRise{0%{transform:translateY(8px) scale(.7);opacity:0}15%{transform:translateY(0) scale(1.1);opacity:1}100%{transform:translateY(-34px);opacity:0}}
 .rlb-banner{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-size:56px;color:#fff;text-shadow:0 0 30px var(--elc);z-index:5;animation:rlBanner 1.3s ease-out forwards;pointer-events:none}@keyframes rlBanner{0%{transform:scale(1.6);opacity:0}20%{transform:scale(1);opacity:1}80%{opacity:1}100%{opacity:0}}
-.rlb-panel{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01)),#1a1721;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px;min-height:120px}
-.rlb-wait{text-align:center;padding:30px 0}
-.rlb-actor{display:flex;gap:12px;align-items:center;margin-bottom:10px}.rlb-actor .rl-pframe{width:56px}
-.rlb-skills{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.rlb-sk{display:flex;flex-direction:column;gap:3px;text-align:left;background:linear-gradient(180deg,#332d40,#251f30);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px;transition:transform .12s,border-color .12s}
-.rlb-sk:hover:not(:disabled){transform:translateY(-2px);border-color:#ffd60a}.rlb-sk.on{border-color:#ffd60a;box-shadow:0 0 18px -6px #ffd60a}.rlb-sk:disabled{opacity:.45}
-.rlb-sk span{font-size:12px;font-weight:700;color:#ffd60a}.rlb-sk small{font-size:12px;color:var(--muted);line-height:1.3}.rlb-sk.pas{opacity:.6}
-@media(max-width:700px){.rlb-skills{grid-template-columns:1fr}.rlb-field{grid-template-columns:1fr;padding:10px;min-height:0}.rlb-vs{display:none}.rlb-side.e{order:-1}.rlb-side{gap:6px}.rlu{grid-template-columns:44px minmax(0,1fr);gap:6px;padding:5px}.rlu.boss{grid-template-columns:64px minmax(0,1fr)}.rlu-name{font-size:13px}.rlu-name .muted{display:none}}
+.rlb-panel{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01)),#1a1721;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px}
+.rlb-stage:has(+.rlb-panel.skillbar){border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:0}
+.rlb-panel.skillbar{display:flex;align-items:center;gap:14px;min-height:78px;padding:9px 12px;border-radius:0 0 16px 16px;border-top:0;margin-top:-10px;position:relative;z-index:3}
+.rlb-who{display:flex;gap:10px;align-items:center;flex:0 0 auto;min-width:0;max-width:240px}.rlb-who .rl-pframe{width:52px;flex:0 0 auto}
+.rlb-hint{display:flex;flex-direction:column;gap:2px;min-width:0}.rlb-hint b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rlb-hint span{font-size:13px;color:var(--muted)}
+.rlb-hint.wide{flex:1;align-items:center;text-align:center}
+.rlb-wait{text-align:center;padding:14px 0}
+.rlb-skills{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1;min-width:0}
+.rlb-sk{position:relative;display:flex;flex-direction:column;justify-content:center;gap:2px;text-align:left;min-height:58px;background:linear-gradient(180deg,#3a3349,#262031);border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:8px 10px 8px 36px;transition:transform .12s,border-color .12s,box-shadow .12s}
+.rlb-sk b{font-size:14px;line-height:1.15}.rlb-sk kbd{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:20px;height:20px;display:grid;place-items:center;border-radius:6px;background:rgba(255,255,255,.1);font:700 11px/1 var(--mono,monospace);color:var(--muted)}
+.rlb-sk:hover:not(:disabled),.rlb-sk:focus-visible{transform:translateY(-2px);border-color:#ffd60a}.rlb-sk.on{border-color:#ffd60a;box-shadow:0 0 18px -6px #ffd60a;background:linear-gradient(180deg,#4a3f22,#2c2516)}.rlb-sk:disabled{opacity:.5}
+.rlb-sk .st{font-size:12px;font-weight:700;color:#ffd60a}.rlb-sk.cd .st{color:var(--muted)}.rlb-sk.pas{opacity:.6}
+.rlb-sk .tip{position:absolute;left:50%;bottom:calc(100% + 10px);transform:translate(-50%,4px);width:max(100%,250px);max-width:320px;padding:9px 11px;border-radius:10px;background:#0f0c14f2;border:1px solid rgba(255,255,255,.16);box-shadow:0 12px 30px -10px #000;font-size:12.5px;line-height:1.35;font-weight:400;color:#e8e4f0;opacity:0;pointer-events:none;transition:opacity .12s,transform .12s;z-index:20}
+.rlb-sk:hover .tip,.rlb-sk:focus-visible .tip,.rlb-sk.on .tip{opacity:1;transform:translate(-50%,0)}
+.rlb-skills .rlb-sk:first-child .tip{left:0;transform:translate(0,4px)}.rlb-skills .rlb-sk:first-child:hover .tip,.rlb-skills .rlb-sk:first-child.on .tip,.rlb-skills .rlb-sk:first-child:focus-visible .tip{transform:none}
+.rlb-skills .rlb-sk:last-child .tip{left:auto;right:0;transform:translate(0,4px)}.rlb-skills .rlb-sk:last-child:hover .tip,.rlb-skills .rlb-sk:last-child.on .tip,.rlb-skills .rlb-sk:last-child:focus-visible .tip{transform:none}
+.rlb-mathov{position:absolute;inset:0;z-index:400;display:grid;place-items:center;padding:14px;background:rgba(10,8,16,.55);backdrop-filter:blur(2px);animation:rlbOvIn .18s ease-out}
+.rlb-mathov .rlb-math{width:min(560px,100%);max-height:100%;overflow:auto;background:#1a1721f2;border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px;box-shadow:0 20px 50px -20px #000}
+.rlb-mathov .choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}.rlb-mathov .rlb-math>.muted{font-size:12px;margin:0}
+.rlb-sk.ic{padding-left:64px}.rlb-sk.ic .rl-skic{position:absolute;left:8px;top:50%;transform:translateY(-50%)}
+.rlb-sk.ic kbd{left:42px;top:auto;bottom:4px;transform:none;width:16px;height:16px;font-size:9.5px;background:#0f0c14d9}
+.rlb-sk.cd .rl-skic{filter:grayscale(.85) brightness(.7)}
+.rl-skill.ic{display:grid;grid-template-columns:46px 1fr;column-gap:12px;align-items:start}.rl-skill.ic>.rl-skic{grid-row:1 / span 2}
+@media(max-width:700px){.rlb-sk.ic{padding:8px 4px 7px;align-items:center;text-align:center;gap:1px}.rlb-sk.ic .rl-skic{position:static;transform:none;width:34px;height:34px;border-radius:9px;margin-bottom:3px}.rlb-sk.ic b{font-size:12px}.rlb-sk.ic .st{font-size:10.5px}}
+@keyframes rlbOvIn{from{opacity:0}to{opacity:1}}
+.rlb-mathov.sheet{position:fixed;inset:0;z-index:1000;place-items:end center;padding:0;background:rgba(10,8,16,.45)}.rlb-mathov.sheet .rlb-math{border-radius:18px 18px 0 0;max-height:82vh;padding:14px 14px calc(14px + env(safe-area-inset-bottom));animation:rlbUp .2s ease-out}
+@keyframes rlbUp{from{transform:translateY(30px)}to{transform:none}}
+@media(max-width:700px){.rlb-panel.skillbar{flex-direction:column;align-items:stretch;gap:8px;padding:8px}.rlb-who{max-width:none}.rlb-who .rl-pframe{width:38px}.rlb-sk{padding:7px 6px 7px 8px;min-height:52px}.rlb-sk kbd{display:none}.rlb-sk b{font-size:12.5px}.rlb-sk .st{font-size:11px}.rlb-sk .tip{width:min(86vw,300px)}.rlb-mathov .choices{grid-template-columns:1fr}.rlb-field{grid-template-columns:1fr;padding:10px;min-height:0}.rlb-vs{display:none}.rlb-side.e{order:-1}.rlb-side{gap:6px}.rlu{grid-template-columns:44px minmax(0,1fr);gap:6px;padding:5px}.rlu.boss{grid-template-columns:64px minmax(0,1fr)}.rlu-name{font-size:13px}.rlu-name .muted{display:none}}
 .rlb-math{display:flex;flex-direction:column;gap:10px}.rlb-math .q{padding:16px}
 .rlb-mt{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}.rlb-mt i{display:block;height:100%;background:#ffd60a}
 .rlb-verdict{font-family:var(--display);font-size:26px;text-align:center}

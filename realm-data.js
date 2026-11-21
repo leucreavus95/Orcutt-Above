@@ -29,7 +29,7 @@ const RL_FX={
   spdUp:{n:'SPD Up',buff:1,c:'#4fd17a',g:'S↑',d:'+30% SPD'},
   critUp:{n:'Crit Up',buff:1,c:'#ffd96a',g:'C↑',d:'+30% Crit Rate'},
   shield:{n:'Shield',buff:1,c:'#9fd6ff',g:'◈',d:'Absorbs damage'},
-  immune:{n:'Immunity',buff:1,c:'#fff6c9',g:'✦',d:'Blocks harmful effects'},
+  immune:{n:'Immunity',buff:1,c:'#fff6c9',g:'✦',d:'Blocks every debuff: none can be applied'},
   regen:{n:'Regen',buff:1,c:'#38d39f',g:'✚',d:'Heals 12% HP each turn'},
   defBreak:{n:'DEF Break',c:'#ff4d6d',g:'D↓',d:'-50% DEF'},
   atkBreak:{n:'ATK Break',c:'#ff4d6d',g:'A↓',d:'-40% ATK'},
@@ -37,7 +37,23 @@ const RL_FX={
   stun:{n:'Stun',c:'#ffd60a',g:'✶',d:'Skips its next turn'},
   burn:{n:'Burn',c:'#ff6a3d',g:'≈',d:'Takes 6% max HP each turn'},
   seal:{n:'Seal',c:'#a46bff',g:'⊘',d:'Can only use its first skill'},
-  mark:{n:'Mark',c:'#ff7eb6',g:'◎',d:'Takes 25% more damage'}
+  mark:{n:'Mark',c:'#ff7eb6',g:'◎',d:'Takes 25% more damage'},
+  poison:{n:'Poison',c:'#8bc43a',g:'☠',d:'Stacks up to 5: loses 4% max HP per stack each turn'},
+  sigil:{n:'Sigil',c:'#a98bff',g:'✧',d:'Stacks up to 3: Aster\'s Rift Sweep detonates every Sigil for bonus damage'},
+  static:{n:'Static',c:'#ffd23a',g:'ϟ',d:'Charged: Brontos\'s bolts crackle harder, and Tempest Drive discharges it for big damage'},
+  soak:{n:'Soaked',c:'#5cc4f0',g:'≋',d:'Drenched: Thalos\'s blades cut deeper and his Deep Current drags it further back'},
+  blind:{n:'Blinded',c:'#9a6a3a',g:'◌',d:'Dirt in the eyes: its attacks have a 40% chance to miss'},
+  drowsy:{n:'Drowsy',c:'#d9b98a',g:'z',d:'35% chance to doze off and lose its turn'},
+  chill:{n:'Chill',c:'#7cc4ff',g:'❄',d:'Stacks up to 3: at 3 Chill it freezes solid and skips a turn'},
+  rime:{n:'Rune Ward',buff:1,c:'#7cc4ff',g:'❖',d:'Enemies that hit it get Chilled'},
+  daze:{n:'Dazed',c:'#7fe3ef',g:'♪',d:'Ringing ears: Chime\'s shards hit harder, and her Resonance Burst stuns it'},
+  seed:{n:'Seeded',c:'#a8dc5a',g:'❦',d:'Loses 5% HP each turn; the healing goes to the enemy team'},
+  bulwark:{n:'Bulwark',buff:1,c:'#d98a4a',g:'▣',d:'Takes 25% less damage from hits'},
+  guard:{n:'Guarded',buff:1,c:'#6fe0f5',g:'⛨',d:'A guardian takes 30% of the damage for it'},
+  ward:{n:'Flame Ward',buff:1,c:'#ff9a3d',g:'♨',d:'Enemies that hit it may catch fire'},
+  freeze:{n:'Frozen',c:'#9fd8ff',g:'❄',d:'Encased in ice: skips its turns until it thaws'},
+  taunt:{n:'Taunted',c:'#e0a83a',g:'⚑',d:'Must aim its single-target attacks at the one who taunted it'},
+  veil:{n:'Veiled',buff:1,c:'#b9a3e0',g:'◐',d:'Phased out: enemies can\'t target or hit it'}
 };
 
 /* ---------- heroes ----------

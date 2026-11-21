@@ -102,6 +102,8 @@ function rlSummon(p,n){
     let x=Math.random()*tot,r=x<(+R[5]||0)?5:x<(+R[5]||0)+(+R[4]||0)?4:3;
     if(c.pity>0&&p.pity>=c.pity)r=5;
     if(n>=10&&i===n-1&&!out.some(o=>RL_H[o.id].r>=4)&&r<4)r=4;
+    // the 3★ slot also covers Common/Uncommon heroes: 40% of those pulls land on one when any exist
+    if(r===3&&RL_HEROES.some(h=>h.r<3)&&Math.random()<.4)r=Math.random()<.6||!RL_HEROES.some(h=>h.r===2)?(RL_HEROES.some(h=>h.r===1)?1:2):2;
     let pool=RL_HEROES.filter(h=>h.r===r);if(!pool.length){const rs=[...new Set(RL_HEROES.map(h=>h.r))].sort((a,b)=>Math.abs(a-r)-Math.abs(b-r)||b-a);pool=RL_HEROES.filter(h=>h.r===rs[0])}let id=(r===5&&Math.random()<.5)?feat:rlRand(pool).id;
     if(r===5)p.pity=0;
     const isNew=rlAddHero(p,id);let note='new';
@@ -168,17 +170,30 @@ function rlTurnStart(B,u){
   const ev=[];B.turn++;u.atb=0;u.cds=u.cds.map(c=>Math.max(0,c-1));
   const burns=u.fx.filter(f=>f.k==='burn').length;
   if(burns){const d=Math.round(u.maxHp*.06*burns);rlDamage(B,u,d,ev,{dot:true})}
+  const psn=u.fx.filter(f=>f.k==='poison').length;if(psn&&u.alive){rlDamage(B,u,Math.round(u.maxHp*.04*psn*(u.boss?.5:1)),ev,{dot:true});ev.push({k:'ptick',u:u.uid,v:psn})}
+  // Seeded: the seed drains 5% HP and heals the most hurt unit on the other side
+  if(u.alive&&rlHas(u,'seed')){const d=Math.round(u.maxHp*.05);rlDamage(B,u,d,ev,{dot:true});const fr=B.side[1-u.side].filter(x=>x.alive).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];if(fr)rlHeal(fr,d,ev)}
   if(u.alive&&rlHas(u,'regen')){const a=Math.round(u.maxHp*.12);rlHeal(u,a,ev)}
   if(!u.alive){rlCheck(B,ev);return{ev,can:false}}
   if(rlHas(u,'stun')){ev.push({k:'skip',u:u.uid});rlTick(u,ev);return{ev,can:false}}
+  if(rlHas(u,'freeze')){ev.push({k:'iced',u:u.uid});rlTick(u,ev);return{ev,can:false}} // Permafrost: frozen solid, skips the turn
+  if(rlHas(u,'drowsy')&&Math.random()<.35){u.fx=u.fx.filter(x=>x.k!=='drowsy');ev.push({k:'doze',u:u.uid});rlTick(u,ev);return{ev,can:false}}
   return{ev,can:true};
 }
 function rlTick(u,ev){u.fx.forEach(f=>f.t--);const gone=u.fx.filter(f=>f.t<=0);u.fx=u.fx.filter(f=>f.t>0);if(gone.length)ev.push({k:'fxgone',u:u.uid});if(!rlHas(u,'shield'))u.shield=0}
 function rlHeal(u,a,ev){if(!u.alive)return;const b=u.hp;u.hp=Math.min(u.maxHp,u.hp+Math.round(a));const d=u.hp-b;if(d>0)ev.push({k:'heal',u:u.uid,v:d})}
 function rlDamage(B,u,amt,ev,o){
-  let a=Math.max(1,Math.round(amt));if(u.shield>0){const s=Math.min(u.shield,a);u.shield-=s;a-=s;if(u.shield<=0)u.fx=u.fx.filter(f=>f.k!=='shield')}
+  let a=Math.max(1,Math.round(amt));
+  // Scale Plating (Kestran): 20% less damage from hits while above half HP
+  {const H=u.kind==='hero'&&typeof RL_H!=='undefined'&&RL_H[u.id];if(H&&H.plating&&!(o&&o.dot)&&u.hp>u.maxHp*.5)a=Math.max(1,Math.round(a*(1-H.plating)))}
+  // Earthen Bulwark: a stone wall blunts direct hits
+  if(!(o&&(o.dot||o.guarded))&&rlHas(u,'bulwark'))a=Math.max(1,Math.round(a*.75));
+  // Guardian Current: the guardian takes 30% of direct hits aimed at a guarded ally
+  const gd=!(o&&(o.dot||o.guarded))&&u.fx.find(f=>f.k==='guard');if(gd){const G=B.all().find(x=>x.uid===gd.src);if(G&&G.alive&&G!==u){const sh=Math.round(a*.3);if(sh>0){a-=sh;ev.push({k:'guarded',u:u.uid,g:G.uid});rlDamage(B,G,sh,ev,{guarded:true})}}}if(u.shield>0){const s=Math.min(u.shield,a);u.shield-=s;a-=s;if(u.shield<=0)u.fx=u.fx.filter(f=>f.k!=='shield')}
   u.hp=Math.max(0,u.hp-a);ev.push({k:'hit',u:u.uid,v:Math.round(amt),hp:u.hp,crit:o&&o.crit,adv:o&&o.adv,dot:o&&o.dot});
-  if(u.hp<=0&&u.alive){u.alive=false;u.atb=0;u.fx=[];u.shield=0;ev.push({k:'die',u:u.uid})}
+  if(u.hp<=0&&u.alive){const H=u.kind==='hero'&&typeof RL_H!=='undefined'&&RL_H[u.id];
+    if(H&&H.rebirth&&!u.reborn){u.reborn=true;u.hp=Math.round(u.maxHp*H.rebirth);u.fx=u.fx.filter(x=>RL_FX[x.k]&&RL_FX[x.k].buff);ev.push({k:'reborn',u:u.uid});return a}
+    u.alive=false;u.atb=0;u.fx=[];u.shield=0;ev.push({k:'die',u:u.uid})}
   return a}
 function rlApplyFx(B,src,tgt,f,power,ev,isEnemy){
   const k=f[0],F=RL_FX[k];
@@ -186,56 +201,102 @@ function rlApplyFx(B,src,tgt,f,power,ev,isEnemy){
   if(k==='healT'){rlHeal(tgt,tgt.maxHp*f[1]/100*power,ev);return}
   if(k==='cleanse'){if(tgt.fx.some(x=>!RL_FX[x.k].buff)){tgt.fx=tgt.fx.filter(x=>RL_FX[x.k].buff);ev.push({k:'cleanse',u:tgt.uid})}return}
   if(k==='strip'){const b=tgt.fx.filter(x=>RL_FX[x.k].buff).slice(0,f[1]);if(b.length){tgt.fx=tgt.fx.filter(x=>!b.includes(x));if(!rlHas(tgt,'shield'))tgt.shield=0;ev.push({k:'strip',u:tgt.uid})}return}
+  if(k==='cdDown'){if(tgt.alive&&tgt.cds){tgt.cds=tgt.cds.map(c=>Math.max(0,c-f[1]))}return}
   if(k==='atb'){if(tgt.alive){tgt.atb=Math.min(100,tgt.atb+f[1]);ev.push({k:'atb',u:tgt.uid,v:f[1]})}return}
   if(k==='revive'){return}
   if(k==='atbDown'){if(power<1)return;if(Math.random()*100<f[2]&&!rlResist(src,tgt)&&!rlHas(tgt,'immune')){tgt.atb=Math.max(0,tgt.atb-f[1]);ev.push({k:'atb',u:tgt.uid,v:-f[1]})}else ev.push({k:'resist',u:tgt.uid});return}
   if(!F)return;
-  if(F.buff){const t=k==='shield'?f[2]:f[1];tgt.fx=tgt.fx.filter(x=>x.k!==k);tgt.fx.push({k,t:t+(tgt===src?1:0)});if(k==='shield'){tgt.shield=Math.round(src.maxHp*f[1]/100*power*(tgt===src?1:1))}ev.push({k:'fx',u:tgt.uid,f:k});return}
+  if(k==='guard'&&tgt===src)return; // the guardian doesn't guard himself
+  if(F.buff){const t=k==='shield'?f[2]:f[1];tgt.fx=tgt.fx.filter(x=>x.k!==k);tgt.fx.push(k==='guard'?{k,t,src:src.uid}:{k,t:t+(tgt===src?1:0)});if(k==='shield'){tgt.shield=Math.round(src.maxHp*f[1]/100*power*(tgt===src?1:1))}ev.push({k:'fx',u:tgt.uid,f:k});return}
   // debuff
   if(power<1||!tgt.alive)return;
   if(Math.random()*100>=f[2])return;
   if(rlHas(tgt,'immune')||rlResist(src,tgt)){ev.push({k:'resist',u:tgt.uid});return}
-  if(k==='burn'){if(tgt.fx.filter(x=>x.k==='burn').length<3)tgt.fx.push({k,t:f[1]})}
+  if(k==='poison'){const n=f[3]||1;for(let i=0;i<n;i++)if(tgt.fx.filter(x=>x.k==='poison').length<5)tgt.fx.push({k,t:f[1]});ev.push({k:'fx',u:tgt.uid,f:k});return}
+  if(k==='sigil'){if(tgt.fx.filter(x=>x.k==='sigil').length<3)tgt.fx.push({k,t:f[1]});ev.push({k:'fx',u:tgt.uid,f:k});return}
+  if(k==='chill'){tgt.fx.push({k,t:f[1]});if(tgt.fx.filter(x=>x.k==='chill').length>=3){tgt.fx=tgt.fx.filter(x=>x.k!=='chill'&&x.k!=='stun');tgt.fx.push({k:'stun',t:1});ev.push({k:'frozen',u:tgt.uid});return}}
+  else if(k==='taunt'){tgt.fx=tgt.fx.filter(x=>x.k!=='taunt');tgt.fx.push({k,t:f[1],src:src.uid})} // Taunted: single-target attacks must go to the taunter
+  else if(k==='burn'){if(tgt.fx.filter(x=>x.k==='burn').length<3)tgt.fx.push({k,t:f[1]})}
   else{tgt.fx=tgt.fx.filter(x=>x.k!==k);tgt.fx.push({k,t:f[1]})}
   ev.push({k:'fx',u:tgt.uid,f:k});
 }
 function rlResist(src,tgt){return Math.random()*100<rlClamp(tgt.stats.res-src.stats.acc,15,90)}
 function rlUsable(u,i){const s=u.sk[i];if(!s||s.pas)return false;if(i>0&&rlHas(u,'seal'))return false;return u.cds[i]<=0}
 function rlTargets(B,u,s,tid){
-  const foes=B.side[1-u.side].filter(x=>x.alive),mine=B.side[u.side].filter(x=>x.alive);
+  const foes=B.side[1-u.side].filter(x=>x.alive&&!rlHas(x,'veil')),mine=B.side[u.side].filter(x=>x.alive); // Veiled units can't be targeted at all
+  if(s.tg==='e1'&&!s.bounce){const tn=u.fx.find(f=>f.k==='taunt'),T=tn&&foes.find(x=>x.uid===tn.src);if(T)return[T]}
+  if(s.bounce&&foes.length)return Array.from({length:s.bounce},()=>foes[Math.floor(Math.random()*foes.length)]); // Ricochet: random enemy per hit
   if(s.tg==='eA')return foes;if(s.tg==='aA')return s.fx.some(f=>f[0]==='revive')?B.side[u.side]:mine;if(s.tg==='self')return[u];
+  if(s.res){const all=B.side[u.side],pick=all.find(x=>x.uid===tid);if(pick)return[pick];const dead=all.find(x=>!x.alive);return[dead||mine.slice().sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0]]}
   if(s.tg==='a1')return[mine.find(x=>x.uid===tid)||mine[0]];
-  return[foes.find(x=>x.uid===tid)||foes[0]];
+  return[foes.find(x=>x.uid===tid)||foes[0]].filter(Boolean);
 }
 /* perform a skill. power: 1 = full, 0.5 = math answer missed */
 function rlAct(B,u,i,tid,power){
   const s=u.sk[i],ev=[],pw=power==null?1:power,lvl=u.skl[i]||1,bonus=1+.1*(lvl-1);
   const tg=rlTargets(B,u,s,tid);ev.push({k:'act',u:u.uid,s:i,t:tg.map(x=>x.uid),p:pw});
+  if((s.tg==='e1'||s.tg==='eA')&&!tg.length&&B.side[1-u.side].some(x=>x.alive))ev.push({k:'lost',u:u.uid}); // every enemy is Veiled
   if(s.cd)u.cds[i]=Math.max(1,s.cd-(lvl>=3?1:0));
   const foe=s.tg==='e1'||s.tg==='eA';
   if(foe&&s.m>0){
     for(const t of tg){if(!t.alive)continue;
       const adv=rlAdv(u.el,t.el);
       for(let h=0;h<(s.h||1);h++){if(!t.alive)break;
+        if(rlHas(u,'blind')&&Math.random()<.4){ev.push({k:'miss',u:t.uid});continue} // Blinded
         let base=s.sc==='def'?rlEff(u,'def'):s.sc==='hp'?u.maxHp*2:rlEff(u,'atk');
         let d=base*s.m*bonus*pw;
         let def=rlEff(t,'def')*(1-(s.ign||0));d*=1000/(1140+3.5*RL_SQ*def);
         if(adv>0)d*=1.3;if(adv<0)d*=.75;
+        if(s.exec&&t.hp<t.maxHp*.5)d*=1+s.exec; // Finisher
+        if(s.opener&&t.hp>=t.maxHp)d*=1+s.opener; // Opening strike
+        if(s.vsDaze&&rlHas(t,'daze'))d*=1+s.vsDaze;
+        if(s.vsSoak&&rlHas(t,'soak'))d*=1+s.vsSoak;
+        if(s.vsStatic&&rlHas(t,'static'))d*=1+s.vsStatic;
+        if(s.vsBreak&&rlHas(t,'defBreak'))d*=1+s.vsBreak;
+        if(s.vsPoison)d*=1+s.vsPoison*t.fx.filter(x=>x.k==='poison').length;
+        if(s.rift){const n=t.fx.filter(x=>x.k==='sigil').length;if(n){d*=1+s.rift*n;if(h===(s.h||1)-1){t.fx=t.fx.filter(x=>x.k!=='sigil');ev.push({k:'rift',u:t.uid,v:n})}}}
+        if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;
+        if(u.tempo)d*=1+.1*u.tempo+(s.crescendo?s.crescendo*u.tempo:0); // Tempo: +10% per beat; Crescendo spends it big
         if(rlHas(t,'mark'))d*=1.25;if(s.vsBurn&&rlHas(t,'burn'))d*=1+s.vsBurn;
-        const cr=rlEff(u,'cr')+(adv>0?15:adv<0?-15:0),crit=Math.random()*100<cr;if(crit)d*=1+u.stats.cd/100;
+        const cr=rlEff(u,'cr')+(adv>0?15:adv<0?-15:0),crit=(s.critMark&&rlHas(t,'mark'))||(rlHas(u,'veil')&&u.kind==='hero'&&typeof RL_H!=='undefined'&&RL_H[u.id]&&RL_H[u.id].ambush)||Math.random()*100<cr; // Shadowstrike: hits from the Veil always crit
+        if(crit)d*=1+u.stats.cd/100;
         d*=.95+Math.random()*.1;
         const dealt=rlDamage(B,t,d,ev,{crit,adv});
+        if(s.splash&&h===0)for(const o2 of B.side[t.side].filter(x=>x.alive&&x!==t&&!rlHas(x,'veil')))rlDamage(B,o2,d*s.splash,ev,{}); // Aftershock
         if(u.stats.steal)rlHeal(u,dealt*u.stats.steal/100,ev);
       }
+      const preDaze=s.ring&&rlHas(t,'daze');
+      // Mireburst: every Poison stack bursts at once (instant damage), then fresh Poison is applied
+      if(s.pburst&&t.alive&&pw>=.5){const n=t.fx.filter(x=>x.k==='poison').length;if(n){ev.push({k:'toxic',u:t.uid,v:n});rlDamage(B,t,t.maxHp*.04*n*s.pburst*(t.boss?.5:1)*pw,ev,{dot:true})}}
+      const preSoak=s.undertow&&rlHas(t,'soak');
+      if(s.waxBurn&&t.alive&&rlHas(t,'slow'))rlApplyFx(B,u,t,['burn',2,100],pw*bonus,ev,true); // melting wax: an extra Burn on Slowed targets
       for(const f of s.fx)if(f[0]!=='self'&&f[0]!=='team')rlApplyFx(B,u,t,f,pw*bonus,ev,true);
+      // Undertow: the Deep Current drags enemies' turns back, Soaked ones much further
+      if(s.undertow&&t.alive&&pw>=.99&&!rlHas(t,'immune')){const v=preSoak?60:25;t.atb=Math.max(0,t.atb-v);ev.push({k:'atb',u:t.uid,v:-v})}
+      // Resonance: an enemy already Dazed when the burst lands is stunned
+      if(s.ring&&t.alive&&preDaze&&!rlHas(t,'immune')){t.fx=t.fx.filter(x=>x.k!=='daze'&&x.k!=='stun');t.fx.push({k:'stun',t:1});ev.push({k:'fx',u:t.uid,f:'stun'})}
+      // Foxfire: set off every Burn on the target at once (their remaining burn damage, capped)
+      if(s.det&&t.alive){const bs=t.fx.filter(x=>x.k==='burn');if(bs.length){const left=bs.reduce((a,x)=>a+Math.max(1,x.t),0);t.fx=t.fx.filter(x=>x.k!=='burn');ev.push({k:'det',u:t.uid});rlDamage(B,t,Math.min(t.maxHp*.06*left,rlEff(u,'atk')*3.2)*pw,ev,{dot:true})}}
+      // Rune Ward: whoever strikes a warded unit gets Chilled
+      if(u.alive&&rlHas(t,'rime')&&!B._rime){B._rime=true;rlApplyFx(B,t,u,['chill',3,60],1,ev,true);B._rime=false}
+      // Flame Ward: whoever strikes a warded unit may catch fire
+      if(u.alive&&rlHas(t,'ward')&&!B._ward){B._ward=true;rlApplyFx(B,t,u,['burn',2,50],1,ev,true);B._ward=false}
       if(t.alive&&t.pas.pas==='counter'&&s.tg==='e1'&&!B._counter&&Math.random()*100<t.pas.v){B._counter=true;ev.push({k:'counter',u:t.uid});ev.push(...rlAct(B,t,0,u.uid,1));B._counter=false}
     }
   }else if(foe){for(const t of tg)for(const f of s.fx)if(f[0]!=='self'&&f[0]!=='team')rlApplyFx(B,u,t,f,pw*bonus,ev,true)}
   else{
+    // Second Dawn: raise the chosen fallen ally (a living target is fully mended instead)
+    if(s.res){const t=tg[0];const rz=s.fx.find(f=>f[0]==='rez');if(t&&!t.alive){t.alive=true;t.hp=Math.round(t.maxHp*rz[1]/100*pw);t.atb=0;t.fx=[];ev.push({k:'revive',u:t.uid,hp:t.hp})}else if(t){rlHeal(t,t.maxHp*.35*pw,ev)}}
     for(const f of s.fx){if(f[0]==='revive'){for(const t of B.side[u.side])if(!t.alive&&!t.revived){t.alive=true;t.revived=true;t.hp=Math.round(t.maxHp*f[1]/100*pw);t.atb=0;ev.push({k:'revive',u:t.uid,hp:t.hp})}continue}
-      if(f[0]==='self'||f[0]==='team')continue;for(const t of tg)if(t.alive)rlApplyFx(B,u,t,f,pw*bonus,ev,false)}
+      if(f[0]==='self'||f[0]==='team'||f[0]==='rez')continue;for(const t of tg)if(t.alive)rlApplyFx(B,u,t,f,pw*bonus,ev,false)}
   }
   for(const f of s.fx){if(f[0]==='self')rlApplyFx(B,u,u,f.slice(1),pw*bonus,ev,false);if(f[0]==='team')for(const t of B.side[u.side])if(t.alive)rlApplyFx(B,u,t,f.slice(1),pw*bonus,ev,false)}
+  // Discharge: Tempest Drive sets off the Static on every enemy
+  if(s.discharge&&pw>=.5){for(const t of B.side[1-u.side].filter(x=>x.alive&&rlHas(x,'static'))){t.fx=t.fx.filter(x=>x.k!=='static');ev.push({k:'zap',u:t.uid});rlDamage(B,t,rlEff(u,'atk')*s.discharge*pw*(.95+Math.random()*.1),ev,{crit:true})}}
+  // Tempo: Rio's beats build up with each skill; Rhythm Burst spends them
+  if(s.crescendo&&u.tempo){u.tempo=0;ev.push({k:'tempo',u:u.uid,v:0})}else if(s.tempo){const b=u.tempo||0;u.tempo=Math.min(3,b+s.tempo);if(u.tempo!==b)ev.push({k:'tempo',u:u.uid,v:u.tempo})}
+  // Dusk Dash: landing the final blow lets her move again right away
+  if(s.again&&u.alive&&tg.some(t=>!t.alive)){u.atb=100;ev.push({k:'again',u:u.uid})}
   if(!B._counter)rlTick(u,ev);
   rlCheck(B,ev);return ev;
 }
@@ -246,14 +307,14 @@ function rlCheck(B,ev){
 }
 /* simple tactical AI, used for enemies, arena defense and auto-battle */
 function rlAI(B,u){
-  const mine=B.side[u.side].filter(x=>x.alive),foes=B.side[1-u.side].filter(x=>x.alive),dead=B.side[u.side].some(x=>!x.alive&&!x.revived);
+  const mine=B.side[u.side].filter(x=>x.alive),foes=B.side[1-u.side].filter(x=>x.alive&&!rlHas(x,'veil')),dead=B.side[u.side].some(x=>!x.alive&&!x.revived);
   for(let i=2;i>=0;i--){if(!rlUsable(u,i))continue;const s=u.sk[i];
     const heals=s.fx.some(f=>f[0]==='heal'||f[0]==='healT');
     if(s.fx.some(f=>f[0]==='revive')&&!dead&&!mine.some(x=>x.hp/x.maxHp<.5))continue;
     if((s.tg==='a1'||s.tg==='aA')&&heals&&!s.fx.some(f=>RL_FX[f[0]]&&RL_FX[f[0]].buff)&&!mine.some(x=>x.hp/x.maxHp<.7))continue;
     let tid;
     if(s.tg==='a1'){tid=mine.slice().sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0].uid}
-    else if(s.tg==='e1'){tid=foes.slice().sort((a,b)=>(rlAdv(u.el,b.el)-rlAdv(u.el,a.el))*.4+(a.hp/a.maxHp-b.hp/b.maxHp))[0].uid}
+    else if(s.tg==='e1'){if(!foes.length)continue;tid=foes.slice().sort((a,b)=>(rlAdv(u.el,b.el)-rlAdv(u.el,a.el))*.4+(a.hp/a.maxHp-b.hp/b.maxHp))[0].uid}
     return{i,tid};
   }
   return{i:0,tid:foes[0]&&foes[0].uid};
