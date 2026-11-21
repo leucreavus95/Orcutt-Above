@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Bram, the boar shieldbearer (chibi art). COMMON tank. Tusker Bash shoves one enemy with his shield
+  // (DEF-scaled, may stun), Shield Brace digs in for a shield and DEF Up, and Hold the Line plants his
+  // shield and taunts every enemy for 2 turns while he takes less damage.
+  {id:'boar',col:{c:'#a0703f',l:'#f3e2c4',d:'#3a2414'},vp:['#ffffff','#f3e2c4','#c9a26a','#5a3a1e'],
+   hero:{n:'Bram',r:1,role:'def',spd:92,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:10},
+     ev:['Bram','Bram Tusker','Bram, the Shieldwall'],
+     sk:[rlSk('Tusker Bash',{m:3.0,sc:'def',fx:[['stun',1,15]]}),
+         rlSk('Shield Brace',{cd:3,tg:'self',fx:[['shield',20,2],['defUp',2]]}),
+         rlSk('Hold the Line',{cd:4,tg:'eA',m:.8,sc:'def',fx:[['taunt',2,75],['self','bulwark',2]]})]}},
   // Sage, the village herbalist (chibi art). COMMON healer. Quick Remedy mends one ally, Herbal Poultice
   // patches one ally up and draws out their debuffs, and Renewing Draught heals the whole team over time.
   {id:'herb',col:{c:'#8fb85a',l:'#f4ffd6',d:'#2e3a1c'},vp:['#ffffff','#f4ffd6','#b8e07a','#5a7a2a'],

@@ -22,6 +22,14 @@ const RL_ART={
   // Thorne (stag shaman, chibi). LEGENDARY support. Frames per form are [Spirit Bolt, Totem Ward, Ancestral Tempest].
   // Voltan (lynx striker, chibi). LEGENDARY. Frames per form are [Thunderclap Fist, Chain Arc, Stormstep].
   // Sage (village herbalist, chibi). COMMON healer. Frames per form are [Quick Remedy, Herbal Poultice, Renewing Draught].
+  // Bram (boar shieldbearer, chibi). COMMON tank. Frames per form are [Tusker Bash, Shield Brace, Hold the Line].
+  boar:{f:[{src:'art/boar-1.webp',ax:215,ay:723,h:716,w:487,ih:723,ht:0},{src:'art/boar-2.webp',ax:213,ay:725,h:716,w:487,ih:725,ht:0},{src:'art/boar-3.webp',ax:215,ay:726,h:716,w:502,ih:727,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,
+        c:[[{src:'art/boar-1c1.webp',ax:123,ay:320,h:401,w:360,ih:321,ht:0},{src:'art/boar-1c2.webp',ax:137,ay:322,h:401,w:375,ih:323,ht:0},{src:'art/boar-1c3.webp',ax:191,ay:387,h:401,w:375,ih:391,ht:0}],
+           [{src:'art/boar-2c1.webp',ax:151,ay:319,h:401,w:407,ih:319,ht:0},{src:'art/boar-2c2.webp',ax:178,ay:375,h:401,w:371,ih:381,ht:0},{src:'art/boar-2c3.webp',ax:202,ay:397,h:401,w:408,ih:400,ht:0}],
+           [{src:'art/boar-3c1.webp',ax:216,ay:317,h:401,w:441,ih:325,ht:0},{src:'art/boar-3c2.webp',ax:197,ay:385,h:401,w:413,ih:393,ht:0},{src:'art/boar-3c3.webp',ax:218,ay:401,h:401,w:441,ih:407,ht:0}]],
+        spell:[{vp:['#ffffff','#f3e2c4','#c9a26a','#5a3a1e'],hand:[110,140],bySkill:[null,null,{burst:'art/fx-boar-spikes1.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#ffffff','#f3e2c4','#c9a26a','#5a3a1e'],hand:[110,140],bySkill:[null,null,{burst:'art/fx-boar-spikes2.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#ffffff','#f3e2c4','#c9a26a','#5a3a1e'],hand:[110,140],bySkill:[null,null,{burst:'art/fx-boar-spikes3.webp',aoe:'erupt',sz:.5}]}]},
   herb:{f:[{src:'art/herb-1.webp',ax:181,ay:811,h:806,w:469,ih:811,ht:0},{src:'art/herb-2.webp',ax:200,ay:811,h:806,w:470,ih:812,ht:0},{src:'art/herb-3.webp',ax:206,ay:812,h:806,w:486,ih:812,ht:0}],pose:'skill',
         c:[[{src:'art/herb-1c1.webp',ax:116,ay:395,h:532,w:400,ih:393,ht:0},{src:'art/herb-1c2.webp',ax:118,ay:438,h:532,w:316,ih:436,ht:0},{src:'art/herb-1c3.webp',ax:124,ay:476,h:532,w:333,ih:474,ht:0}],
            [{src:'art/herb-2c1.webp',ax:139,ay:395,h:532,w:426,ih:393,ht:0},{src:'art/herb-2c2.webp',ax:127,ay:438,h:532,w:338,ih:436,ht:0},{src:'art/herb-2c3.webp',ax:127,ay:478,h:532,w:350,ih:476,ht:0}],
