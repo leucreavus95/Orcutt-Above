@@ -19,6 +19,14 @@ const RL_ART={
   // Origa (origami crane, chibi). EPIC. Frames per form are [Fold Dash, Feather Piercer, Paper Storm].
   // Ignis (salamander arcanist, chibi). LEGENDARY. Frames per form are [Cinder Bolt, Scorching Arc, Ignition Burst].
   // Kael (frost owl, chibi). LEGENDARY. Frames per form are [Glacial Talon, Shardstorm, Permafrost Ring].
+  // Thorne (stag shaman, chibi). LEGENDARY support. Frames per form are [Spirit Bolt, Totem Ward, Ancestral Tempest].
+  stag:{f:[{src:'art/stag-1.webp',ax:157,ay:824,h:819,w:408,ih:825,ht:0},{src:'art/stag-2.webp',ax:219,ay:843,h:819,w:491,ih:844,ht:0},{src:'art/stag-3.webp',ax:283,ay:907,h:819,w:614,ih:907,ht:0}],pose:'skill',
+        c:[[{src:'art/stag-1c1.webp',ax:106,ay:338,h:344,w:401,ih:337,ht:0},{src:'art/stag-1c2.webp',ax:177,ay:391,h:344,w:381,ih:396,ht:0},{src:'art/stag-1c3.webp',ax:183,ay:320,h:344,w:408,ih:319,ht:0}],
+           [{src:'art/stag-2c1.webp',ax:111,ay:337,h:344,w:430,ih:336,ht:0},{src:'art/stag-2c2.webp',ax:196,ay:412,h:344,w:426,ih:414,ht:0},{src:'art/stag-2c3.webp',ax:157,ay:398,h:344,w:427,ih:398,ht:0}],
+           [{src:'art/stag-3c1.webp',ax:114,ay:338,h:344,w:445,ih:337,ht:0},{src:'art/stag-3c2.webp',ax:211,ay:420,h:344,w:444,ih:422,ht:0},{src:'art/stag-3c3.webp',ax:279,ay:451,h:344,w:447,ih:451,ht:0}]],
+        spell:[{vp:['#ffffff','#d8fff2','#5fe0c0','#2d5a3a'],hand:[150,165],support:'totem',shield:'art/fx-stag-totem1.webp',bySkill:[{shot:'art/fx-stag-bolt1.webp',sz:.7},null,{burst:'art/fx-stag-bolt1.webp',aoe:'meteor',img:'art/fx-stag-bolt1.webp'}]},
+               {vp:['#ffffff','#d8fff2','#5fe0c0','#2d5a3a'],hand:[150,165],support:'totem',shield:'art/fx-stag-totem2.webp',bySkill:[{shot:'art/fx-stag-bolt2.webp',sz:.7},null,{burst:'art/fx-stag-bolt2.webp',aoe:'meteor',img:'art/fx-stag-bolt2.webp'}]},
+               {vp:['#ffffff','#d8fff2','#5fe0c0','#2d5a3a'],hand:[150,165],support:'totem',shield:'art/fx-stag-totem3.webp',bySkill:[{shot:'art/fx-stag-bolt3.webp',sz:.7},null,{burst:'art/fx-stag-bolt3.webp',aoe:'meteor',img:'art/fx-stag-bolt3.webp'}]}]},
   frowl:{f:[{src:'art/frowl-1.webp',ax:196,ay:684,h:679,w:428,ih:685,ht:0},{src:'art/frowl-2.webp',ax:283,ay:704,h:679,w:480,ih:702,ht:0},{src:'art/frowl-3.webp',ax:327,ay:812,h:679,w:638,ih:810,ht:0}],pose:'skill',
         c:[[{src:'art/frowl-1c1.webp',ax:126,ay:327,h:340,w:410,ih:327,ht:0},{src:'art/frowl-1c2.webp',ax:129,ay:322,h:340,w:404,ih:323,ht:0},{src:'art/frowl-1c3.webp',ax:177,ay:256,h:340,w:394,ih:385,ht:0}],
            [{src:'art/frowl-2c1.webp',ax:133,ay:336,h:340,w:438,ih:336,ht:0},{src:'art/frowl-2c2.webp',ax:132,ay:332,h:340,w:430,ih:332,ht:0},{src:'art/frowl-2c3.webp',ax:180,ay:258,h:340,w:431,ih:396,ht:0}],
@@ -243,7 +251,7 @@ const RL_ART={
                {vp:['#ffffff','#fff0b8','#ffb347','#e0461c'],hand:[118,92],support:'flameward',bySkill:[null,{shot:'art/fx-fox-ball3.webp',burst:'art/fx-fox-ball3.webp'},null]}]},
 };
 (function(){
-  const preload=()=>{for(const id in RL_ART)[...RL_ART[id].f,...(RL_ART[id].fv||[])].forEach(f=>{const i=new Image();i.decoding='async';i.src=f.src;(window.__rlPre=window.__rlPre||[]).push(i)})};preload();
+  const preload=()=>{if(typeof RL_CUT!=='undefined')for(const id in RL_CUT)for(const st in RL_CUT[id])for(const k in RL_CUT[id][st]){const c=RL_CUT[id][st][k];if(c.b){const i=new Image();i.src=c.b;(window.__rlPre=window.__rlPre||[]).push(i)}}for(const id in RL_ART)[...RL_ART[id].f,...(RL_ART[id].fv||[])].forEach(f=>{const i=new Image();i.decoding='async';i.src=f.src;(window.__rlPre=window.__rlPre||[]).push(i)})};preload();
   const lvOf=(id,o)=>o.lv!=null?o.lv:(o.stage!=null?[1,CR_EVO[0],CR_EVO[1]][o.stage]:crLv(id));
   const oldPort=rlHeroSVG,oldBody=rlHeroBody;
   // card portrait: element backdrop, figure shown head to knees
@@ -281,7 +289,10 @@ function artPose(st,now,speed){ // the figure's shape at this moment
     if(T>=1150)st.cast=-1;else{const fi=Math.min(1,T/90),fo=T>1000?Math.min(1,(T-1000)/150):0;
       P.seq=fo>0?[[i,1-fo],[-1,fo]]:fi<1?[[-1,1-fi],[i,fi]]:[[i,1]];
       // throw follow-through: snap from the wind-up frame to the standing pose with a forward lunge as the shot leaves
-      if(st.rel&&st.rel[i]&&T>=440){const r=Math.min(1,(T-440)/70);P.seq=r<1?[[i,1-r],[-1,r]]:[[-1,1]];P.lean+=(STILL?0:22)*Math.exp(-(T-440)/160)}P.pulse=T>200&&T<700?.02*Math.sin((T-200)/40):0;P.kick=T>480&&T<900?Math.exp(-(T-480)/140):0;
+      const CT=st.cut&&st.cut[i];
+      if(CT&&CT.b&&T>=470&&fo<=0){const r=Math.min(1,(T-470)/80);P.seq=r<1?[[i+10,1],[i,1-r]]:[[i+10,1]]}
+      else if(CT&&CT.b&&fo>0)P.seq=[[i+10,1-fo],[-1,fo]];
+      if(((st.rel&&st.rel[i])||(CT&&CT.snap))&&T>=440){const r=Math.min(1,(T-440)/70);P.seq=r<1?[[i,1-r],[-1,r]]:[[-1,1]];P.lean+=(STILL?0:22)*Math.exp(-(T-440)/160)}P.pulse=T>200&&T<700?.02*Math.sin((T-200)/40):0;P.kick=T>480&&T<900?Math.exp(-(T-480)/140):0;
       P.ring=Math.min(1,T/120)*(1-fo);P.glow=0}}
   else if(st.dashOn&&st.frames&&st.dashPose!=null){P.seq=[[Array.isArray(st.dashPose)?st.dashPose[st.sk||0]:st.dashPose,1]];P.lean=0}
   else if(st.cast>=0&&st.frames){const T=(now-st.cast)*speed,C=CAST_T;
@@ -310,7 +321,7 @@ function artDraw(cv,now){
     // the battle re-adds these classes within one frame, so watch each change
     const watch=(el,cls,key)=>{if(!el)return;new MutationObserver(rs=>{for(const r of rs)if(!(r.oldValue||'').split(' ').includes(cls)&&el.classList.contains(cls)){st[key]=performance.now();break}}).observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true})};
     watch(spr,'cast','cast');new MutationObserver(()=>{if(spr&&spr.dataset.sk!=null)st.sk=+spr.dataset.sk}).observe(spr,{attributes:true,attributeFilter:['data-sk']});if(spr&&spr.dataset.sk!=null)st.sk=+spr.dataset.sk;watch(unit,'hit','hit');watch(spr,'dash','dash')}
-  st.dashOn=!!(spr&&spr.classList.contains('dash'));st.mode=A.pose||'seq';st.dashPose=A.dashPose;st.rel=A.release;st.frames=!!(FR&&FR.every(f=>artImg(f.src)));
+  st.dashOn=!!(spr&&spr.classList.contains('dash'));st.mode=A.pose||'seq';st.dashPose=A.dashPose;st.rel=A.release;st.cut=typeof RL_CUT!=='undefined'&&RL_CUT[id]&&RL_CUT[id][s]||null;st.frames=!!(FR&&FR.every(f=>artImg(f.src)));
   const P=artPose(st,now,speed),E=RL_EL[RL_H[id].el],t=(now+st.ph)/1000;
   const sc=cw/AW,buf=st.buf;if(buf.width!==cw||buf.height!==ch){buf.width=cw;buf.height=ch}
   const g=buf.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cw,ch);g.setTransform(sc,0,0,sc,-AX0*sc,-AY0*sc);
@@ -322,7 +333,7 @@ function artDraw(cv,now){
       sx=P.sx*(1+P.chest*Math.exp(-Math.pow((v-.68)/.12,2)));
       g.drawImage(im,0,sy0,iw,sy1-sy0+.6,120-ax*k*sx+off,y0,iw*k*sx,y1-y0+.7)}};
   const Hs=s===2?238:224,frame=(f,al,fi)=>{const im=artImg(f.src),k=Hs/f.h*(1+(P.pulse||0));g.save();g.globalAlpha=al*(veil&&fi!==2?.5:1);g.translate(120-dir*7*(P.kick||0),228);g.scale(dir*k,k);g.drawImage(im,-f.ax,-f.ay);g.restore()};
-  if(P.seq)P.seq.forEach(([i,al])=>{if(al<=0)return;if(i<0)strips(img,al);else frame(FR[i],al,i)});else strips(img,1);g.globalAlpha=1;
+  if(P.seq)P.seq.forEach(([i,al])=>{if(al<=0)return;if(i<0)strips(img,al);else if(i>=10){const C=st.cut&&st.cut[i-10],F=FR[i-10];if(C&&C.b){const im=artImg(C.b);if(im)frame(Object.assign({},F,{src:C.b}),al,i-10);else frame(F,al,i-10)}}else frame(FR[i],al,i)});else strips(img,1);g.globalAlpha=1;
   const c=cv.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cw,ch);
   if(P.ring>0){c.setTransform(sc,0,0,sc,-AX0*sc,-AY0*sc);c.save();c.translate(120,229);c.scale(1,.24);{const rg=c.createRadialGradient(0,0,0,0,0,80);rg.addColorStop(0,E.l);rg.addColorStop(.5,E.c);rg.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=.45*P.ring;c.fillStyle=rg;c.beginPath();c.arc(0,0,80,0,7);c.fill()}c.globalAlpha=P.ring;c.strokeStyle=E.l;c.shadowColor=E.c;c.shadowBlur=14;
     const r=46+20*Math.min(1,P.ring*1.3);c.lineWidth=4.5;c.beginPath();c.arc(0,0,r,0,7);c.stroke();c.lineWidth=1.6;c.setLineDash([10,7]);c.rotate(t*2.4);c.beginPath();c.arc(0,0,r*.74,0,7);c.stroke();c.setLineDash([]);
@@ -338,7 +349,7 @@ function artLoop(){if(artRaf)return;const step=now=>{const cvs=document.querySel
 
 /* ---------- spells that match the art ---------- */
 function rlArtSpell(u){const A=RL_ART[u.id];if(!A||!A.spell)return null;const st=crStage(u.lv||crLv(u.id)),S=A.spell[st];if(!S)return null;
-  const key='art_'+u.id+st;if(!RL_VP[key])RL_VP[key]=S.vp;return Object.assign({key,uid:u.uid,side:u.side,big:st===2},S)}
+  const key='art_'+u.id+st;if(!RL_VP[key])RL_VP[key]=S.vp;return Object.assign({key,uid:u.uid,side:u.side,big:st===2,hid:u.id,st},S)}
 function rlArtHand(S){const f=rlbPt(S.uid,'foot');if(!f)return null;const d=S.side?-1:1,k=f.w/240;return{x:f.x+d*S.hand[0]*k,y:f.y-(12+S.hand[1])*k,d,k}}
 async function rlArtFire(S,e,sk,ult){const h=rlArtHand(S);if(!h)return;const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;
   if(sk.tg==='eA'&&S.aoe==='starfall')return vfxStarfall(h,pts,S);
@@ -419,7 +430,7 @@ function vfxStarfall(h,pts,S){const P=S.vp,sp=vSp(),K=Math.max(1,h.k*2.2),sky=pt
           for(let j=0;j<16;j++){const an=-Math.PI*vR(.1,.9),v=vR(120,300)*K;vfxP({x:q.x,y:q.y,vx:Math.cos(an)*v,vy:Math.sin(an)*v,ay:600,life:vR(.35,.7),s:vR(2,4)*K,c:rlRand(P),shape:'star',vr:8})}}});
       c.restore();if(hit>=sky.length&&fade<=0){this.done=true}if(hit>=sky.length&&!this.r){this.r=1;res()}}})})}
 // skill 2: wind ribbons wrap each ally, with a compass ring at their feet
-function rlArtSupport(S,e,sk){if(S.support==='barkshield')return rlArtSupportBark(S,e);const P=S.vp,sp=vSp();e.t.forEach((uid,n)=>{const q=rlbPt(uid,'foot');if(!q)return;const K=q.w/240,cx=q.x,base=q.y,top=q.y-q.h*.85;let t=-n*.06/sp;
+function rlArtSupport(S,e,sk){if(S.support==='barkshield'||S.support==='totem')return rlArtSupportBark(S,e);const P=S.vp,sp=vSp();e.t.forEach((uid,n)=>{const q=rlbPt(uid,'foot');if(!q)return;const K=q.w/240,cx=q.x,base=q.y,top=q.y-q.h*.85;let t=-n*.06/sp;
   VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const life=.85/sp,k=t/life;if(k>=1){this.done=true;return}const a=Math.sin(Math.PI*Math.min(1,k));
     c.save();c.globalCompositeOperation='lighter';
     c.globalAlpha=.7*a;c.strokeStyle=P[2];c.lineWidth=2*K;c.save();c.translate(cx,base);c.scale(1,.28);c.beginPath();c.arc(0,0,62*K,0,6.283);c.stroke();c.rotate(-t*3);c.fillStyle=P[1];for(let i=0;i<4;i++){c.rotate(Math.PI/2);c.beginPath();c.moveTo(0,-74*K);c.lineTo(6*K,-56*K);c.lineTo(-6*K,-56*K);c.closePath();c.fill()}c.restore();
@@ -489,7 +500,7 @@ vfxRoots=function(h,uid,tid,S){const P=S.vp,W=S.wood,sp=vSp(),a=rlbPt(uid,'foot'
       if(img){const w=b.w*1.55,hh=w*img.naturalHeight/img.naturalWidth,H=hh*g*(1-sink*.6);c.save();c.globalAlpha=1-sink;c.drawImage(img,b.x-w/2,b.y+hh*.12-H,w,H);c.restore()}
       if(t2>grow+hold+back)this.done=true}}})})};
 // Barkward: the crystal leaf-shield from his art forms in front of each ally
-rlArtSupportBark=function(S,e){const P=S.vp,sp=vSp(),img=thImg('shield');e.t.forEach((uid,n)=>{const q=rlbPt(uid);if(!q)return;const cx=q.x+q.w*.24,cy=q.y+q.h*.05;let t=-n*.08/sp;
+rlArtSupportBark=function(S,e){const P=S.vp,sp=vSp(),img=S.shield?artImg(S.shield):thImg('shield');e.t.forEach((uid,n)=>{const q=rlbPt(uid);if(!q)return;const cx=q.x+q.w*.24,cy=q.y+q.h*.05;let t=-n*.08/sp;
   const leaves=Array.from({length:10},()=>({a:vR(0,6.283),r:vR(80,140)*q.w/240}));
   VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const gather=.22/sp,hold=.7/sp,out=.25/sp;if(t>gather+hold+out){this.done=true;return}
     if(t<gather){const k=t/gather;for(const L of leaves){const r=L.r*(1-k);vfxP({x:cx+Math.cos(L.a+k*3)*r,y:cy+Math.sin(L.a+k*3)*r*.8,life:.08,s:4,c:P[2],shape:'leaf',rot:L.a})}return}
@@ -573,7 +584,7 @@ function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst|
     pts.forEach((q,i)=>{if(!hit.has(i)&&x>=q.x){hit.add(i);paintBurst(q.x,q.y,Object.assign({},S,{paint:{shot:p.burst||p.shot}}),1.2,false)}});
     if(hit.size>=pts.length&&!this.r){this.r=1;res()}if(k>=1){this.done=true;if(!this.r)res()}}})})}
 (function(){const prev=rlArtFire,prevSup=rlArtSupport;
-  rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0]||{};S=Object.assign({},S,{paint:p,bySkill:null},p.hand?{hand:p.hand}:{});
+  rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0]||{},C=typeof RL_CUT!=='undefined'&&RL_CUT[S.hid]&&RL_CUT[S.hid][S.st]&&RL_CUT[S.hid][S.st][e.s];S=Object.assign({},S,{paint:p,bySkill:null},p.hand?{hand:p.hand}:{},C&&C.hand&&p.shot&&!p.up?{hand:C.hand}:{});
       if(p.aoe==='spearrain'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxSpearRain(pts,S,p.img)}
       if(p.aoe==='permafrost'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxPermafrost(pts,S,p.img)}
       if(p.aoe==='meteor'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxMeteor(pts,S,p.img)}

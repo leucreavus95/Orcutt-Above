@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Thorne, the stag shaman (chibi art). LEGENDARY support. Spirit Bolt strikes one enemy and mends the
+  // team a little; Totem Ward raises a spirit totem over every ally that clears their debuffs and blocks
+  // any new ones for 2 turns; Ancestral Tempest sweeps all enemies and delays their turns.
+  {id:'stag',col:{c:'#3fbf9a',l:'#dcfff2',d:'#1d3a2a'},vp:['#ffffff','#d8fff2','#5fe0c0','#2d5a3a'],
+   hero:{n:'Thorne',r:5,role:'sup',spd:107,it:'staff',o:'cloak',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:20},
+     ev:['Thorne','Thorne Antlerwood','Thorne, the Ancestral Shaman'],
+     sk:[rlSk('Spirit Bolt',{m:3.5,fx:[['team','healT',5]]}),
+         rlSk('Totem Ward',{cd:4,tg:'aA',fx:[['cleanse'],['immune',2],['shield',10,2]]}),
+         rlSk('Ancestral Tempest',{cd:4,tg:'eA',m:1.9,fx:[['atbDown',30,70],['atkBreak',2,45]]})]}},
   // Kael, the frost-owl cryomancer (chibi art). LEGENDARY. A control mage: Glacial Talon hurls a frost
   // slash that Chills, Shardstorm pelts one enemy with ice shards (harder per Chill), and
   // Permafrost Ring freezes every enemy solid for 2 turns.

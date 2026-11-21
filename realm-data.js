@@ -29,7 +29,7 @@ const RL_FX={
   spdUp:{n:'SPD Up',buff:1,c:'#4fd17a',g:'S↑',d:'+30% SPD'},
   critUp:{n:'Crit Up',buff:1,c:'#ffd96a',g:'C↑',d:'+30% Crit Rate'},
   shield:{n:'Shield',buff:1,c:'#9fd6ff',g:'◈',d:'Absorbs damage'},
-  immune:{n:'Immunity',buff:1,c:'#fff6c9',g:'✦',d:'Blocks harmful effects'},
+  immune:{n:'Immunity',buff:1,c:'#fff6c9',g:'✦',d:'Blocks every debuff: none can be applied'},
   regen:{n:'Regen',buff:1,c:'#38d39f',g:'✚',d:'Heals 12% HP each turn'},
   defBreak:{n:'DEF Break',c:'#ff4d6d',g:'D↓',d:'-50% DEF'},
   atkBreak:{n:'ATK Break',c:'#ff4d6d',g:'A↓',d:'-40% ATK'},
