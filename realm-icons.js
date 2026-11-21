@@ -90,12 +90,16 @@ function rlGlyphFor(s){if(RL_SKICON[s.n])return RL_SKICON[s.n];const f=s.fx.map(
   if(f.includes('revive')||s.res)return'sunrise';if(f.some(k=>k==='heal'||k==='healT'))return'heal';if(f.includes('shield'))return'shield';
   if(f.includes('burn'))return'flame';if(f.includes('poison'))return'poison';if(f.includes('chill'))return'snow';if(s.tg==='eA')return'burst';return(s.h||1)>1?'blades':'sword'}
 /* the icon tile: glyph on the hero's colour. dim: greyed (on cooldown) */
-function rlSkIcon(id,lv,i){const H=RL_H[id],s=H&&H.sk[i];if(!s||s.pas)return'';const E=RL_EL[H.el]||{c:'#888',d:'#222',l:'#fff'},g=RL_GLYPH[rlGlyphFor(s)]||RL_GLYPH.sword;
+// painted icons from the ability atlas (art/icons/<hero>-<1..3>.webp); heroes not listed use the glyph tiles
+const RL_ICON_ART=new Set(['fox','turtle','ram','moth','tree','bug','bell','ice','drum','bow','lance','shroom','mole','wick','thun','ray','star','phx','bas','deer','med','pan','sab','tort']);
+function rlSkIcon(id,lv,i){const H=RL_H[id],s=H&&H.sk[i];if(!s||s.pas)return'';
+  if(RL_ICON_ART.has(id))return`<span class="rl-skic art"><img src="art/icons/${id}-${i+1}.webp" alt="" loading="lazy" decoding="async">${i===2?'<i class="ult"></i>':''}</span>`;const E=RL_EL[H.el]||{c:'#888',d:'#222',l:'#fff'},g=RL_GLYPH[rlGlyphFor(s)]||RL_GLYPH.sword;
   return`<span class="rl-skic" style="--ic:${E.c};--icd:${E.d};--icl:${E.l}"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="sh">${g}</g><g>${g}</g></svg>${i===2?'<i class="ult"></i>':''}</span>`}
 (function(){const st=document.createElement('style');st.textContent=`
 .rl-skic{position:relative;display:grid;place-items:center;width:46px;height:46px;border-radius:11px;flex:0 0 auto;
   background:radial-gradient(120% 90% at 30% 20%,color-mix(in srgb,var(--icl) 35%,var(--ic)),var(--ic) 45%,var(--icd));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 0 0 1px rgba(255,255,255,.18),inset 0 -6px 10px -6px rgba(0,0,0,.45),0 3px 8px -3px #000}
+.rl-skic.art{background:#1a1424;overflow:hidden}.rl-skic.art img{width:100%;height:100%;display:block;object-fit:cover;transform:scale(1.04)}
 .rl-skic svg{width:64%;height:64%;overflow:visible;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .rl-skic svg .sh{stroke:rgba(0,0,0,.4);stroke-width:3.6;transform:translate(.4px,.9px)}
 .rl-skic .ult{position:absolute;inset:-1px;border-radius:12px;box-shadow:inset 0 0 0 2px #ffd60a;opacity:.85;pointer-events:none}`;document.head.appendChild(st)})();
