@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Wick (candle sprite, chibi). Frames per form are [Wax Glob, Ember Spit, Flame Flick].
+  wick:{zoom:.22,eyeY:135,f:[{src:'art/wick-1.webp',ax:191,ay:578,h:482,w:491,ih:583,ht:93,cx:265,fy:370},{src:'art/wick-2.webp',ax:189,ay:600,h:482,w:499,ih:604,ht:115,cx:268,fy:390},{src:'art/wick-3.webp',ax:187,ay:598,h:482,w:481,ih:602,ht:113,cx:268,fy:390}],pose:'skill',
+        c:[[{src:'art/wick-1c1.webp',ax:122,ay:406,h:347,w:416,ih:409,ht:69},{src:'art/wick-1c2.webp',ax:122,ay:422,h:347,w:353,ih:423,ht:72},{src:'art/wick-1c3.webp',ax:122,ay:413,h:347,w:404,ih:416,ht:70}],
+           [{src:'art/wick-2c1.webp',ax:128,ay:406,h:347,w:427,ih:409,ht:69},{src:'art/wick-2c2.webp',ax:129,ay:424,h:347,w:376,ih:425,ht:73},{src:'art/wick-2c3.webp',ax:129,ay:414,h:347,w:426,ih:417,ht:71}],
+           [{src:'art/wick-3c1.webp',ax:130,ay:398,h:347,w:467,ih:400,ht:59},{src:'art/wick-3c2.webp',ax:129,ay:407,h:347,w:390,ih:408,ht:56},{src:'art/wick-3c3.webp',ax:130,ay:416,h:347,w:428,ih:418,ht:72}]],
+        spell:[{vp:['#ffffff','#fff0c8','#ffa040','#c84a18'],hand:[115,153],bySkill:[{shot:'art/fx-wick-wax1.webp',sz:.55},{shot:'art/fx-wick-ember1.webp',sz:.45,hand:[100,125]},{shot:'art/fx-wick-flick1.webp',aoe:'fan',sz:.8}]},
+               {vp:['#ffffff','#fff0c8','#ffa040','#c84a18'],hand:[115,153],bySkill:[{shot:'art/fx-wick-wax2.webp',sz:.55},{shot:'art/fx-wick-ember2.webp',sz:.45,hand:[100,125]},{shot:'art/fx-wick-flick2.webp',aoe:'fan',sz:.8}]},
+               {vp:['#ffffff','#fff0c8','#ffa040','#c84a18'],hand:[115,153],bySkill:[{shot:'art/fx-wick-wax3.webp',sz:.55},{shot:'art/fx-wick-ember3.webp',sz:.45,hand:[100,125]},{shot:'art/fx-wick-flick3.webp',aoe:'fan',sz:.8}]}]},
   // Digby (mole digger, chibi). Frames per form are [Shovel Jab, Dirt-Clod Toss, Burrow Burst]:
   // the jab and the burrow are lunges (each in its own pose); the burrow erupts dirt under the target.
   mole:{zoom:.3,eyeY:110,release:[false,true,false],f:[{src:'art/mole-1.webp',ax:199,ay:471,h:466,w:483,ih:473,ht:2,cx:285,fy:190},{src:'art/mole-2.webp',ax:203,ay:479,h:466,w:488,ih:481,ht:2,cx:290,fy:190},{src:'art/mole-3.webp',ax:201,ay:477,h:466,w:481,ih:479,ht:2,cx:285,fy:190}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'dirt',

@@ -110,7 +110,15 @@ const RL_ROSTER=[
      ev:['Digby','Digby Deepdelve','Digby, the Tunnel Captain'],
      sk:[rlSk('Shovel Jab',{m:3.3,sc:'def',fx:[['defBreak',1,30]]}),
          rlSk('Dirt-Clod Toss',{cd:3,m:2.4,sc:'def',fx:[['blind',2,70]]}),
-         rlSk('Burrow Burst',{cd:4,m:3.6,sc:'def',ign:.5,fx:[['stun',1,35],['self','defUp',2]]})]}}
+         rlSk('Burrow Burst',{cd:4,m:3.6,sc:'def',ign:.5,fx:[['stun',1,35],['self','defUp',2]]})]}},
+  // Wick, the candle sprite (chibi art). Rare. Wax then fire: his wax glob coats an enemy in Wax (slowed),
+  // his ember spit sets it ablaze (twice over on waxed targets), and his flame flick burns the whole line.
+  {id:'wick',col:{c:'#ff9a3d',l:'#fff0c8',d:'#4a2410'},vp:['#ffffff','#fff0c8','#ffa040','#c84a18'],
+   hero:{n:'Wick',r:3,role:'atk',spd:106,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:12},
+     ev:['Wick','Wick Brasscap','Wick, the Everflame'],
+     sk:[rlSk('Wax Glob',{m:3.2,fx:[['slow',2,60]]}),
+         rlSk('Ember Spit',{cd:3,m:2.8,waxBurn:true,fx:[['burn',2,70]]}),
+         rlSk('Flame Flick',{cd:4,tg:'eA',m:1.7,vsBurn:.3,fx:[['burn',2,40]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

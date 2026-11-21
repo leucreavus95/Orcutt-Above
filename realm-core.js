@@ -247,6 +247,7 @@ function rlAct(B,u,i,tid,power){
         if(u.stats.steal)rlHeal(u,dealt*u.stats.steal/100,ev);
       }
       const preDaze=s.ring&&rlHas(t,'daze');
+      if(s.waxBurn&&t.alive&&rlHas(t,'slow'))rlApplyFx(B,u,t,['burn',2,100],pw*bonus,ev,true); // melting wax: an extra Burn on Slowed targets
       for(const f of s.fx)if(f[0]!=='self'&&f[0]!=='team')rlApplyFx(B,u,t,f,pw*bonus,ev,true);
       // Resonance: an enemy already Dazed when the burst lands is stunned
       if(s.ring&&t.alive&&preDaze&&!rlHas(t,'immune')){t.fx=t.fx.filter(x=>x.k!=='daze'&&x.k!=='stun');t.fx.push({k:'stun',t:1});ev.push({k:'fx',u:t.uid,f:'stun'})}
