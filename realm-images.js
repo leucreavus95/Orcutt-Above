@@ -23,9 +23,9 @@ const RL_ART={
         c:[[{src:'art/frowl-1c1.webp',ax:126,ay:327,h:340,w:410,ih:327,ht:0},{src:'art/frowl-1c2.webp',ax:129,ay:322,h:340,w:404,ih:323,ht:0},{src:'art/frowl-1c3.webp',ax:177,ay:256,h:340,w:394,ih:385,ht:0}],
            [{src:'art/frowl-2c1.webp',ax:133,ay:336,h:340,w:438,ih:336,ht:0},{src:'art/frowl-2c2.webp',ax:132,ay:332,h:340,w:430,ih:332,ht:0},{src:'art/frowl-2c3.webp',ax:180,ay:258,h:340,w:431,ih:396,ht:0}],
            [{src:'art/frowl-3c1.webp',ax:144,ay:395,h:340,w:448,ih:395,ht:0},{src:'art/frowl-3c2.webp',ax:140,ay:375,h:340,w:461,ih:375,ht:0},{src:'art/frowl-3c3.webp',ax:206,ay:309,h:340,w:462,ih:440,ht:0}]],
-        spell:[{vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave1.webp',sz:.6},{shot:'art/fx-frowl-shards1.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-crystal.webp'}]},
-               {vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave2.webp',sz:.6},{shot:'art/fx-frowl-shards2.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-crystal.webp'}]},
-               {vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave3.webp',sz:.6},{shot:'art/fx-frowl-shards3.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-crystal.webp'}]}]},
+        spell:[{vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave1.webp',sz:.6},{shot:'art/fx-frowl-shards1.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-ring1.webp'}]},
+               {vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave2.webp',sz:.6},{shot:'art/fx-frowl-shards2.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-ring2.webp'}]},
+               {vp:['#ffffff','#dff3ff','#8fcaf5','#2f5f9e'],hand:[135,135],bySkill:[{shot:'art/fx-frowl-wave3.webp',sz:.6},{shot:'art/fx-frowl-shards3.webp',sz:.55},{aoe:'permafrost',img:'art/fx-frowl-ring3.webp'}]}]},
   sal:{f:[{src:'art/sal-1.webp',ax:247,ay:554,h:548,w:470,ih:552,ht:0},{src:'art/sal-2.webp',ax:264,ay:595,h:548,w:504,ih:594,ht:0},{src:'art/sal-3.webp',ax:321,ay:689,h:548,w:589,ih:689,ht:0}],pose:'skill',
         c:[[{src:'art/sal-1c1.webp',ax:131,ay:333,h:362,w:418,ih:333,ht:0},{src:'art/sal-1c2.webp',ax:118,ay:387,h:362,w:414,ih:387,ht:0},{src:'art/sal-1c3.webp',ax:102,ay:307,h:362,w:416,ih:312,ht:0}],
            [{src:'art/sal-2c1.webp',ax:126,ay:350,h:362,w:442,ih:350,ht:0},{src:'art/sal-2c2.webp',ax:123,ay:398,h:362,w:437,ih:400,ht:0},{src:'art/sal-2c3.webp',ax:206,ay:346,h:362,w:434,ih:367,ht:0}],
@@ -580,7 +580,7 @@ function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst|
       if(p.aoe==='spearsweep'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxSpearSweep(pts,S)}
       if(sk.tg==='eA'&&(p.aoe==='erupt'||p.aoe==='sweep')){const h=rlArtHand(S);const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;if(p.up&&h){await vfxShootUp(h,S,p.up);}return p.aoe==='erupt'?paintErupt(pts,S):paintSweep(h,pts,S)}}
     return prev(S,e,sk,ult)};
-  Object.values(RL_ART).forEach(A=>(A.spell||[]).forEach(S=>S&&S.bySkill&&S.bySkill.forEach(p=>p&&['shot','burst','sigil','aura'].forEach(k=>p[k]&&artImg(p[k])))));
+  Object.values(RL_ART).forEach(A=>(A.spell||[]).forEach(S=>S&&S.bySkill&&S.bySkill.forEach(p=>p&&['shot','burst','sigil','aura','img','up'].forEach(k=>p[k]&&artImg(p[k])))));
 })();
 
 /* a broad spear sweep across the enemy line: silver slash arcs, dust and a shove */
@@ -617,20 +617,12 @@ function vfxFlameWard(S,e){const P=S.vp,sp=vSp(),big=S.big;e.t.forEach((uid,n)=>
 /* volley fired skyward before an arrow rain lands: flaming arrows streak up off the top of the stage */
 /* Permafrost Ring: a frost ring races out under each enemy and ice crystals spear up around them */
 function vfxPermafrost(pts,S,src){const img=artImg(src),P=S.vp,sp=vSp();rlbShake(true);
-  return Promise.all(pts.map((q,j)=>new Promise(res=>{let t=-j*.07/sp,hit=false;const life=1.05/sp,foot=q.y+q.h*.42,R=q.w*.75,N=9;
-    const cr=Array.from({length:N},(_,i)=>({an:i/N*6.283+vR(-.2,.2),h:vR(.45,.8)*q.h,d:vR(.0,.12)}));
-    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}if(k>.3&&!hit){hit=true;res()}
-      const g=1-Math.pow(1-Math.min(1,k/.3),3),a=k<.7?1:1-(k-.7)/.3;
-      c.save();c.translate(q.x,foot);
-      // frost disc + ring on the ground
-      c.save();c.scale(1,.32);c.globalAlpha=a*.5;const rg=c.createRadialGradient(0,0,0,0,0,R*g);rg.addColorStop(0,P[1]);rg.addColorStop(.7,P[2]);rg.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=rg;c.beginPath();c.arc(0,0,R*g,0,6.283);c.fill();
-      c.globalAlpha=a;c.strokeStyle=P[0];c.lineWidth=5;c.shadowColor=P[2];c.shadowBlur=16;c.beginPath();c.arc(0,0,R*g,0,6.283);c.stroke();c.lineWidth=2;c.setLineDash([8,8]);c.beginPath();c.arc(0,0,R*.72*g,0,6.283);c.stroke();c.restore();
-      // crystals spearing up, back ones first
-      cr.slice().sort((x,y)=>Math.sin(x.an)-Math.sin(y.an)).forEach((o,i)=>{const kk=Math.min(1,Math.max(0,(k-.12-o.d)/.22)),e=1-Math.pow(1-kk,3);if(e<=0||!img)return;
-        const x=Math.cos(o.an)*R*.85,y=Math.sin(o.an)*R*.85*.32,H=o.h*e,W=H*img.naturalWidth/img.naturalHeight;c.save();c.globalAlpha=a;c.translate(x,y);c.rotate(Math.cos(o.an)*.35);c.drawImage(img,-W/2,-H,W,H);c.restore()});
-      c.restore();
-      if(Math.random()<.7)vfxP({x:q.x+vR(-R,R),y:foot-vR(0,q.h*.6),vx:vR(-20,20),vy:vR(-60,-10),life:vR(.4,.8),s:vR(2,4),c:rlRand(P),shape:'dia',vr:3})}});
-    setTimeout(()=>{vfxP({x:q.x,y:q.y+q.h*.1,life:.4,s:10,grow:220,c:P[1],shape:'shock'})},(j*70+300)/sp)})))}
+  return Promise.all(pts.map((q,j)=>new Promise(res=>{let t=-j*.07/sp,hit=false;const life=1.2/sp,foot=q.y+q.h*.45;
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=t/life;if(k>=1){this.done=true;return}if(k>.28&&!hit){hit=true;res()}
+      if(!img)return;const g=Math.min(1,k/.28),e=1-Math.pow(1-g,3),sy=.25+.75*e,a=k<.72?Math.min(1,g*1.6):1-(k-.72)/.28;
+      // the ring from the art, rising out of the ground under the enemy (its centre sits ~72% down the picture)
+      const W=q.w*1.45*(.8+.2*e),H=W*img.naturalHeight/img.naturalWidth;c.save();c.globalAlpha=a;c.translate(q.x,foot);c.scale(1,sy);c.drawImage(img,-W/2,-H*.72,W,H);c.restore();
+      if(Math.random()<.5)vfxP({x:q.x+vR(-W*.4,W*.4),y:foot-vR(0,q.h*.5),vx:vR(-15,15),vy:vR(-50,-10),life:vR(.4,.8),s:vR(2,3),c:rlRand(P),shape:'dia',vr:3})}})})))}
 
 /* Ignition Burst: fireballs fly up off the staff, then drop straight onto each enemy and blossom into flame */
 function vfxMeteor(pts,S,src){const img=artImg(src),P=S.vp,sp=vSp();
