@@ -19,7 +19,7 @@ function rlSkillText(h,s,lvl,st){
   const parts=[];const turns=t=>`${t} turn${t>1?'s':''}`;
   if(s.m>0){const base=s.sc==='def'?st.def:s.sc==='hp'?st.hp*2:st.atk,v=base*s.m*bonus,lo=Math.max(1,Math.round(v*.95)),hi=Math.max(lo,Math.round(v*1.05));
     parts.push(`Deals ${lo}–${hi} damage to ${who}${s.h>1?`, ${s.h} times`:''}`)}
-  if(s.ign)parts.push('Pierces armor');if(s.vsBurn)parts.push('Extra damage to burning enemies');if(s.splash)parts.push(`Aftershock: ${Math.round(s.splash*100)}% of the damage also hits every other enemy`);if(s.det)parts.push('Sets off all of the target\'s Burns at once');
+  if(s.ign)parts.push('Pierces armor');if(s.vsBurn)parts.push('Extra damage to burning enemies');if(s.exec)parts.push(`Deals ${Math.round(s.exec*100)}% more damage to enemies under half HP`);if(s.again)parts.push('If it defeats the target, she acts again right away');if(s.splash)parts.push(`Aftershock: ${Math.round(s.splash*100)}% of the damage also hits every other enemy`);if(s.det)parts.push('Sets off all of the target\'s Burns at once');
   s.fx.forEach(f=>{let tgt=who,k=f[0],a=f;if(k==='self'||k==='team'){tgt=k==='self'?'itself':'all allies';a=f.slice(1);k=a[0]}
     const F=RL_FX[k];
     if(k==='heal')parts.push(`Heals ${tgt} for ${Math.round(st.hp*a[1]/100*bonus)} HP`);

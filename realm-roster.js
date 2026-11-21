@@ -29,7 +29,15 @@ const RL_ROSTER=[
      ev:['Crag','Crag Stonehorn','Crag, the Geode King'],
      sk:[rlSk('Seismic Strike',{m:3.5,splash:.35}),
          rlSk('Crystal Burst',{cd:3,m:1.25,h:3,fx:[['defBreak',1,30]]}),
-         rlSk('Earthen Bulwark',{cd:4,tg:'aA',fx:[['bulwark',2],['self','defUp',2]]})]}}
+         rlSk('Earthen Bulwark',{cd:4,tg:'aA',fx:[['bulwark',2],['self','defUp',2]]})]}},
+  // Nyx, the moth (chibi art). Epic. An assassin: her dash finishes off weakened enemies and,
+  // if it lands the final blow, she moves again; her wing-blades Mark targets; her night crescent Seals skills.
+  {id:'moth',col:{c:'#8f6bff',l:'#ece4ff',d:'#1f1440'},vp:['#ffffff','#e6dcff','#a98bff','#3b2385'],
+   hero:{n:'Nyx',r:4,role:'atk',spd:118,it:'staff',o:'cloak',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cr',v:15},
+     ev:['Nyx','Nyx Duskwing','Nyx, the Moonveil'],
+     sk:[rlSk('Dusk Dash',{m:3.3,exec:.5,again:true}),
+         rlSk('Wingblade Volley',{cd:3,m:1.2,h:3,fx:[['mark',2,45]]}),
+         rlSk('Nightfall Burst',{cd:4,tg:'eA',m:2.1,fx:[['seal',1,35]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

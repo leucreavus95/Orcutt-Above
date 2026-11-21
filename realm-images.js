@@ -10,6 +10,15 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Nyx (moth, chibi). Frames per form are [Dusk Dash, Wingblade Volley, Nightfall Burst]:
+  // a dashing dagger strike, a volley of painted wing-blades, and a crescent of night that sweeps the line.
+  moth:{zoom:.5,eyeY:100,f:[{src:'art/moth-1.webp',ax:244,ay:522,h:517,w:500,ih:522,ht:2,cx:320,fy:99},{src:'art/moth-2.webp',ax:235,ay:522,h:517,w:480,ih:522,ht:2,cx:310,fy:99},{src:'art/moth-3.webp',ax:319,ay:560,h:517,w:596,ih:561,ht:2,cx:360,fy:132}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'night',
+        c:[[{src:'art/moth-1c1.webp',ax:134,ay:318,h:311,w:400,ih:318,ht:3},{src:'art/moth-1c2.webp',ax:117,ay:317,h:311,w:407,ih:318,ht:3},{src:'art/moth-1c3.webp',ax:110,ay:352,h:311,w:450,ih:384,ht:24}],
+           [{src:'art/moth-2c1.webp',ax:146,ay:312,h:311,w:421,ih:313,ht:3},{src:'art/moth-2c2.webp',ax:130,ay:318,h:311,w:423,ih:318,ht:3},{src:'art/moth-2c3.webp',ax:115,ay:350,h:311,w:413,ih:399,ht:17}],
+           [{src:'art/moth-3c1.webp',ax:188,ay:377,h:311,w:515,ih:379,ht:3},{src:'art/moth-3c2.webp',ax:182,ay:333,h:311,w:558,ih:334,ht:1},{src:'art/moth-3c3.webp',ax:165,ay:402,h:311,w:552,ih:457,ht:8}]],
+        spell:[{vp:['#ffffff','#e6dcff','#a98bff','#3b2385'],hand:[150,125],bySkill:[null,{shot:'art/fx-moth-blade1.webp'},{burst:'art/fx-moth-moon1.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#e6dcff','#a98bff','#3b2385'],hand:[150,125],bySkill:[null,{shot:'art/fx-moth-blade2.webp'},{burst:'art/fx-moth-moon2.webp',aoe:'sweep'}]},
+               {vp:['#ffffff','#e6dcff','#a98bff','#3b2385'],hand:[150,125],bySkill:[null,{shot:'art/fx-moth-blade3.webp'},{burst:'art/fx-moth-moon3.webp',aoe:'sweep'}]}]},
   // Crag (ram, chibi). Frames per form are [Seismic Strike, Crystal Burst, Earthen Bulwark]:
   // the strike is a hammer lunge that bursts rock spikes under the target, the burst throws painted crystals.
   ram:{zoom:.42,eyeY:112,f:[{src:'art/ram-1.webp',ax:347,ay:858,h:853,w:920,ih:857,ht:2,cx:500,fy:258,sc:2.8721},{src:'art/ram-2.webp',ax:130,ay:297,h:297,w:262,ih:304,ht:2,cx:175,fy:97},{src:'art/ram-3.webp',ax:145,ay:307,h:297,w:338,ih:317,ht:2,cx:200,fy:118}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,
@@ -387,7 +396,7 @@ function vfxSpearSweep(pts,S){if(!pts.length)return Promise.resolve();const P=S.
 
 /* ---------- Ren (fire fox): a fire crescent where his blade lands, and a ring of fire for Flame Ward ---------- */
 function rlArtMelee(u,tp,big){const A=RL_ART[u.id];if(A&&A.impact){const st=crStage(u.lv||crLv(u.id));paintErupt([tp],{vp:RL_VP[u.id],paint:{burst:A.impact[st]}});rlbShake(true);return true}
-  if(!A||A.slash!=='fire')return false;const st=crStage(u.lv||crLv(u.id)),sp=vSp(),d=u.side?-1:1,R=tp.h*.55*(1+.12*st),P=RL_VP[u.id]||RL_VP.fox;let t=0;const life=.42/sp;
+  if(!A||!A.slash)return false;const st=crStage(u.lv||crLv(u.id)),sp=vSp(),d=u.side?-1:1,R=tp.h*.55*(1+.12*st),P=RL_VP[u.id]||RL_VP.fox;let t=0;const life=.42/sp;
   VFX.items.push({step(dt,c){t+=dt;const k=Math.min(1,t/life),sw=-1.9+3.2*Math.min(1,k/.45),a=k<.45?1:1-(k-.45)/.55;c.save();c.translate(tp.x,tp.y);c.scale(d,1);c.globalCompositeOperation='lighter';
     for(let i=0;i<3;i++){const w=[26,15,6][i]*(1+.3*st),col=[P[3],P[2],P[0]][i];c.globalAlpha=a*[.55,.8,1][i];c.strokeStyle=col;c.lineWidth=w;c.lineCap='round';c.beginPath();c.arc(-R*.25,0,R,-1.9,Math.max(-1.89,sw));c.stroke()}
     c.restore();if(k<.5)for(let i=0;i<3;i++){const an=-1.9+3.2*Math.min(1,k/.45)+vR(-.2,.2);vfxP({x:tp.x+d*(Math.cos(an)*R-R*.25),y:tp.y+Math.sin(an)*R,vx:d*vR(20,140),vy:vR(-160,-40),ay:200,life:vR(.3,.6),s:vR(2,5),c:rlRand(P)})}
