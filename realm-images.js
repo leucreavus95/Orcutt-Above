@@ -15,9 +15,9 @@ const RL_ART={
         c:[[{src:'art/phx-1c1.webp',ax:116,ay:292,h:294,w:375,ih:293,ht:2},{src:'art/phx-1c2.webp',ax:122,ay:299,h:294,w:397,ih:300,ht:2},{src:'art/phx-1c3.webp',ax:95,ay:298,h:294,w:402,ih:299,ht:18}],
            [{src:'art/phx-2c1.webp',ax:134,ay:310,h:294,w:408,ih:311,ht:2},{src:'art/phx-2c2.webp',ax:129,ay:306,h:294,w:410,ih:307,ht:3},{src:'art/phx-2c3.webp',ax:104,ay:312,h:294,w:431,ih:313,ht:24}],
            [{src:'art/phx-3c1.webp',ax:169,ay:358,h:294,w:482,ih:358,ht:3},{src:'art/phx-3c2.webp',ax:154,ay:341,h:294,w:490,ih:342,ht:3},{src:'art/phx-3c3.webp',ax:126,ay:346,h:294,w:488,ih:346,ht:16}]],
-        spell:[{vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow1.webp'},{shot:'art/fx-phx-feather1.webp',aoe:'fan'},{burst:'art/fx-phx-rain1.webp',aoe:'erupt',sz:.62}]},
-               {vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow2.webp'},{shot:'art/fx-phx-feather2.webp',aoe:'fan'},{burst:'art/fx-phx-rain2.webp',aoe:'erupt',sz:.62}]},
-               {vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow3.webp'},{shot:'art/fx-phx-feather3.webp',aoe:'fan'},{burst:'art/fx-phx-rain3.webp',aoe:'erupt',sz:.62}]}]},
+        spell:[{vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow1.webp'},{shot:'art/fx-phx-feather1.webp',aoe:'fan'},{burst:'art/fx-phx-rain1.webp',aoe:'erupt',sz:.62,up:'art/fx-phx-feather1.webp',hand:[60,215]}]},
+               {vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow2.webp'},{shot:'art/fx-phx-feather2.webp',aoe:'fan'},{burst:'art/fx-phx-rain2.webp',aoe:'erupt',sz:.62,up:'art/fx-phx-feather2.webp',hand:[60,215]}]},
+               {vp:['#ffffff','#fff1c0','#ff9a2a','#c42a10'],hand:[185,150],bySkill:[{shot:'art/fx-phx-arrow3.webp'},{shot:'art/fx-phx-feather3.webp',aoe:'fan'},{burst:'art/fx-phx-rain3.webp',aoe:'erupt',sz:.62,up:'art/fx-phx-feather3.webp',hand:[60,215]}]}]},
   // Aster (astral sorcerer, chibi). LEGENDARY. Frames per form are [Astral Lance, Sigil-Bolt Volley, Rift Sweep].
   star:{zoom:.46,eyeY:95,f:[{src:'art/star-1.webp',ax:203,ay:560,h:555,w:416,ih:560,ht:2,cx:215,fy:175},{src:'art/star-2.webp',ax:235,ay:633,h:555,w:453,ih:633,ht:1,cx:255,fy:250},{src:'art/star-3.webp',ax:264,ay:696,h:555,w:553,ih:696,ht:3,cx:320,fy:320}],pose:'skill',
         c:[[{src:'art/star-1c1.webp',ax:139,ay:338,h:291,w:421,ih:339,ht:3},{src:'art/star-1c2.webp',ax:140,ay:332,h:275,w:422,ih:334,ht:1},{src:'art/star-1c3.webp',ax:119,ay:311,h:254,w:418,ih:314,ht:12}],
@@ -496,7 +496,7 @@ function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst|
 (function(){const prev=rlArtFire,prevSup=rlArtSupport;
   rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0]||{};S=Object.assign({},S,{paint:p,bySkill:null},p.hand?{hand:p.hand}:{});
       if(p.aoe==='spearsweep'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxSpearSweep(pts,S)}
-      if(sk.tg==='eA'&&(p.aoe==='erupt'||p.aoe==='sweep')){const h=rlArtHand(S);const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;return p.aoe==='erupt'?paintErupt(pts,S):paintSweep(h,pts,S)}}
+      if(sk.tg==='eA'&&(p.aoe==='erupt'||p.aoe==='sweep')){const h=rlArtHand(S);const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;if(p.up&&h){await vfxShootUp(h,S,p.up);}return p.aoe==='erupt'?paintErupt(pts,S):paintSweep(h,pts,S)}}
     return prev(S,e,sk,ult)};
   Object.values(RL_ART).forEach(A=>(A.spell||[]).forEach(S=>S&&S.bySkill&&S.bySkill.forEach(p=>p&&['shot','burst','sigil','aura'].forEach(k=>p[k]&&artImg(p[k])))));
 })();
@@ -531,3 +531,13 @@ function vfxFlameWard(S,e){const P=S.vp,sp=vSp(),big=S.big;e.t.forEach((uid,n)=>
     for(let i=0;i<3;i++){c.globalAlpha=a*[.5,.8,1][i];c.strokeStyle=[P[3],P[2],P[1]][i];c.lineWidth=[12,7,3][i];c.beginPath();c.ellipse(0,0,R*.8*g,R*g,0,0,6.283);c.stroke()}
     c.restore();const fl=big?5:3;for(let i=0;i<fl;i++){const an=Math.random()*6.283;vfxP({x:q.x+Math.cos(an)*R*.8*g,y:q.y+Math.sin(an)*R*g,vy:vR(-150,-60),life:vR(.3,.6),s:vR(3,7),c:rlRand(P),shape:i%2?'c':'dia',vr:4})}}})})}
 (function(){const prev=rlArtSupport;rlArtSupport=function(S,e,sk){if(S.support==='flameward'||S.support==='ring')return vfxFlameWard(S,e);return prev(S,e,sk)}})();
+
+/* volley fired skyward before an arrow rain lands: flaming arrows streak up off the top of the stage */
+function vfxShootUp(h,S,src){const img=artImg(src),P=S.vp,sp=vSp(),n=5;
+  return new Promise(res=>{let done=0;for(let i=0;i<n;i++){let t=-i*.06/sp;const life=.42/sp,ang=-Math.PI/2+h.d*(.22+i*.06),L=60*Math.max(1,h.k*1.7);
+    VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=Math.min(1,t/life),e=k*k,x=h.x+Math.cos(ang)*900*e,y=h.y+Math.sin(ang)*900*e;
+      c.save();c.globalCompositeOperation='lighter';c.globalAlpha=k<.8?1:1-(k-.8)/.2;c.translate(x,y);c.rotate(ang);
+      if(img){const H=L*img.naturalHeight/img.naturalWidth;c.drawImage(img,-L/2,-H/2,L,H)}c.restore();
+      if(Math.random()<.8)vfxP({x,y,vx:vR(-30,30),vy:vR(40,120),life:vR(.2,.45),s:vR(2,5),c:rlRand(P)});
+      if(k>=1){this.done=true;if(++done===n)res()}}})}
+    vfxP({x:h.x,y:h.y,life:.3,s:8,grow:180,c:P[2],shape:'shock'})}).then(()=>new Promise(r=>setTimeout(r,60/sp)))}
