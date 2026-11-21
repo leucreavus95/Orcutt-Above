@@ -12,10 +12,10 @@ const RL_ART={
   // f: standing art for each form, with the same placement fields (w/ih = file size).
   // Kestran (pangolin spear knight, chibi). LEGENDARY. Frames per form are [Spear Thrust, Winding Sweep, Spearstorm]:
   // the thrust is a lunge; the sweep reuses the thrust stance (the sheet's sweep crosses his legs) and draws the painted arc.
-  pan:{f:[{src:'art/pan-1.webp',ax:242,ay:487,h:472,w:462,ih:487,ht:0},{src:'art/pan-2.webp',ax:252,ay:502,h:485,w:455,ih:501,ht:0},{src:'art/pan-3.webp',ax:294,ay:580,h:562,w:625,ih:580,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
-        c:[[{src:'art/pan-1c1.webp',ax:128,ay:285,h:276,w:412,ih:285,ht:0},{src:'art/pan-1c2.webp',ax:128,ay:285,h:276,w:412,ih:285,ht:0},{src:'art/pan-1c3.webp',ax:138,ay:307,h:296,w:287,ih:306,ht:0}],
-           [{src:'art/pan-2c1.webp',ax:130,ay:290,h:280,w:424,ih:289,ht:0},{src:'art/pan-2c2.webp',ax:130,ay:290,h:280,w:424,ih:289,ht:0},{src:'art/pan-2c3.webp',ax:142,ay:392,h:380,w:291,ih:392,ht:0}],
-           [{src:'art/pan-3c1.webp',ax:133,ay:298,h:289,w:438,ih:298,ht:0},{src:'art/pan-3c2.webp',ax:133,ay:298,h:289,w:438,ih:298,ht:0},{src:'art/pan-3c3.webp',ax:145,ay:398,h:385,w:292,ih:397,ht:0}]],
+  pan:{f:[{src:'art/pan-1.webp',ax:242,ay:487,h:472,w:464,ih:487,ht:0},{src:'art/pan-2.webp',ax:252,ay:501,h:485,w:457,ih:501,ht:0},{src:'art/pan-3.webp',ax:294,ay:580,h:562,w:625,ih:580,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
+        c:[[{src:'art/pan-1c1.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c2.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c3.webp',ax:140,ay:313,h:303,w:289,ih:313,ht:0}],
+           [{src:'art/pan-2c1.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c2.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c3.webp',ax:144,ay:391,h:379,w:293,ih:391,ht:0}],
+           [{src:'art/pan-3c1.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c2.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c3.webp',ax:147,ay:421,h:408,w:304,ih:421,ht:0}]],
         spell:[{vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc1.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear1.webp'}]},
                {vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc2.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear2.webp'}]},
                {vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],hand:[150,150],bySkill:[null,{burst:'art/fx-pan-arc3.webp',aoe:'sweep'},{aoe:'spearrain',img:'art/fx-pan-spear3.webp'}]}]},
