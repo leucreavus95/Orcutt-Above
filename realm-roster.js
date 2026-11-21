@@ -78,7 +78,15 @@ const RL_ROSTER=[
      ev:['Rio','Rio Quickstep','Rio, the Grand Maestro'],
      sk:[rlSk('Rapid Lunge',{m:1.9,h:2,tempo:1}),
          rlSk('Sonic Note Volley',{cd:3,m:1.2,h:3,tempo:1,fx:[['atbDown',15,60],['team','atb',15]]}),
-         rlSk('Rhythm Burst',{cd:4,tg:'eA',m:1.6,crescendo:.35,fx:[['stun',1,15]]})]}}
+         rlSk('Rhythm Burst',{cd:4,tg:'eA',m:1.6,crescendo:.35,fx:[['stun',1,15]]})]}},
+  // Wren, the ranger (chibi art). Rare. A marksman: her charged arrow is a sure critical on Marked foes,
+  // her triple-shot fans across three random enemies and Marks them, her arrow rain pins the whole line.
+  {id:'bow',col:{c:'#4f8a5a',l:'#fff1c8',d:'#1a2e20'},vp:['#ffffff','#fff1c8','#f0b050','#3f6a4a'],
+   hero:{n:'Wren',r:3,role:'atk',spd:110,it:'staff',o:'cloak',hg:'hood',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cr',v:12},
+     ev:['Wren','Wren Swiftfeather','Wren, the Greenwood Ranger'],
+     sk:[rlSk('Charged Arrow',{m:3.8,critMark:true}),
+         rlSk('Triple-Shot',{cd:3,tg:'eA',m:1.5,bounce:3,fx:[['mark',2,50]]}),
+         rlSk('Arrow Rain',{cd:4,tg:'eA',m:1.8,fx:[['slow',2,50],['defBreak',1,25]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

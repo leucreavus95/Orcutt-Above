@@ -235,7 +235,7 @@ function rlAct(B,u,i,tid,power){
         if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;
         if(u.tempo)d*=1+.1*u.tempo+(s.crescendo?s.crescendo*u.tempo:0); // Tempo: +10% per beat; Crescendo spends it big
         if(rlHas(t,'mark'))d*=1.25;if(s.vsBurn&&rlHas(t,'burn'))d*=1+s.vsBurn;
-        const cr=rlEff(u,'cr')+(adv>0?15:adv<0?-15:0),crit=Math.random()*100<cr;if(crit)d*=1+u.stats.cd/100;
+        const cr=rlEff(u,'cr')+(adv>0?15:adv<0?-15:0),crit=(s.critMark&&rlHas(t,'mark'))||Math.random()*100<cr;if(crit)d*=1+u.stats.cd/100;
         d*=.95+Math.random()*.1;
         const dealt=rlDamage(B,t,d,ev,{crit,adv});
         if(s.splash&&h===0)for(const o2 of B.side[t.side].filter(x=>x.alive&&x!==t))rlDamage(B,o2,d*s.splash,ev,{}); // Aftershock

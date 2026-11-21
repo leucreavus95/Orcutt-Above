@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Wren (ranger, chibi). Frames per form are [Charged Arrow, Triple-Shot, Arrow Rain].
+  bow:{zoom:.55,eyeY:95,f:[{src:'art/bow-1.webp',ax:222,ay:551,h:545,w:471,ih:550,ht:3,cx:215,fy:140},{src:'art/bow-2.webp',ax:218,ay:559,h:545,w:496,ih:560,ht:4,cx:215,fy:140},{src:'art/bow-3.webp',ax:271,ay:582,h:545,w:598,ih:583,ht:3,cx:300,fy:150}],pose:'skill',
+        c:[[{src:'art/bow-1c1.webp',ax:156,ay:370,h:354,w:470,ih:370,ht:2},{src:'art/bow-1c2.webp',ax:156,ay:360,h:354,w:470,ih:359,ht:3},{src:'art/bow-1c3.webp',ax:214,ay:369,h:354,w:453,ih:374,ht:3}],
+           [{src:'art/bow-2c1.webp',ax:152,ay:380,h:354,w:466,ih:380,ht:2},{src:'art/bow-2c2.webp',ax:150,ay:368,h:354,w:450,ih:367,ht:2},{src:'art/bow-2c3.webp',ax:214,ay:370,h:354,w:435,ih:376,ht:3}],
+           [{src:'art/bow-3c1.webp',ax:182,ay:388,h:354,w:514,ih:388,ht:3},{src:'art/bow-3c2.webp',ax:206,ay:376,h:354,w:543,ih:376,ht:2},{src:'art/bow-3c3.webp',ax:254,ay:395,h:354,w:514,ih:408,ht:12}]],
+        spell:[{vp:['#ffffff','#fff1c8','#f0b050','#3f6a4a'],hand:[190,175],bySkill:[{shot:'art/fx-bow-arrow1.webp'},{shot:'art/fx-bow-arrow1.webp',aoe:'fan'},{burst:'art/fx-bow-rain1.webp',aoe:'erupt'}]},
+               {vp:['#ffffff','#fff1c8','#f0b050','#3f6a4a'],hand:[190,175],bySkill:[{shot:'art/fx-bow-arrow2.webp'},{shot:'art/fx-bow-arrow2.webp',aoe:'fan'},{burst:'art/fx-bow-rain2.webp',aoe:'erupt'}]},
+               {vp:['#ffffff','#fff1c8','#f0b050','#3f6a4a'],hand:[190,175],bySkill:[{shot:'art/fx-bow-arrow3.webp'},{shot:'art/fx-bow-arrow3.webp',aoe:'fan'},{burst:'art/fx-bow-rain3.webp',aoe:'erupt'}]}]},
   // Rio (drummer duelist, chibi). Frames per form are [Rapid Lunge, Sonic Note Volley, Rhythm Burst].
   drum:{zoom:.62,eyeY:92,f:[{src:'art/drum-1.webp',ax:211,ay:551,h:545,w:486,ih:552,ht:3,cx:225,fy:110},{src:'art/drum-2.webp',ax:211,ay:552,h:545,w:576,ih:553,ht:2,cx:225,fy:110},{src:'art/drum-3.webp',ax:331,ay:552,h:545,w:680,ih:553,ht:2,cx:345,fy:110}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'note',
         c:[[{src:'art/drum-1c1.webp',ax:134,ay:378,h:377,w:397,ih:382,ht:1},{src:'art/drum-1c2.webp',ax:134,ay:382,h:377,w:375,ih:386,ht:2},{src:'art/drum-1c3.webp',ax:134,ay:388,h:377,w:385,ih:392,ht:18}],
