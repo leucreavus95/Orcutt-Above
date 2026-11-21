@@ -215,30 +215,50 @@ async function lTeacherSignIn(){
   try{if(LIVE.auth.currentUser)await LIVE.auth.signOut().catch(()=>{});await lAuthRetry(()=>LIVE.auth.signInWithPopup(p))}
   catch(e){if(e&&/popup-blocked|operation-not-supported/.test(e.code||''))return LIVE.auth.signInWithRedirect(p);throw e}
 }
-async function lStudentSignIn(code,user,pin){
+// "Keep me signed in": the device keeps the student's session key (never the PIN itself) so that
+// if the browser drops its Firebase login (closed tab, cleared login storage), it can sign back in.
+const L_REM='oa-remember';
+function lRemGet(){try{return JSON.parse(localStorage.getItem(L_REM)||'null')}catch(e){return null}}
+function lRemSet(v){try{v?localStorage.setItem(L_REM,JSON.stringify(v)):localStorage.removeItem(L_REM)}catch(e){}}
+async function lPersist(keep){try{await LIVE.auth.setPersistence(keep?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION)}catch(e){}}
+async function lStudentSignIn(code,user,pin,remember){
   code=String(code||'').trim().toUpperCase();user=String(user||'').trim().toLowerCase();pin=String(pin||'').trim();
   if(!code||!user||!pin)throw new Error('missing');
   let u=LIVE.auth.currentUser;
   if(u&&!u.isAnonymous){await LIVE.auth.signOut();u=null}
-  if(!u)u=(await lAuthRetry(()=>LIVE.auth.signInAnonymously())).user;
+  if(remember===false&&u){await LIVE.auth.signOut();u=null}
+  if(!u){await lPersist(remember!==false);u=(await lAuthRetry(()=>LIVE.auth.signInAnonymously())).user}
   const cd=await LIVE.db.doc('codes/'+code).get();if(!cd.exists)throw new Error('code');
   const cid=cd.data().cid,lg=await LIVE.db.doc('logins/'+cid+'~'+user).get();if(!lg.exists)throw new Error('match');
   const sid=lg.data().sid,h=await lSha(sid+':'+pin);
   try{await LIVE.db.doc('sessions/'+u.uid).set({sid,cid,h,t:Date.now()})}catch(e){throw new Error('match')}
+  lRemSet(remember===false?null:{sid,cid,h,code,user});
   return {sid,cid};
 }
-async function lSignOut(){
+// Sign back in from the saved key. Fails (and forgets the key) if the teacher changed the PIN.
+async function lStudentResume(){
+  const r=lRemGet();if(!r||!r.sid||!r.cid||!r.h)return null;
+  try{let u=LIVE.auth.currentUser;
+    if(u&&!u.isAnonymous)return null;
+    if(!u){await lPersist(true);u=(await lAuthRetry(()=>LIVE.auth.signInAnonymously())).user}
+    await LIVE.db.doc('sessions/'+u.uid).set({sid:r.sid,cid:r.cid,h:r.h,t:Date.now()});
+    return {sid:r.sid,cid:r.cid}}
+  catch(e){console.warn('Saved sign-in no longer works',e);if(!lIdbErr(e)&&!/network|unavailable|offline/i.test(String(e&&(e.code||e.message))))lRemSet(null);return null}
+}
+async function lSignOut(keepDevice){
   lStop();try{duelStop()}catch(e){}try{tpStop()}catch(e){}const u=LIVE.auth.currentUser;
   try{if(u&&u.isAnonymous)await LIVE.db.doc('sessions/'+u.uid).delete()}catch(e){}
+  if(!keepDevice)lRemSet(null);
   LIVE.role=null;LIVE.sess=null;LIVE.owner=null;LIVE.email='';
   await LIVE.auth.signOut();
 }
 // What the browser was signed in as last time.
 function lWhoAmI(){
   return new Promise(res=>{const un=LIVE.auth.onAuthStateChanged(async u=>{un();
-    if(!u)return res(null);
+    const resume=async()=>{const s=await lStudentResume();return s?{role:'student',sess:s}:null};
+    if(!u)return res(await resume());
     if(!u.isAnonymous)return res(lAllowed(u.email)?{role:'teacher',user:u}:{role:'denied',user:u});
-    try{const d=await LIVE.db.doc('sessions/'+u.uid).get();res(d.exists?{role:'student',sess:{sid:d.data().sid,cid:d.data().cid}}:null)}catch(e){res(null)}
+    try{const d=await LIVE.db.doc('sessions/'+u.uid).get();res(d.exists?{role:'student',sess:{sid:d.data().sid,cid:d.data().cid}}:await resume())}catch(e){res(await resume())}
   })});
 }
 
