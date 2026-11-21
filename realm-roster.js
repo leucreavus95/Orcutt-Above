@@ -192,6 +192,15 @@ const RL_ROSTER=[
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Kasim, the jackal dune duelist (chibi art). EPIC. Sandshear flings a blade of sand that can Blind,
+  // Twin Dune Cuts sends two sand slashes that crack DEF, and Dust Devil whips a sandstorm across every
+  // enemy, Blinding them, while Kasim speeds up.
+  {id:'jack',col:{c:'#d9a95a',l:'#fff1d0',d:'#2a2018'},vp:['#fff6dc','#f3d9a0','#d9a95a','#6a4a1e'],
+   hero:{n:'Kasim',r:4,role:'atk',spd:118,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cr',v:15},
+     ev:['Kasim','Kasim Dune Blade','Kasim, the Dune Duelist'],
+     sk:[rlSk('Sandshear',{m:3.6,fx:[['blind',1,35]]}),
+         rlSk('Twin Dune Cuts',{cd:3,m:1.9,h:2,fx:[['defBreak',2,50]]}),
+         rlSk('Dust Devil',{cd:4,tg:'eA',m:1.6,fx:[['blind',2,60],['self','spdUp',2]]})]}},
   // Bram, the boar shieldbearer (chibi art). COMMON tank. Tusker Bash shoves one enemy with his shield
   // (DEF-scaled, may stun), Shield Brace digs in for a shield and DEF Up, and Hold the Line plants his
   // shield and taunts every enemy for 2 turns while he takes less damage.

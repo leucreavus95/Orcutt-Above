@@ -23,6 +23,14 @@ const RL_ART={
   // Voltan (lynx striker, chibi). LEGENDARY. Frames per form are [Thunderclap Fist, Chain Arc, Stormstep].
   // Sage (village herbalist, chibi). COMMON healer. Frames per form are [Quick Remedy, Herbal Poultice, Renewing Draught].
   // Bram (boar shieldbearer, chibi). COMMON tank. Frames per form are [Tusker Bash, Shield Brace, Hold the Line].
+  // Kasim (jackal duelist, chibi). EPIC. Frames per form are [Sandshear, Twin Dune Cuts, Dust Devil].
+  jack:{f:[{src:'art/jack-1.webp',ax:253,ay:752,h:746,w:478,ih:753,ht:0},{src:'art/jack-2.webp',ax:264,ay:752,h:746,w:515,ih:752,ht:0},{src:'art/jack-3.webp',ax:281,ay:749,h:746,w:539,ih:749,ht:0}],pose:'skill',
+        c:[[{src:'art/jack-1c1.webp',ax:117,ay:368,h:433,w:404,ih:371,ht:0},{src:'art/jack-1c2.webp',ax:146,ay:382,h:433,w:389,ih:386,ht:0},{src:'art/jack-1c3.webp',ax:287,ay:408,h:433,w:385,ih:433,ht:0}],
+           [{src:'art/jack-2c1.webp',ax:117,ay:371,h:433,w:419,ih:379,ht:0},{src:'art/jack-2c2.webp',ax:152,ay:379,h:433,w:410,ih:387,ht:0},{src:'art/jack-2c3.webp',ax:276,ay:409,h:433,w:397,ih:430,ht:0}],
+           [{src:'art/jack-3c1.webp',ax:134,ay:375,h:433,w:423,ih:381,ht:0},{src:'art/jack-3c2.webp',ax:153,ay:387,h:433,w:409,ih:396,ht:0},{src:'art/jack-3c3.webp',ax:278,ay:430,h:433,w:406,ih:444,ht:0}]],
+        spell:[{vp:['#fff6dc','#f3d9a0','#d9a95a','#6a4a1e'],hand:[130,135],bySkill:[{shot:'art/fx-jack-wave1.webp',sz:.6},{shot:'art/fx-jack-twin1.webp',sz:.6},{burst:'art/fx-jack-wave1.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#fff6dc','#f3d9a0','#d9a95a','#6a4a1e'],hand:[130,135],bySkill:[{shot:'art/fx-jack-wave2.webp',sz:.6},{shot:'art/fx-jack-twin2.webp',sz:.6},{burst:'art/fx-jack-wave2.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#fff6dc','#f3d9a0','#d9a95a','#6a4a1e'],hand:[130,135],bySkill:[{shot:'art/fx-jack-wave3.webp',sz:.6},{shot:'art/fx-jack-twin3.webp',sz:.6},{burst:'art/fx-jack-wave3.webp',aoe:'erupt',sz:.5}]}]},
   boar:{f:[{src:'art/boar-1.webp',ax:215,ay:723,h:716,w:487,ih:723,ht:0},{src:'art/boar-2.webp',ax:213,ay:725,h:716,w:487,ih:725,ht:0},{src:'art/boar-3.webp',ax:215,ay:726,h:716,w:502,ih:727,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,
         c:[[{src:'art/boar-1c1.webp',ax:123,ay:320,h:401,w:360,ih:321,ht:0},{src:'art/boar-1c2.webp',ax:137,ay:322,h:401,w:375,ih:323,ht:0},{src:'art/boar-1c3.webp',ax:191,ay:387,h:401,w:375,ih:391,ht:0}],
            [{src:'art/boar-2c1.webp',ax:151,ay:319,h:401,w:407,ih:319,ht:0},{src:'art/boar-2c2.webp',ax:178,ay:375,h:401,w:371,ih:381,ht:0},{src:'art/boar-2c3.webp',ax:202,ay:397,h:401,w:408,ih:400,ht:0}],
