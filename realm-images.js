@@ -10,6 +10,14 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
+  // Vexis (basilisk, chibi). LEGENDARY. Frames per form are [Venom Fang, Twin Toxin Crescents, Caustic Mireburst].
+  bas:{zoom:.42,eyeY:100,f:[{src:'art/bas-1.webp',ax:249,ay:654,h:648,w:467,ih:652,ht:3,cx:285,fy:230},{src:'art/bas-2.webp',ax:250,ay:668,h:648,w:488,ih:666,ht:3,cx:290,fy:240},{src:'art/bas-3.webp',ax:285,ay:701,h:648,w:539,ih:699,ht:1,cx:330,fy:270}],pose:'skill',
+        c:[[{src:'art/bas-1c1.webp',ax:184,ay:375,h:385,w:368,ih:376,ht:2},{src:'art/bas-1c2.webp',ax:156,ay:391,h:385,w:317,ih:391,ht:3},{src:'art/bas-1c3.webp',ax:277,ay:353,h:385,w:294,ih:352,ht:1}],
+           [{src:'art/bas-2c1.webp',ax:172,ay:385,h:385,w:340,ih:386,ht:2},{src:'art/bas-2c2.webp',ax:158,ay:393,h:385,w:315,ih:393,ht:0},{src:'art/bas-2c3.webp',ax:147,ay:363,h:385,w:266,ih:362,ht:2}],
+           [{src:'art/bas-3c1.webp',ax:200,ay:392,h:385,w:374,ih:393,ht:2},{src:'art/bas-3c2.webp',ax:162,ay:398,h:385,w:316,ih:397,ht:2},{src:'art/bas-3c3.webp',ax:239,ay:369,h:385,w:258,ih:368,ht:2}]],
+        spell:[{vp:['#ffffff','#eaffb0','#b6e83a','#4a1a2e'],hand:[175,150],bySkill:[{shot:'art/fx-bas-fang1.webp',sz:.75},{shot:'art/fx-bas-cres1.webp',sz:.55},{burst:'art/fx-bas-mire1.webp',aoe:'erupt',sz:.65}]},
+               {vp:['#ffffff','#eaffb0','#b6e83a','#4a1a2e'],hand:[175,150],bySkill:[{shot:'art/fx-bas-fang2.webp',sz:.75},{shot:'art/fx-bas-cres2.webp',sz:.55},{burst:'art/fx-bas-mire2.webp',aoe:'erupt',sz:.65}]},
+               {vp:['#ffffff','#eaffb0','#b6e83a','#4a1a2e'],hand:[175,150],bySkill:[{shot:'art/fx-bas-fang3.webp',sz:.75},{shot:'art/fx-bas-cres3.webp',sz:.55},{burst:'art/fx-bas-mire3.webp',aoe:'erupt',sz:.65}]}]},
   // Solenne (phoenix archer, chibi). LEGENDARY. Frames per form are [Sunflare Arrow, Feather Volley, Phoenix Rain].
   phx:{zoom:.42,eyeY:95,f:[{src:'art/phx-1.webp',ax:217,ay:514,h:509,w:492,ih:512,ht:2,cx:200,fy:140},{src:'art/phx-2.webp',ax:189,ay:545,h:509,w:479,ih:543,ht:5,cx:200,fy:170},{src:'art/phx-3.webp',ax:237,ay:593,h:509,w:526,ih:591,ht:4,cx:240,fy:200}],pose:'skill',
         c:[[{src:'art/phx-1c1.webp',ax:116,ay:292,h:294,w:375,ih:293,ht:2},{src:'art/phx-1c2.webp',ax:122,ay:299,h:294,w:397,ih:300,ht:2},{src:'art/phx-1c3.webp',ax:95,ay:298,h:294,w:402,ih:299,ht:18}],

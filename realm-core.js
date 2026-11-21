@@ -170,6 +170,7 @@ function rlTurnStart(B,u){
   const ev=[];B.turn++;u.atb=0;u.cds=u.cds.map(c=>Math.max(0,c-1));
   const burns=u.fx.filter(f=>f.k==='burn').length;
   if(burns){const d=Math.round(u.maxHp*.06*burns);rlDamage(B,u,d,ev,{dot:true})}
+  const psn=u.fx.filter(f=>f.k==='poison').length;if(psn&&u.alive){rlDamage(B,u,Math.round(u.maxHp*.04*psn*(u.boss?.5:1)),ev,{dot:true});ev.push({k:'ptick',u:u.uid,v:psn})}
   // Seeded: the seed drains 5% HP and heals the most hurt unit on the other side
   if(u.alive&&rlHas(u,'seed')){const d=Math.round(u.maxHp*.05);rlDamage(B,u,d,ev,{dot:true});const fr=B.side[1-u.side].filter(x=>x.alive).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];if(fr)rlHeal(fr,d,ev)}
   if(u.alive&&rlHas(u,'regen')){const a=Math.round(u.maxHp*.12);rlHeal(u,a,ev)}
@@ -208,6 +209,7 @@ function rlApplyFx(B,src,tgt,f,power,ev,isEnemy){
   if(power<1||!tgt.alive)return;
   if(Math.random()*100>=f[2])return;
   if(rlHas(tgt,'immune')||rlResist(src,tgt)){ev.push({k:'resist',u:tgt.uid});return}
+  if(k==='poison'){const n=f[3]||1;for(let i=0;i<n;i++)if(tgt.fx.filter(x=>x.k==='poison').length<5)tgt.fx.push({k,t:f[1]});ev.push({k:'fx',u:tgt.uid,f:k});return}
   if(k==='sigil'){if(tgt.fx.filter(x=>x.k==='sigil').length<3)tgt.fx.push({k,t:f[1]});ev.push({k:'fx',u:tgt.uid,f:k});return}
   if(k==='chill'){tgt.fx.push({k,t:f[1]});if(tgt.fx.filter(x=>x.k==='chill').length>=3){tgt.fx=tgt.fx.filter(x=>x.k!=='chill'&&x.k!=='stun');tgt.fx.push({k:'stun',t:1});ev.push({k:'frozen',u:tgt.uid});return}}
   else if(k==='burn'){if(tgt.fx.filter(x=>x.k==='burn').length<3)tgt.fx.push({k,t:f[1]})}
@@ -243,6 +245,7 @@ function rlAct(B,u,i,tid,power){
         if(s.vsDaze&&rlHas(t,'daze'))d*=1+s.vsDaze;
         if(s.vsSoak&&rlHas(t,'soak'))d*=1+s.vsSoak;
         if(s.vsStatic&&rlHas(t,'static'))d*=1+s.vsStatic;
+        if(s.vsPoison)d*=1+s.vsPoison*t.fx.filter(x=>x.k==='poison').length;
         if(s.rift){const n=t.fx.filter(x=>x.k==='sigil').length;if(n){d*=1+s.rift*n;if(h===(s.h||1)-1){t.fx=t.fx.filter(x=>x.k!=='sigil');ev.push({k:'rift',u:t.uid,v:n})}}}
         if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;
         if(u.tempo)d*=1+.1*u.tempo+(s.crescendo?s.crescendo*u.tempo:0); // Tempo: +10% per beat; Crescendo spends it big
@@ -254,6 +257,8 @@ function rlAct(B,u,i,tid,power){
         if(u.stats.steal)rlHeal(u,dealt*u.stats.steal/100,ev);
       }
       const preDaze=s.ring&&rlHas(t,'daze');
+      // Mireburst: every Poison stack bursts at once (instant damage), then fresh Poison is applied
+      if(s.pburst&&t.alive&&pw>=.5){const n=t.fx.filter(x=>x.k==='poison').length;if(n){ev.push({k:'toxic',u:t.uid,v:n});rlDamage(B,t,t.maxHp*.04*n*s.pburst*(t.boss?.5:1)*pw,ev,{dot:true})}}
       const preSoak=s.undertow&&rlHas(t,'soak');
       if(s.waxBurn&&t.alive&&rlHas(t,'slow'))rlApplyFx(B,u,t,['burn',2,100],pw*bonus,ev,true); // melting wax: an extra Burn on Slowed targets
       for(const f of s.fx)if(f[0]!=='self'&&f[0]!=='team')rlApplyFx(B,u,t,f,pw*bonus,ev,true);

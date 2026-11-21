@@ -154,7 +154,16 @@ const RL_ROSTER=[
      ev:['Solenne','Solenne Emberwing','Solenne, the Undying Sun'],
      sk:[rlSk('Sunflare Arrow',{m:3.9,vsBurn:.4,fx:[['burn',2,60]]}),
          rlSk('Feather Volley',{cd:3,tg:'eA',m:1.6,fx:[['burn',2,50]]}),
-         rlSk('Phoenix Rain',{cd:5,tg:'eA',m:2.4,vsBurn:.5,fx:[['burn',2,70],['self','healT',25]]})]}}
+         rlSk('Phoenix Rain',{cd:5,tg:'eA',m:2.4,vsBurn:.5,fx:[['burn',2,70],['self','healT',25]]})]}},
+  // Vexis, the basilisk (chibi art). LEGENDARY. Poison: stacking damage over time (up to 5 stacks,
+  // 4% max HP per stack each turn). His fang strikes and poisons, his crescents cut deeper per stack,
+  // and Caustic Mireburst poisons the whole line and makes every Poison burst at once for instant damage.
+  {id:'bas',col:{c:'#8bc43a',l:'#eaffb0',d:'#2a0e1a'},vp:['#ffffff','#eaffb0','#b6e83a','#4a1a2e'],
+   hero:{n:'Vexis',r:5,role:'atk',spd:116,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'acc',v:25},
+     ev:['Vexis','Vexis Venomscale','Vexis, the Plague Sovereign'],
+     sk:[rlSk('Venom Fang',{m:3.6,fx:[['poison',3,85,2]]}),
+         rlSk('Twin Toxin Crescents',{cd:3,m:1.7,h:2,vsPoison:.12,fx:[['poison',3,70,1]]}),
+         rlSk('Caustic Mireburst',{cd:5,tg:'eA',m:1.8,pburst:1.5,fx:[['poison',3,75,2]]})]}}
 ];
 RL_EL.any={n:'Star',c:'#ffd96a',d:'#8a6a00',l:'#fff6c9',beats:null};
 (function(){

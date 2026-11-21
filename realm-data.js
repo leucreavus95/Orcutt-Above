@@ -38,6 +38,7 @@ const RL_FX={
   burn:{n:'Burn',c:'#ff6a3d',g:'≈',d:'Takes 6% max HP each turn'},
   seal:{n:'Seal',c:'#a46bff',g:'⊘',d:'Can only use its first skill'},
   mark:{n:'Mark',c:'#ff7eb6',g:'◎',d:'Takes 25% more damage'},
+  poison:{n:'Poison',c:'#8bc43a',g:'☠',d:'Stacks up to 5: loses 4% max HP per stack each turn'},
   sigil:{n:'Sigil',c:'#a98bff',g:'✧',d:'Stacks up to 3: Aster\'s Rift Sweep detonates every Sigil for bonus damage'},
   static:{n:'Static',c:'#ffd23a',g:'ϟ',d:'Charged: Brontos\'s bolts crackle harder, and Tempest Drive discharges it for big damage'},
   soak:{n:'Soaked',c:'#5cc4f0',g:'≋',d:'Drenched: Thalos\'s blades cut deeper and his Deep Current drags it further back'},
