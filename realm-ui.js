@@ -186,17 +186,59 @@ function rlZoomBy(d){const R=rlUI(),k0=R.pan.k,k=rlClamp(k0*(d>0?1.18:1/1.18),.4
 
 /* ---------- heroes ---------- */
 function rlHeroCard(p,id,o){const h=RL_H[id],m=p.heroes[id];const inTeam=p.team.indexOf(id);
-  return`<button class="rl-hcard r${h.r}${m?'':' unowned'}${o&&o.sel?' sel':''}" data-a="${o&&o.act||'rlHero'}" data-v="${id}" ${m?'':'disabled'}><div class="rl-pframe r${h.r}">${m?rlHeroSVG(id,{motes:false}):`<div class="rl-sil">${rlHeroSVG(id,{motes:false})}</div>`}</div>${inTeam>=0&&m?`<span class="rl-tslot">${inTeam===0?'Leader':'Team'}</span>`:''}<div class="rl-hc-name">${rlElChip(h.el)}<b>${m?esc(crName(id,m.lv)):'???'}</b></div><div class="rl-hc-sub">${m?`${rlStars(m.st)}<span class="num">Lv ${m.lv}</span>`:`${rlStars(h.r,'dim')}`}</div></button>`}
+  return`<button class="rl-hcard r${h.r}${m?'':' unowned'}${o&&o.sel?' sel':''}${inTeam>=0&&m?' onteam':''}" data-a="${o&&o.act||'rlHero'}" data-v="${id}" ${m?'':'disabled'}${m&&!o?` data-drag="hero" data-id="${id}"`:''}><div class="rl-pframe r${h.r}">${m?rlHeroSVG(id,{motes:false}):`<div class="rl-sil">${rlHeroSVG(id,{motes:false})}</div>`}</div>${inTeam>=0&&m?`<span class="rl-tslot">${inTeam===0?'Leader':'Team'}</span>`:''}<div class="rl-hc-name">${rlElChip(h.el)}<b>${m?esc(crName(id,m.lv)):'???'}</b></div><div class="rl-hc-sub">${m?`${rlStars(m.st)}<span class="num">Lv ${m.lv}</span>`:`${rlStars(h.r,'dim')}`}</div></button>`}
 function rlHeroes(s,p){
   const R=rlUI(),owned=Object.keys(p.heroes);
   if(R.hero&&p.heroes[R.hero])return rlHeroDetail(s,p,R.hero);
   const list=RL_HEROES.filter(h=>R.hf==='all'||h.el===R.hf).sort((a,b)=>(!!p.heroes[b.id]-!!p.heroes[a.id])||b.r-a.r||(p.heroes[b.id]?p.heroes[b.id].lv:0)-(p.heroes[a.id]?p.heroes[a.id].lv:0));
-  const team=i=>{const id=p.team[i];return id?`<button class="rl-slot filled" data-a="rlHero" data-v="${id}"><div class="rl-pframe r${RL_H[id].r} live">${rlHeroSVG(id)}</div><span>${i===0?'Leader':'Slot '+(i+1)}</span></button>`:`<div class="rl-slot"><span>Empty</span></div>`};
+  const slots=rlSlots(p);
+  const team=i=>{const id=slots[i];return id?`<div class="rl-slot filled" data-slot="${i}"><button class="rl-sbtn" data-a="rlHero" data-v="${id}" data-drag="slot" data-i="${i}" data-id="${id}" title="Drag to move, tap to open"><div class="rl-pframe r${RL_H[id].r} live">${rlHeroSVG(id)}</div><span>${p.team[0]===id?'Leader':'Slot '+(i+1)}</span></button><button class="rl-sx" data-a="rlSlotOut" data-v="${i}" aria-label="Remove ${esc(RL_H[id].n)} from team" title="Remove">×</button></div>`:`<div class="rl-slot" data-slot="${i}"><span class="rl-plus">+</span><span>${i===0?'Leader slot':'Slot '+(i+1)}</span></div>`};
   const pw=p.team.reduce((a,id)=>a+rlPower(rlHeroStats(p,id)),0);
   const lead=p.team[0]&&RL_H[p.team[0]].ld;
-  return`<div class="rl-sec"><div class="spread"><div><h2>Your team</h2><p class="muted">Power ${rlNum(pw)}. The first creature leads.${lead?' '+esc(rlLeadText(RL_H[p.team[0]])):''} Open a creature to add or remove them.</p></div></div><div class="rl-team">${[0,1,2,3].map(team).join('')}</div></div>
+  return`<div class="rl-heroes"><div class="rl-sec"><div class="spread"><div><h2>Your team</h2><p class="muted">Power ${rlNum(pw)}. Drag creatures from your collection into any slot. Drag between slots to swap, or drag one out (or tap ×) to remove it. The first filled slot leads.${lead?' '+esc(rlLeadText(RL_H[p.team[0]])):''}</p></div></div><div class="rl-team">${[0,1,2,3].map(team).join('')}</div></div>
   <div class="rl-sec"><div class="spread"><div><h2>Collection</h2><p class="muted">${owned.length} of ${RL_HEROES.length} creatures found</p></div><div class="row">${[].map(e=>`<button class="pill" data-a="rlHf" data-v="${e}" aria-pressed="${R.hf===e}">${e==='all'?'All':rlElChip(e)+RL_EL[e].n}</button>`).join('')}</div></div>
-  <div class="rl-grid">${list.map(h=>rlHeroCard(p,h.id)).join('')}</div></div>`;
+  <div class="rl-grid">${list.map(h=>rlHeroCard(p,h.id)).join('')}</div></div></div>`;
+}
+/* team slots: p.slots keeps the 4 slots (with gaps); p.team is the packed list battles use */
+function rlSlots(p){
+  const seen=new Set();let s=Array.isArray(p.slots)&&p.slots.length===4?p.slots.slice():[null,null,null,null];
+  s=s.map(id=>id&&p.heroes[id]&&p.team.includes(id)&&!seen.has(id)?(seen.add(id),id):null);
+  for(const id of p.team)if(!seen.has(id)&&p.heroes[id]){const i=s.indexOf(null);if(i<0)break;s[i]=id;seen.add(id)}
+  p.slots=s;p.team=s.filter(Boolean);return s}
+function rlSetSlots(p,s){p.slots=s;p.team=s.filter(Boolean);rlSave(ui.sId);render()}
+function rlScroller(el){for(let n=el;n&&n!==document.body;n=n.parentElement){const o=getComputedStyle(n).overflowY;if((o==='auto'||o==='scroll')&&n.scrollHeight>n.clientHeight)return n}return document.scrollingElement}
+function rlTeamWire(){
+  const root=document.querySelector('.rl-heroes');if(!root||root._wired)return;root._wired=true;
+  root.addEventListener('dragstart',e=>e.preventDefault());
+  root.addEventListener('click',e=>{if(Date.now()-(RLU.noClick||0)<400){e.stopPropagation();e.preventDefault()}},true);
+  root.addEventListener('pointerdown',e=>{
+    if(e.button!==0)return;const src=e.target.closest('[data-drag]');if(!src||src.disabled)return;
+    const d={id:src.dataset.id,from:src.dataset.drag==='slot'?+src.dataset.i:-1,x:e.clientX,y:e.clientY,cx:e.clientX,cy:e.clientY,on:false,over:null,pid:e.pointerId,touch:e.pointerType==='touch',timer:null,raf:0,sc:rlScroller(root)};
+    const start=()=>{if(d.on)return;d.on=true;clearTimeout(d.timer);const fr=src.querySelector('.rl-pframe');
+      d.ghost=document.createElement('div');d.ghost.className='rl-ghost';d.ghost.innerHTML=(fr?fr.outerHTML:'')+'<i>Remove</i>';document.body.appendChild(d.ghost);
+      src.classList.add('dragging');root.classList.add('rl-dragging');if(navigator.vibrate&&d.touch)try{navigator.vibrate(15)}catch(_){}
+      place();loop()};
+    const place=()=>{d.ghost.style.transform=`translate(${d.cx-45}px,${d.cy-55}px)`;
+      const el=document.elementFromPoint(d.cx,d.cy),sl=el&&el.closest('.rl-team [data-slot]');
+      if(d.over!==sl){d.over&&d.over.classList.remove('over');d.over=sl;sl&&sl.classList.add('over')}
+      d.ghost.classList.toggle('out',d.from>=0&&!sl)};
+    const loop=()=>{if(!d.on)return;const h=window.innerHeight,edge=56;let v=0;if(d.over);else if(d.cy<edge)v=-(edge-d.cy)/4;else if(d.cy>h-edge)v=(d.cy-(h-edge))/4;
+      if(v){d.sc.scrollTop+=v;place()}d.raf=requestAnimationFrame(loop)};
+    const move=ev=>{if(ev.pointerId!==d.pid)return;d.cx=ev.clientX;d.cy=ev.clientY;
+      if(!d.on){if(Math.hypot(d.cx-d.x,d.cy-d.y)<7)return;if(d.touch){stop();return}start()}
+      ev.preventDefault();place()};
+    const tmove=ev=>{if(d.on&&ev.cancelable)ev.preventDefault()};
+    const stop=()=>{clearTimeout(d.timer);cancelAnimationFrame(d.raf);window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',end);window.removeEventListener('pointercancel',end);window.removeEventListener('touchmove',tmove)};
+    const end=ev=>{if(ev.pointerId!==d.pid)return;stop();if(!d.on)return;d.on=false;
+      d.ghost.remove();src.classList.remove('dragging');root.classList.remove('rl-dragging');d.over&&d.over.classList.remove('over');
+      RLU.noClick=Date.now();if(ev.type==='pointercancel')return;
+      const p=P_(),s=rlSlots(p).slice();
+      if(d.over){const to=+d.over.dataset.slot,at=s.indexOf(d.id);if(at===to)return;if(at>=0){s[at]=s[to];s[to]=d.id}else s[to]=d.id}
+      else if(d.from>=0)s[d.from]=null;else return;
+      rlSetSlots(p,s)};
+    if(d.touch)d.timer=setTimeout(start,230); // touch: press and hold to pick up, so swiping still scrolls
+    window.addEventListener('pointermove',move,{passive:false});window.addEventListener('pointerup',end);window.addEventListener('pointercancel',end);window.addEventListener('touchmove',tmove,{passive:false});
+  });
 }
 function rlStatRows(st,base){const keys=['hp','atk','def','spd','cr','cd','acc','res'];return keys.map(k=>{const v=st[k],b=base[k],d=v-b;return`<div class="rl-srow"><span>${RL_STAT[k].n}</span><b class="num">${rlNum(v)}${RL_STAT[k].p?'%':''}</b>${d>0?`<span class="good num">+${rlNum(d)}</span>`:'<span></span>'}</div>`}).join('')}
 function rlGearChip(g,o){if(!g)return'';const S=RL_SETS[g.set];return`<span class="rl-gchip ${g.r}" style="--sc:${S.c}"><b>${RL_SLOTS[g.s].n}</b> +${g.lv}<i>${S.n}</i></span>`}
@@ -288,6 +330,7 @@ function rlBattleShell(s,p){const R=rlUI(),b=R.b;
 function rlMount(){
   if(ui.mode!=='student'||ui.sTab!=='realm')return;const R=rlUI();
   if(document.getElementById('rl-svg'))rlMapWire();
+  if(document.querySelector('.rl-heroes'))rlTeamWire();
   if(R.b&&document.getElementById('rlb')){rlbBuild();rlbPanel()}
   const rv=document.querySelector('.rl-sumres');if(rv&&!STILL)rv.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
@@ -422,8 +465,9 @@ const REALM_ACTIONS={
   rlHero(d){const R=rlUI();R.hero=d.v;R.v='heroes';render()},
   rlHeroBack(){rlUI().hero=null;render()},
   rlHf(d){rlUI().hf=d.v;render()},
-  rlTeamToggle(d){const p=P_(),i=p.team.indexOf(d.v);if(i>=0)p.team.splice(i,1);else{if(p.team.length>=4){toast('Your team is full. Remove someone first.');return}p.team.push(d.v)}rlSave(ui.sId);render()},
-  rlLead(d){const p=P_(),i=p.team.indexOf(d.v);if(i>0){p.team.splice(i,1);p.team.unshift(d.v);rlSave(ui.sId);render()}},
+  rlTeamToggle(d){const p=P_(),s=rlSlots(p).slice(),i=s.indexOf(d.v);if(i>=0)s[i]=null;else{const j=s.indexOf(null);if(j<0){toast('Your team is full. Remove someone first.');return}s[j]=d.v}rlSetSlots(p,s)},
+  rlLead(d){const p=P_(),s=rlSlots(p).slice(),i=s.indexOf(d.v);if(i>0){s[i]=s[0];s[0]=d.v;rlSetSlots(p,s)}},
+  rlSlotOut(d){const p=P_(),s=rlSlots(p).slice();s[+d.v]=null;rlSetSlots(p,s)},
   rlTome(){const p=P_(),id=rlUI().hero;if(!p.tomes)return;p.tomes--;const ups=rlGiveXp(p,id,1500);rlSave(ui.sId);const lv0=p.heroes[id].lv-ups;rlUI().flash=ups?(crStage(lv0)<crStage(p.heroes[id].lv)?`${crName(id,lv0)} evolved into ${crName(id,p.heroes[id].lv)}!`:`${crName(id,p.heroes[id].lv)} reached level ${p.heroes[id].lv}!`):`${crName(id,p.heroes[id].lv)} gained 1500 XP`;render()},
   rlPromote(){const p=P_(),id=rlUI().hero,h=p.heroes[id],c=rlPromoCost(h.st),el=RL_H[id].el;if(h.lv<rlMaxLv(h.st)||p.ess.any<c.ess||p.gold<c.gold)return;p.ess.any-=c.ess;p.gold-=c.gold;h.st++;rlSave(ui.sId);rlUI().flash=`${crName(id,h.lv)} is now ${h.st}★!`;render()},
   rlGearSlot(d){const R=rlUI();R.modal={t:'gear',slot:+d.v};const p=P_(),h=p.heroes[R.hero];R.gsel=h.g[+d.v]||null;render()},
@@ -552,6 +596,17 @@ const REALM_TCHANGE={
 .rl-team{display:grid;grid-template-columns:repeat(4,minmax(0,170px));gap:12px}
 .rl-slot{border:2px dashed rgba(255,255,255,.15);border-radius:12px;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:none;color:var(--muted);padding:6px}
 .rl-slot.filled{border-style:solid;border-color:rgba(255,255,255,.1);background:rgba(255,255,255,.03)}.rl-slot.filled .rl-pframe{width:100%}
+.rl-slot{position:relative;transition:border-color .15s,background .15s,transform .15s}.rl-plus{font-size:28px;line-height:1;opacity:.5}
+.rl-sbtn{background:none;border:0;color:inherit;font:inherit;width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0}
+.rl-sx{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:#1a1721;color:#fff;font-size:16px;line-height:1;display:grid;place-items:center;opacity:.75;z-index:2}.rl-sx:hover{opacity:1;background:#d7263d}
+[data-drag]{cursor:grab;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.rl-heroes img{-webkit-user-drag:none}
+.rl-dragging,.rl-dragging *{cursor:grabbing!important}
+.rl-dragging .rl-slot{border-color:rgba(255,214,10,.5)}.rl-dragging .rl-slot:not(.filled){background:rgba(255,214,10,.04)}
+.rl-slot.over{border-color:#ffd60a!important;border-style:solid;background:rgba(255,214,10,.14)!important;transform:scale(1.04)}
+.rl-hcard.onteam{outline:2px solid rgba(255,214,10,.5);outline-offset:-2px}
+.dragging{opacity:.3}
+.rl-ghost{position:fixed;left:0;top:0;width:90px;pointer-events:none;z-index:9999;filter:drop-shadow(0 10px 18px rgba(0,0,0,.55))}.rl-ghost .rl-pframe{width:90px;transform:rotate(-4deg) scale(1.05)}
+.rl-ghost i{display:none;position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);background:#d7263d;color:#fff;font:700 11px/1 system-ui;font-style:normal;letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:5px}.rl-ghost.out i{display:block}.rl-ghost.out .rl-pframe{opacity:.6}
 .rl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
 .rl-hcard{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01)),#1a1721;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:5px;text-align:left;position:relative;transition:transform .18s}
 .rl-hcard:hover:not(:disabled){transform:translateY(-4px)}
