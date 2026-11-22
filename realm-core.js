@@ -173,6 +173,8 @@ function rlTurnStart(B,u){
   const psn=u.fx.filter(f=>f.k==='poison').length;if(psn&&u.alive){rlDamage(B,u,Math.round(u.maxHp*.04*psn*(u.boss?.5:1)),ev,{dot:true});ev.push({k:'ptick',u:u.uid,v:psn})}
   // Seeded: the seed drains 5% HP and heals the most hurt unit on the other side
   if(u.alive&&rlHas(u,'seed')){const d=Math.round(u.maxHp*.05);rlDamage(B,u,d,ev,{dot:true});const fr=B.side[1-u.side].filter(x=>x.alive).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];if(fr)rlHeal(fr,d,ev)}
+  // Snared (Marla's noose): the rope tightens whenever the noosed unit tries to act
+  if(u.alive&&rlHas(u,'snare')){rlDamage(B,u,Math.round(u.maxHp*.07*(u.boss?.5:1)),ev,{dot:true});ev.push({k:'rope',u:u.uid})}
   if(u.alive&&rlHas(u,'regen')){const a=Math.round(u.maxHp*.12);rlHeal(u,a,ev)}
   if(!u.alive){rlCheck(B,ev);return{ev,can:false}}
   if(rlHas(u,'stun')){ev.push({k:'skip',u:u.uid});rlTick(u,ev);return{ev,can:false}}
@@ -207,6 +209,7 @@ function rlApplyFx(B,src,tgt,f,power,ev,isEnemy){
   if(k==='atbDown'){if(power<1)return;if(Math.random()*100<f[2]&&!rlResist(src,tgt)&&!rlHas(tgt,'immune')){tgt.atb=Math.max(0,tgt.atb-f[1]);ev.push({k:'atb',u:tgt.uid,v:-f[1]})}else ev.push({k:'resist',u:tgt.uid});return}
   if(!F)return;
   if(k==='guard'&&tgt===src)return; // the guardian doesn't guard himself
+  if(F.buff&&rlHas(tgt,'snare')){ev.push({k:'bound',u:tgt.uid});return} // a noosed unit can't be buffed
   if(F.buff){const t=k==='shield'?f[2]:f[1];tgt.fx=tgt.fx.filter(x=>x.k!==k);tgt.fx.push(k==='guard'?{k,t,src:src.uid}:{k,t:t+(tgt===src?1:0)});if(k==='shield'){tgt.shield=Math.round(src.maxHp*f[1]/100*power*(tgt===src?1:1))}ev.push({k:'fx',u:tgt.uid,f:k});return}
   // debuff
   if(power<1||!tgt.alive)return;
@@ -255,6 +258,7 @@ function rlAct(B,u,i,tid,power){
         if(s.vsBreak&&rlHas(t,'defBreak'))d*=1+s.vsBreak;
         if(s.vsPoison)d*=1+s.vsPoison*t.fx.filter(x=>x.k==='poison').length;
         if(s.rift){const n=t.fx.filter(x=>x.k==='sigil').length;if(n){d*=1+s.rift*n;if(h===(s.h||1)-1){t.fx=t.fx.filter(x=>x.k!=='sigil');ev.push({k:'rift',u:t.uid,v:n})}}}
+        if(s.vsSnare&&rlHas(t,'snare'))d*=1+s.vsSnare;
         if(s.vsChill)d*=1+s.vsChill*t.fx.filter(x=>x.k==='chill').length;
         if(u.tempo)d*=1+.1*u.tempo+(s.crescendo?s.crescendo*u.tempo:0); // Tempo: +10% per beat; Crescendo spends it big
         if(rlHas(t,'mark'))d*=1.25;if(s.vsBurn&&rlHas(t,'burn'))d*=1+s.vsBurn;

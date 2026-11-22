@@ -182,16 +182,116 @@ const RL_ROSTER=[
      sk:[rlSk('Kindled Aid',{tg:'a1',fx:[['heal',28],['atkUp',2]]}),
          rlSk('Hearthlight Rally',{cd:3,tg:'aA',fx:[['heal',16],['cleanse'],['defUp',2]]}),
          rlSk('Second Dawn',{cd:5,tg:'a1',res:true,fx:[['rez',55],['shield',20,2],['immune',1]]})]}},
-  // Kestran, the pangolin spear knight (chibi art). LEGENDARY. Breaks armor and punishes broken armor:
+  // Kestran, the pangolin spear knight (chibi art). EPIC. Breaks armor and punishes broken armor:
   // his thrust pierces and cracks armor, his sweep pushes the line back and raises his scale guard,
   // and Spearstorm rains jade spears that hit far harder on enemies with broken armor.
   // Passive, Scale Plating: takes 20% less damage while above half HP.
   {id:'pan',col:{c:'#2f9a78',l:'#d8fff0',d:'#0e2e24'},vp:['#ffffff','#d8fff0','#5fd9b0','#1e5a46'],
-   hero:{n:'Kestran',r:5,role:'def',spd:106,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:20},plating:.2,
+   hero:{n:'Kestran',r:4,role:'def',spd:106,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:20},plating:.2,
      ev:['Kestran','Kestran Jadescale','Kestran, the Emerald Bulwark'],
      sk:[rlSk('Spear Thrust',{m:3.6,sc:'def',ign:.5,fx:[['defBreak',2,55]]}),
          rlSk('Winding Sweep',{cd:3,tg:'eA',m:1.9,sc:'def',fx:[['atbDown',25,60],['self','shield',18,2]]}),
          rlSk('Spearstorm',{cd:5,tg:'eA',m:2.4,sc:'def',vsBreak:.7,fx:[['defBreak',1,40]]})]}},
+  // Rowan, the standard-bearer (chibi art). EPIC support. Rally Standard plants his banner and lifts the whole
+  // team's ATK, Banner Feint dashes in and snaps the flag in an enemy's face (Blind), and Commanding Sweep
+  // swings the banner through every enemy, delaying their turns while pushing his team's turns forward.
+  {id:'flag',col:{c:'#a83a30',l:'#fff0d0',d:'#1a2238'},vp:['#ffffff','#fff0d0','#e8c070','#8a2a24'],
+   hero:{n:'Rowan',r:4,role:'sup',spd:113,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:15},
+     ev:['Rowan','Rowan Bannerguard','Rowan, the Standard-Bearer'],
+     sk:[rlSk('Rally Standard',{tg:'aA',fx:[['atkUp',2],['healT',4]]}),
+         rlSk('Banner Feint',{cd:3,m:3.6,fx:[['blind',2,65],['self','spdUp',2]]}),
+         rlSk('Commanding Sweep',{cd:4,tg:'eA',m:1.7,fx:[['atbDown',20,55],['team','atb',20]]})]}},
+  // Lysa, the glasswright (chibi art). EPIC. Shardline fires a spear of amber glass that pierces armor,
+  // Prism Snare locks one enemy inside a glass prism (may stun, and Marks them), and Glassfall flings
+  // shards skyward that rain down on every enemy, cracking their DEF.
+  {id:'glass',col:{c:'#e0a030',l:'#fff1d0',d:'#2a1424'},vp:['#fff6dc','#ffd98a','#f0a830','#5a2a3a'],
+   hero:{n:'Lysa',r:4,role:'atk',spd:110,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cd',v:20},
+     ev:['Lysa','Lysa Glasswright','Lysa, the Prism Maker'],
+     sk:[rlSk('Shardline',{m:3.7,ign:.25}),
+         rlSk('Prism Snare',{cd:3,m:2.0,fx:[['stun',1,55],['mark',2,70]]}),
+         rlSk('Glassfall',{cd:4,tg:'eA',m:1.8,fx:[['defBreak',2,55]]})]}},
+  // Brakk, the fiddler-crab tideguard (chibi art). EPIC tank. Clawguard bashes with his giant claw raised
+  // as a shield (DEF-scaled, shields himself), Brine Snap crushes one enemy, Soaking them and sapping their
+  // ATK, and Riptide Lunge surges in on a wave: a heavy hit that drags the enemy's turn back (much further
+  // if Soaked) and shields the whole team.
+  {id:'crab',col:{c:'#3f9a9a',l:'#dffcfc',d:'#12302e'},vp:['#ffffff','#d6fbff','#5fd0d8','#1e5a5a'],
+   hero:{n:'Brakk',r:4,role:'def',spd:98,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:15},
+     ev:['Brakk','Brakk Tideshell','Brakk, the Tideguard'],
+     sk:[rlSk('Clawguard',{m:3.2,sc:'def',fx:[['self','shield',10,1]]}),
+         rlSk('Brine Snap',{cd:3,m:3.8,sc:'def',fx:[['soak',2,75],['atkBreak',2,45]]}),
+         rlSk('Riptide Lunge',{cd:4,m:4.4,sc:'def',undertow:true,fx:[['soak',2,70],['team','shield',12,2]]})]}},
+  // Varek, the ashen chain warden (chibi art). LEGENDARY bruiser. Chainhook Strike hooks one enemy and
+  // drags their turn back, Cinder Sweep whips a burning chain across every enemy (Burn), and Furnace Break
+  // slams the hook down on one enemy: huge damage, more against burning foes, splash to the rest, may stun.
+  {id:'chain',col:{c:'#b8442a',l:'#ffe2cc',d:'#1e1410'},vp:['#fff0d8','#ffb37a','#e2482a','#3a1410'],
+   hero:{n:'Varek',r:5,role:'atk',spd:104,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:15},
+     ev:['Varek','Varek Ashbound','Varek, the Chain Warden'],
+     sk:[rlSk('Chainhook Strike',{m:3.8,fx:[['atbDown',25,60]]}),
+         rlSk('Cinder Sweep',{cd:3,tg:'eA',m:1.6,fx:[['burn',2,65]]}),
+         rlSk('Furnace Break',{cd:4,m:5.0,splash:.35,vsBurn:.5,fx:[['stun',1,40]]})]}},
+  // Burl, the beaver bridgewright (chibi art). COMMON. A sturdy builder: Mallet Tap whacks one enemy
+  // (DEF-scaled), Timber Toss lobs a log that can stun, and Quick Barricade throws up a wooden wall that
+  // shields the whole team and raises their DEF.
+  {id:'beav',col:{c:'#a0683a',l:'#f3e2c4',d:'#3a2414'},vp:['#ffffff','#f3e2c4','#c08a52','#4a2e18'],
+   hero:{n:'Burl',r:1,role:'def',spd:95,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:10},
+     ev:['Burl','Burl Dambuilder','Burl, the Bridgewright'],
+     sk:[rlSk('Mallet Tap',{m:3.0,sc:'def'}),
+         rlSk('Timber Toss',{cd:3,m:2.2,sc:'def',fx:[['stun',1,30]]}),
+         rlSk('Quick Barricade',{cd:4,tg:'aA',fx:[['shield',14,2],['defUp',2]]})]}},
+  // Marla, the marsh trapper (chibi art). RARE. Hooked Jab dashes in with her boat hook, Snare Toss
+  // throws her noose: the Snared enemy can't gain buffs (any that land are blocked), loses one it already
+  // has, and gets rope-burned each time it acts; Bog Sweep drags a wave of bog mud through every enemy,
+  // slowing them and hitting Snared enemies much harder.
+  {id:'marsh',col:{c:'#7a8a4a',l:'#eef0d0',d:'#2a2a18'},vp:['#ffffff','#eef0d0','#b9b48a','#4a4a2a'],
+   hero:{n:'Marla',r:3,role:'atk',spd:106,it:'staff',o:'cloak',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'spd',v:8},
+     ev:['Marla','Marla Reedcloak','Marla, the Bog Warden'],
+     sk:[rlSk('Hooked Jab',{m:3.4,fx:[['atbDown',10,40]]}),
+         rlSk('Snare Toss',{cd:3,m:1.8,fx:[['strip',1],['snare',3,85]]}),
+         rlSk('Bog Sweep',{cd:4,tg:'eA',m:1.5,vsSnare:.6,fx:[['slow',2,55]]})]}},
+  // Corvin, the raven hex-scribe (chibi art). LEGENDARY. A curse-writer: Quillshot fires an inked quill
+  // that Marks, Binding Script wraps one enemy in runes that Seal their skills and sap their ATK, and
+  // Blackwing Sigils hexes every enemy with feather-sigils that Mark them and break their DEF.
+  {id:'raven',col:{c:'#7a3a5a',l:'#f3e2c8',d:'#1a0e14'},vp:['#fff3dc','#e8c99a','#b9875a','#3a1a2a'],
+   hero:{n:'Corvin',r:5,role:'sup',spd:112,it:'staff',o:'cloak',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'atk',v:15},
+     ev:['Corvin','Corvin Inkfeather','Corvin, the Hex-Scribe'],
+     sk:[rlSk('Quillshot',{m:3.6,fx:[['mark',2,45]]}),
+         rlSk('Binding Script',{cd:3,m:2.2,fx:[['seal',2,80],['atkBreak',2,60]]}),
+         rlSk('Blackwing Sigils',{cd:4,tg:'eA',m:1.7,fx:[['mark',2,70],['defBreak',2,55]]})]}},
+  // Kasim, the jackal dune duelist (chibi art). EPIC. Sandshear flings a blade of sand that can Blind,
+  // Twin Dune Cuts sends two sand slashes that crack DEF, and Dust Devil whips a sandstorm across every
+  // enemy, Blinding them, while Kasim speeds up.
+  {id:'jack',col:{c:'#d9a95a',l:'#fff1d0',d:'#2a2018'},vp:['#fff6dc','#f3d9a0','#d9a95a','#6a4a1e'],
+   hero:{n:'Kasim',r:4,role:'atk',spd:118,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'cr',v:15},
+     ev:['Kasim','Kasim Dune Blade','Kasim, the Dune Duelist'],
+     sk:[rlSk('Sandshear',{m:3.6,fx:[['blind',1,35]]}),
+         rlSk('Twin Dune Cuts',{cd:3,m:1.9,h:2,fx:[['defBreak',2,50]]}),
+         rlSk('Dust Devil',{cd:4,tg:'eA',m:1.6,fx:[['blind',2,60],['self','spdUp',2]]})]}},
+  // Bram, the boar shieldbearer (chibi art). COMMON tank. Tusker Bash shoves one enemy with his shield
+  // (DEF-scaled, may stun), Shield Brace digs in for a shield and DEF Up, and Hold the Line plants his
+  // shield and taunts every enemy for 2 turns while he takes less damage.
+  {id:'boar',col:{c:'#a0703f',l:'#f3e2c4',d:'#3a2414'},vp:['#ffffff','#f3e2c4','#c9a26a','#5a3a1e'],
+   hero:{n:'Bram',r:1,role:'def',spd:92,it:'staff',o:'armor',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'def',v:10},
+     ev:['Bram','Bram Tusker','Bram, the Shieldwall'],
+     sk:[rlSk('Tusker Bash',{m:3.0,sc:'def',fx:[['stun',1,15]]}),
+         rlSk('Shield Brace',{cd:3,tg:'self',fx:[['shield',20,2],['defUp',2]]}),
+         rlSk('Hold the Line',{cd:4,tg:'eA',m:.8,sc:'def',fx:[['taunt',2,75],['self','bulwark',2]]})]}},
+  // Sage, the village herbalist (chibi art). COMMON healer. Quick Remedy mends one ally, Herbal Poultice
+  // patches one ally up and draws out their debuffs, and Renewing Draught heals the whole team over time.
+  {id:'herb',col:{c:'#8fb85a',l:'#f4ffd6',d:'#2e3a1c'},vp:['#ffffff','#f4ffd6','#b8e07a','#5a7a2a'],
+   hero:{n:'Sage',r:1,role:'sup',spd:100,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'hp',v:10},
+     ev:['Sage','Sage Herbwise','Sage, the Village Healer'],
+     sk:[rlSk('Quick Remedy',{tg:'a1',fx:[['heal',22]]}),
+         rlSk('Herbal Poultice',{cd:3,tg:'a1',fx:[['heal',18],['cleanse'],['regen',2]]}),
+         rlSk('Renewing Draught',{cd:4,tg:'aA',fx:[['heal',12],['regen',2]]})]}},
+  // Voltan, the lynx striker (chibi art). LEGENDARY. A lightning brawler built on Static: Thunderclap Fist
+  // charges one enemy with Static, Chain Arc jumps between enemies and hits charged ones harder, and
+  // Stormstep blitzes one enemy, discharging all their Static, then leaves him fast and ready to go again.
+  {id:'lynx',col:{c:'#4fb4ff',l:'#dff4ff',d:'#14204a'},vp:['#ffffff','#d6f6ff','#4fd0ff','#1a4a8a'],
+   hero:{n:'Voltan',r:5,role:'atk',spd:124,it:'staff',o:'tunic',hg:'',lk:[4,9,1,4,1,2,1,1,3,4],ld:{s:'spd',v:15},
+     ev:['Voltan','Voltan Sparkpaw','Voltan, the Thunder Striker'],
+     sk:[rlSk('Thunderclap Fist',{m:3.7,fx:[['static',2,75]]}),
+         rlSk('Chain Arc',{cd:3,tg:'eA',m:1.4,bounce:4,vsStatic:.5,fx:[['static',2,45]]}),
+         rlSk('Stormstep',{cd:4,m:4.4,discharge:1.6,fx:[['self','spdUp',2],['self','atb',40]]})]}},
   // Thorne, the stag shaman (chibi art). LEGENDARY support. Spirit Bolt strikes one enemy and mends the
   // team a little; Totem Ward raises a spirit totem over every ally that clears their debuffs and blocks
   // any new ones for 2 turns; Ancestral Tempest sweeps all enemies and delays their turns.

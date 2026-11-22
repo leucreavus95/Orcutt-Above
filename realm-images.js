@@ -10,7 +10,7 @@ const RL_ART={
   //    reach, charge, release. ax/ay = point between the feet in the file,
   //    h = how tall he would stand in that file's pixels (sets the scale).
   // f: standing art for each form, with the same placement fields (w/ih = file size).
-  // Kestran (pangolin spear knight, chibi). LEGENDARY. Frames per form are [Spear Thrust, Winding Sweep, Spearstorm]:
+  // Kestran (pangolin spear knight, chibi). EPIC. Frames per form are [Spear Thrust, Winding Sweep, Spearstorm]:
   // the thrust is a lunge; the sweep reuses the thrust stance (the sheet's sweep crosses his legs) and draws the painted arc.
   // Sable (hooded wraith, chibi). LEGENDARY. Frames per form are [Quickstep Cut, Twin Crescent, Veilstep Attack];
   // fv holds the phased-out still poses he shows while Veiled.
@@ -20,6 +20,94 @@ const RL_ART={
   // Ignis (salamander arcanist, chibi). LEGENDARY. Frames per form are [Cinder Bolt, Scorching Arc, Ignition Burst].
   // Kael (frost owl, chibi). LEGENDARY. Frames per form are [Glacial Talon, Shardstorm, Permafrost Ring].
   // Thorne (stag shaman, chibi). LEGENDARY support. Frames per form are [Spirit Bolt, Totem Ward, Ancestral Tempest].
+  // Voltan (lynx striker, chibi). LEGENDARY. Frames per form are [Thunderclap Fist, Chain Arc, Stormstep].
+  // Sage (village herbalist, chibi). COMMON healer. Frames per form are [Quick Remedy, Herbal Poultice, Renewing Draught].
+  // Bram (boar shieldbearer, chibi). COMMON tank. Frames per form are [Tusker Bash, Shield Brace, Hold the Line].
+  // Kasim (jackal duelist, chibi). EPIC. Frames per form are [Sandshear, Twin Dune Cuts, Dust Devil].
+  // Corvin (raven hex-scribe, chibi). LEGENDARY. Frames per form are [Quillshot, Binding Script, Blackwing Sigils].
+  // Marla (marsh trapper, chibi). RARE. Frames per form are [Hooked Jab, Snare Toss, Bog Sweep].
+  // Burl (beaver bridgewright, chibi). COMMON. Frames per form are [Mallet Tap, Timber Toss, Quick Barricade].
+  // Varek (ashen chain warden, chibi). LEGENDARY. Frames per form are [Chainhook Strike, Cinder Sweep, Furnace Break].
+  // Brakk (fiddler-crab tideguard, chibi). EPIC tank. Frames per form are [Clawguard, Brine Snap, Riptide Lunge].
+  // Lysa (human glasswright, chibi). EPIC. Frames per form are [Shardline, Prism Snare, Glassfall].
+  // Rowan (standard-bearer, chibi). EPIC support. Frames per form are [Rally Standard, Banner Feint, Commanding Sweep].
+  flag:{f:[{src:'art/flag-1.webp',ax:179,ay:856,h:851,w:495,ih:854,ht:0},{src:'art/flag-2.webp',ax:192,ay:862,h:851,w:499,ih:860,ht:0},{src:'art/flag-3.webp',ax:227,ay:892,h:851,w:531,ih:890,ht:0}],pose:'skill',melee:true,meleeSk:[false,true,false],dashPose:1,slash:'spear',
+        c:[[{src:'art/flag-1c1.webp',ax:152,ay:432,h:511,w:366,ih:432,ht:0},{src:'art/flag-1c2.webp',ax:37,ay:359,h:511,w:391,ih:360,ht:0},{src:'art/flag-1c3.webp',ax:146,ay:349,h:511,w:401,ih:350,ht:0}],
+           [{src:'art/flag-2c1.webp',ax:151,ay:434,h:511,w:372,ih:434,ht:0},{src:'art/flag-2c2.webp',ax:34,ay:366,h:511,w:393,ih:366,ht:0},{src:'art/flag-2c3.webp',ax:148,ay:351,h:511,w:412,ih:351,ht:0}],
+           [{src:'art/flag-3c1.webp',ax:171,ay:454,h:511,w:397,ih:453,ht:0},{src:'art/flag-3c2.webp',ax:32,ay:376,h:511,w:419,ih:376,ht:0},{src:'art/flag-3c3.webp',ax:24,ay:375,h:511,w:434,ih:375,ht:0}]],
+        spell:[{vp:['#ffffff','#fff0d0','#e8c070','#8a2a24'],hand:[110,150]},
+               {vp:['#ffffff','#fff0d0','#e8c070','#8a2a24'],hand:[110,150]},
+               {vp:['#ffffff','#fff0d0','#e8c070','#8a2a24'],hand:[110,150]}]},
+  glass:{f:[{src:'art/glass-1.webp',ax:170,ay:771,h:765,w:491,ih:769,ht:0},{src:'art/glass-2.webp',ax:173,ay:779,h:765,w:515,ih:777,ht:0},{src:'art/glass-3.webp',ax:177,ay:780,h:765,w:496,ih:778,ht:0}],pose:'skill',
+        c:[[{src:'art/glass-1c1.webp',ax:113,ay:379,h:459,w:411,ih:380,ht:0},{src:'art/glass-1c2.webp',ax:119,ay:375,h:459,w:389,ih:375,ht:0},{src:'art/glass-1c3.webp',ax:174,ay:446,h:459,w:396,ih:446,ht:0}],
+           [{src:'art/glass-2c1.webp',ax:122,ay:389,h:459,w:418,ih:389,ht:0},{src:'art/glass-2c2.webp',ax:119,ay:386,h:459,w:408,ih:387,ht:0},{src:'art/glass-2c3.webp',ax:188,ay:450,h:459,w:412,ih:451,ht:0}],
+           [{src:'art/glass-3c1.webp',ax:129,ay:397,h:459,w:438,ih:398,ht:0},{src:'art/glass-3c2.webp',ax:136,ay:412,h:459,w:431,ih:413,ht:0},{src:'art/glass-3c3.webp',ax:202,ay:469,h:459,w:427,ih:469,ht:0}]],
+        spell:[{vp:['#fff6dc','#ffd98a','#f0a830','#5a2a3a'],hand:[130,150],bySkill:[{shot:'art/fx-glass-shard1.webp',sz:.6},{burst:'art/fx-glass-prism1.webp',aoe:'erupt',sz:.5},{aoe:'meteor',shatter:1,img:'art/fx-glass-cry1.webp'}]},
+               {vp:['#fff6dc','#ffd98a','#f0a830','#5a2a3a'],hand:[130,150],bySkill:[{shot:'art/fx-glass-shard2.webp',sz:.6},{burst:'art/fx-glass-prism2.webp',aoe:'erupt',sz:.5},{aoe:'meteor',shatter:1,img:'art/fx-glass-cry2.webp'}]},
+               {vp:['#fff6dc','#ffd98a','#f0a830','#5a2a3a'],hand:[130,150],bySkill:[{shot:'art/fx-glass-shard3.webp',sz:.6},{burst:'art/fx-glass-prism3.webp',aoe:'erupt',sz:.5},{aoe:'meteor',shatter:1,img:'art/fx-glass-cry3.webp'}]}]},
+  crab:{f:[{src:'art/crab-1.webp',ax:108,ay:742,h:736,w:517,ih:743,ht:0},{src:'art/crab-2.webp',ax:112,ay:743,h:736,w:510,ih:744,ht:0},{src:'art/crab-3.webp',ax:121,ay:745,h:736,w:536,ih:744,ht:0}],pose:'skill',melee:true,meleeSk:[true,true,true],dashPose:[0,1,2],slash:'ice',
+        c:[[{src:'art/crab-1c1.webp',ax:177,ay:444,h:442,w:355,ih:445,ht:0},{src:'art/crab-1c2.webp',ax:149,ay:412,h:442,w:413,ih:413,ht:0},{src:'art/crab-1c3.webp',ax:167,ay:297,h:442,w:405,ih:308,ht:0}],
+           [{src:'art/crab-2c1.webp',ax:200,ay:467,h:442,w:391,ih:467,ht:0},{src:'art/crab-2c2.webp',ax:152,ay:412,h:442,w:434,ih:419,ht:0},{src:'art/crab-2c3.webp',ax:155,ay:317,h:442,w:428,ih:320,ht:0}],
+           [{src:'art/crab-3c1.webp',ax:222,ay:473,h:442,w:422,ih:472,ht:0},{src:'art/crab-3c2.webp',ax:154,ay:426,h:442,w:442,ih:438,ht:0},{src:'art/crab-3c3.webp',ax:174,ay:342,h:442,w:428,ih:343,ht:0}]],
+        spell:[{vp:['#ffffff','#d6fbff','#5fd0d8','#1e5a5a']},
+               {vp:['#ffffff','#d6fbff','#5fd0d8','#1e5a5a']},
+               {vp:['#ffffff','#d6fbff','#5fd0d8','#1e5a5a']}]},
+  chain:{f:[{src:'art/chain-1.webp',ax:218,ay:737,h:732,w:510,ih:735,ht:0},{src:'art/chain-2.webp',ax:213,ay:738,h:732,w:476,ih:736,ht:0},{src:'art/chain-3.webp',ax:251,ay:742,h:732,w:530,ih:740,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],slash:'fire',
+        c:[[{src:'art/chain-1c1.webp',ax:139,ay:340,h:439,w:417,ih:341,ht:0},{src:'art/chain-1c2.webp',ax:154,ay:339,h:439,w:401,ih:338,ht:0},{src:'art/chain-1c3.webp',ax:325,ay:442,h:439,w:417,ih:445,ht:0}],
+           [{src:'art/chain-2c1.webp',ax:144,ay:342,h:439,w:419,ih:343,ht:0},{src:'art/chain-2c2.webp',ax:198,ay:345,h:439,w:409,ih:345,ht:0},{src:'art/chain-2c3.webp',ax:279,ay:442,h:439,w:419,ih:456,ht:0}],
+           [{src:'art/chain-3c1.webp',ax:148,ay:342,h:439,w:421,ih:343,ht:0},{src:'art/chain-3c2.webp',ax:211,ay:346,h:439,w:426,ih:347,ht:0},{src:'art/chain-3c3.webp',ax:300,ay:453,h:439,w:432,ih:454,ht:0}]],
+        spell:[{vp:['#fff0d8','#ffb37a','#e2482a','#3a1410'],hand:[140,150],bySkill:[null,{burst:'art/fx-chain-fire1.webp',aoe:'erupt',sz:.55},null]},
+               {vp:['#fff0d8','#ffb37a','#e2482a','#3a1410'],hand:[140,150],bySkill:[null,{burst:'art/fx-chain-fire2.webp',aoe:'erupt',sz:.55},null]},
+               {vp:['#fff0d8','#ffb37a','#e2482a','#3a1410'],hand:[140,150],bySkill:[null,{burst:'art/fx-chain-fire3.webp',aoe:'erupt',sz:.55},null]}]},
+  beav:{f:[{src:'art/beav-1.webp',ax:289,ay:723,h:719,w:500,ih:723,ht:0},{src:'art/beav-2.webp',ax:278,ay:725,h:719,w:486,ih:726,ht:0},{src:'art/beav-3.webp',ax:277,ay:726,h:719,w:486,ih:727,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,
+        c:[[{src:'art/beav-1c1.webp',ax:163,ay:370,h:431,w:391,ih:374,ht:0},{src:'art/beav-1c2.webp',ax:156,ay:354,h:431,w:408,ih:359,ht:0},{src:'art/beav-1c3.webp',ax:211,ay:327,h:431,w:398,ih:332,ht:0}],
+           [{src:'art/beav-2c1.webp',ax:164,ay:369,h:431,w:398,ih:374,ht:0},{src:'art/beav-2c2.webp',ax:166,ay:372,h:431,w:410,ih:376,ht:0},{src:'art/beav-2c3.webp',ax:214,ay:331,h:431,w:407,ih:336,ht:0}],
+           [{src:'art/beav-3c1.webp',ax:168,ay:370,h:431,w:400,ih:376,ht:0},{src:'art/beav-3c2.webp',ax:176,ay:379,h:431,w:413,ih:383,ht:0},{src:'art/beav-3c3.webp',ax:225,ay:332,h:431,w:417,ih:337,ht:0}]],
+        spell:[{vp:['#ffffff','#f3e2c4','#c08a52','#4a2e18'],hand:[120,150],bySkill:[null,{shot:'art/fx-beav-log1.webp',sz:.5},null]},
+               {vp:['#ffffff','#f3e2c4','#c08a52','#4a2e18'],hand:[120,150],bySkill:[null,{shot:'art/fx-beav-log2.webp',sz:.5},null]},
+               {vp:['#ffffff','#f3e2c4','#c08a52','#4a2e18'],hand:[120,150],bySkill:[null,{shot:'art/fx-beav-log3.webp',sz:.5},null]}]},
+  marsh:{f:[{src:'art/marsh-1.webp',ax:184,ay:780,h:775,w:498,ih:781,ht:0},{src:'art/marsh-2.webp',ax:199,ay:788,h:775,w:506,ih:789,ht:0},{src:'art/marsh-3.webp',ax:259,ay:799,h:775,w:557,ih:799,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,
+        c:[[{src:'art/marsh-1c1.webp',ax:141,ay:378,h:465,w:407,ih:379,ht:0},{src:'art/marsh-1c2.webp',ax:125,ay:361,h:465,w:405,ih:361,ht:0},{src:'art/marsh-1c3.webp',ax:268,ay:358,h:465,w:400,ih:359,ht:0}],
+           [{src:'art/marsh-2c1.webp',ax:151,ay:391,h:465,w:435,ih:392,ht:0},{src:'art/marsh-2c2.webp',ax:139,ay:369,h:465,w:437,ih:369,ht:0},{src:'art/marsh-2c3.webp',ax:248,ay:390,h:465,w:432,ih:391,ht:0}],
+           [{src:'art/marsh-3c1.webp',ax:153,ay:420,h:465,w:446,ih:420,ht:0},{src:'art/marsh-3c2.webp',ax:139,ay:386,h:465,w:446,ih:387,ht:0},{src:'art/marsh-3c3.webp',ax:230,ay:416,h:465,w:444,ih:416,ht:0}]],
+        spell:[{vp:['#ffffff','#eef0d0','#b9b48a','#4a4a2a'],hand:[120,140],bySkill:[null,{shot:'art/fx-marsh-noose1.webp',sz:.55},{burst:'art/fx-marsh-mud1.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#ffffff','#eef0d0','#b9b48a','#4a4a2a'],hand:[120,140],bySkill:[null,{shot:'art/fx-marsh-noose2.webp',sz:.55},{burst:'art/fx-marsh-mud2.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#ffffff','#eef0d0','#b9b48a','#4a4a2a'],hand:[120,140],bySkill:[null,{shot:'art/fx-marsh-noose3.webp',sz:.55},{burst:'art/fx-marsh-mud3.webp',aoe:'erupt',sz:.5}]}]},
+  raven:{f:[{src:'art/raven-1.webp',ax:247,ay:762,h:757,w:480,ih:760,ht:0},{src:'art/raven-2.webp',ax:278,ay:767,h:757,w:500,ih:765,ht:0},{src:'art/raven-3.webp',ax:241,ay:768,h:757,w:527,ih:766,ht:0}],pose:'skill',
+        c:[[{src:'art/raven-1c1.webp',ax:130,ay:387,h:454,w:416,ih:387,ht:0},{src:'art/raven-1c2.webp',ax:134,ay:407,h:454,w:416,ih:406,ht:0},{src:'art/raven-1c3.webp',ax:141,ay:392,h:454,w:407,ih:392,ht:0}],
+           [{src:'art/raven-2c1.webp',ax:138,ay:387,h:454,w:416,ih:387,ht:0},{src:'art/raven-2c2.webp',ax:140,ay:409,h:454,w:417,ih:408,ht:0},{src:'art/raven-2c3.webp',ax:134,ay:412,h:454,w:410,ih:413,ht:0}],
+           [{src:'art/raven-3c1.webp',ax:140,ay:395,h:454,w:427,ih:396,ht:0},{src:'art/raven-3c2.webp',ax:144,ay:412,h:454,w:422,ih:411,ht:0},{src:'art/raven-3c3.webp',ax:132,ay:430,h:454,w:420,ih:430,ht:0}]],
+        spell:[{vp:['#fff3dc','#e8c99a','#b9875a','#3a1a2a'],hand:[130,150],bySkill:[{shot:'art/fx-raven-quill1.webp',sz:.55},{burst:'art/fx-raven-script1.webp',aoe:'erupt',sz:.55},{shot:'art/fx-raven-feathers1.webp',aoe:'fan',sz:.5}]},
+               {vp:['#fff3dc','#e8c99a','#b9875a','#3a1a2a'],hand:[130,150],bySkill:[{shot:'art/fx-raven-quill2.webp',sz:.55},{burst:'art/fx-raven-script2.webp',aoe:'erupt',sz:.55},{shot:'art/fx-raven-feathers2.webp',aoe:'fan',sz:.5}]},
+               {vp:['#fff3dc','#e8c99a','#b9875a','#3a1a2a'],hand:[130,150],bySkill:[{shot:'art/fx-raven-quill3.webp',sz:.55},{burst:'art/fx-raven-script3.webp',aoe:'erupt',sz:.55},{shot:'art/fx-raven-feathers3.webp',aoe:'fan',sz:.5}]}]},
+  jack:{f:[{src:'art/jack-1.webp',ax:253,ay:752,h:746,w:478,ih:753,ht:0},{src:'art/jack-2.webp',ax:264,ay:752,h:746,w:515,ih:752,ht:0},{src:'art/jack-3.webp',ax:281,ay:749,h:746,w:539,ih:749,ht:0}],pose:'skill',
+        c:[[{src:'art/jack-1c1.webp',ax:117,ay:368,h:433,w:404,ih:371,ht:0},{src:'art/jack-1c2.webp',ax:146,ay:382,h:433,w:389,ih:386,ht:0},{src:'art/jack-1c3.webp',ax:287,ay:408,h:433,w:385,ih:433,ht:0}],
+           [{src:'art/jack-2c1.webp',ax:117,ay:371,h:433,w:419,ih:379,ht:0},{src:'art/jack-2c2.webp',ax:152,ay:379,h:433,w:410,ih:387,ht:0},{src:'art/jack-2c3.webp',ax:276,ay:409,h:433,w:397,ih:430,ht:0}],
+           [{src:'art/jack-3c1.webp',ax:134,ay:375,h:433,w:423,ih:381,ht:0},{src:'art/jack-3c2.webp',ax:153,ay:387,h:433,w:409,ih:396,ht:0},{src:'art/jack-3c3.webp',ax:278,ay:430,h:433,w:406,ih:444,ht:0}]],
+        spell:[{vp:['#fff6dc','#f3d9a0','#d9a95a','#6a4a1e'],hand:[130,135],bySkill:[{shot:'art/fx-jack-wave1.webp',sz:.6},{shot:'art/fx-jack-twin1.webp',sz:.6},{burst:'art/fx-jack-wave1.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#fff6dc','#f3d9a0','#d9a95a','#6a4a1e'],hand:[130,135],bySkill:[{shot:'art/fx-jack-wave2.webp',sz:.6},{shot:'art/fx-jack-twin2.webp',sz:.6},{burst:'art/fx-jack-wave2.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#fff6dc','#f3d9a0','#d9a95a','#6a4a1e'],hand:[130,135],bySkill:[{shot:'art/fx-jack-wave3.webp',sz:.6},{shot:'art/fx-jack-twin3.webp',sz:.6},{burst:'art/fx-jack-wave3.webp',aoe:'erupt',sz:.5}]}]},
+  boar:{f:[{src:'art/boar-1.webp',ax:215,ay:723,h:716,w:487,ih:723,ht:0},{src:'art/boar-2.webp',ax:213,ay:725,h:716,w:487,ih:725,ht:0},{src:'art/boar-3.webp',ax:215,ay:726,h:716,w:502,ih:727,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,
+        c:[[{src:'art/boar-1c1.webp',ax:123,ay:320,h:401,w:360,ih:321,ht:0},{src:'art/boar-1c2.webp',ax:137,ay:322,h:401,w:375,ih:323,ht:0},{src:'art/boar-1c3.webp',ax:191,ay:387,h:401,w:375,ih:391,ht:0}],
+           [{src:'art/boar-2c1.webp',ax:151,ay:319,h:401,w:407,ih:319,ht:0},{src:'art/boar-2c2.webp',ax:178,ay:375,h:401,w:371,ih:381,ht:0},{src:'art/boar-2c3.webp',ax:202,ay:397,h:401,w:408,ih:400,ht:0}],
+           [{src:'art/boar-3c1.webp',ax:216,ay:317,h:401,w:441,ih:325,ht:0},{src:'art/boar-3c2.webp',ax:197,ay:385,h:401,w:413,ih:393,ht:0},{src:'art/boar-3c3.webp',ax:218,ay:401,h:401,w:441,ih:407,ht:0}]],
+        spell:[{vp:['#ffffff','#f3e2c4','#c9a26a','#5a3a1e'],hand:[110,140],bySkill:[null,null,{burst:'art/fx-boar-spikes1.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#ffffff','#f3e2c4','#c9a26a','#5a3a1e'],hand:[110,140],bySkill:[null,null,{burst:'art/fx-boar-spikes2.webp',aoe:'erupt',sz:.5}]},
+               {vp:['#ffffff','#f3e2c4','#c9a26a','#5a3a1e'],hand:[110,140],bySkill:[null,null,{burst:'art/fx-boar-spikes3.webp',aoe:'erupt',sz:.5}]}]},
+  herb:{f:[{src:'art/herb-1.webp',ax:181,ay:811,h:806,w:469,ih:811,ht:0},{src:'art/herb-2.webp',ax:200,ay:811,h:806,w:470,ih:812,ht:0},{src:'art/herb-3.webp',ax:206,ay:812,h:806,w:486,ih:812,ht:0}],pose:'skill',
+        c:[[{src:'art/herb-1c1.webp',ax:116,ay:395,h:532,w:400,ih:393,ht:0},{src:'art/herb-1c2.webp',ax:118,ay:438,h:532,w:316,ih:436,ht:0},{src:'art/herb-1c3.webp',ax:124,ay:476,h:532,w:333,ih:474,ht:0}],
+           [{src:'art/herb-2c1.webp',ax:139,ay:395,h:532,w:426,ih:393,ht:0},{src:'art/herb-2c2.webp',ax:127,ay:438,h:532,w:338,ih:436,ht:0},{src:'art/herb-2c3.webp',ax:127,ay:478,h:532,w:350,ih:476,ht:0}],
+           [{src:'art/herb-3c1.webp',ax:138,ay:395,h:532,w:446,ih:393,ht:0},{src:'art/herb-3c2.webp',ax:135,ay:437,h:532,w:353,ih:435,ht:0},{src:'art/herb-3c3.webp',ax:141,ay:477,h:532,w:382,ih:475,ht:0}]],
+        spell:[{vp:['#ffffff','#f4ffd6','#b8e07a','#5a7a2a'],hand:[110,150]},
+               {vp:['#ffffff','#f4ffd6','#b8e07a','#5a7a2a'],hand:[110,150]},
+               {vp:['#ffffff','#f4ffd6','#b8e07a','#5a7a2a'],hand:[110,150]}]},
+  lynx:{f:[{src:'art/lynx-1.webp',ax:270,ay:859,h:854,w:504,ih:857,ht:0},{src:'art/lynx-2.webp',ax:266,ay:861,h:854,w:499,ih:859,ht:0},{src:'art/lynx-3.webp',ax:284,ay:866,h:854,w:530,ih:864,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,true],dashPose:[0,1,2],
+        c:[[{src:'art/lynx-1c1.webp',ax:158,ay:363,h:495,w:393,ih:361,ht:0},{src:'art/lynx-1c2.webp',ax:164,ay:363,h:495,w:389,ih:364,ht:0},{src:'art/lynx-1c3.webp',ax:48,ay:308,h:495,w:368,ih:311,ht:0}],
+           [{src:'art/lynx-2c1.webp',ax:177,ay:373,h:495,w:424,ih:371,ht:0},{src:'art/lynx-2c2.webp',ax:176,ay:373,h:495,w:430,ih:374,ht:0},{src:'art/lynx-2c3.webp',ax:62,ay:309,h:495,w:405,ih:311,ht:0}],
+           [{src:'art/lynx-3c1.webp',ax:184,ay:377,h:495,w:449,ih:375,ht:0},{src:'art/lynx-3c2.webp',ax:175,ay:375,h:495,w:466,ih:376,ht:0},{src:'art/lynx-3c3.webp',ax:63,ay:309,h:495,w:445,ih:312,ht:0}]],
+        spell:[{vp:['#ffffff','#d6f6ff','#4fd0ff','#1a4a8a'],hand:[120,150],bySkill:[null,{shot:'art/fx-lynx-arc1.webp',sz:.6},null]},
+               {vp:['#ffffff','#d6f6ff','#4fd0ff','#1a4a8a'],hand:[120,150],bySkill:[null,{shot:'art/fx-lynx-arc2.webp',sz:.6},null]},
+               {vp:['#ffffff','#d6f6ff','#4fd0ff','#1a4a8a'],hand:[120,150],bySkill:[null,{shot:'art/fx-lynx-arc3.webp',sz:.6},null]}]},
   stag:{f:[{src:'art/stag-1.webp',ax:157,ay:824,h:819,w:408,ih:825,ht:0},{src:'art/stag-2.webp',ax:219,ay:843,h:819,w:491,ih:844,ht:0},{src:'art/stag-3.webp',ax:283,ay:907,h:819,w:614,ih:907,ht:0}],pose:'skill',
         c:[[{src:'art/stag-1c1.webp',ax:106,ay:338,h:344,w:401,ih:337,ht:0},{src:'art/stag-1c2.webp',ax:177,ay:391,h:344,w:381,ih:396,ht:0},{src:'art/stag-1c3.webp',ax:183,ay:320,h:344,w:408,ih:319,ht:0}],
            [{src:'art/stag-2c1.webp',ax:111,ay:337,h:344,w:430,ih:336,ht:0},{src:'art/stag-2c2.webp',ax:196,ay:412,h:344,w:426,ih:414,ht:0},{src:'art/stag-2c3.webp',ax:157,ay:398,h:344,w:427,ih:398,ht:0}],
@@ -63,7 +151,7 @@ const RL_ART={
         spell:[{vp:['#ffffff','#ecdcf4','#b07ac0','#4a1f45'],hand:[70,112],bySkill:[null,{shot:'art/fx-sab-cres.webp',sz:.72},null]},
                {vp:['#ffffff','#ecdcf4','#b07ac0','#4a1f45'],hand:[70,112],bySkill:[null,{shot:'art/fx-sab-cres.webp',sz:.72},null]},
                {vp:['#ffffff','#ecdcf4','#b07ac0','#4a1f45'],hand:[70,112],bySkill:[null,{shot:'art/fx-sab-cres.webp',sz:.72},null]}]},
-  pan:{f:[{src:'art/pan-1.webp',ax:200,ay:607,h:587,w:408,ih:606,ht:0},{src:'art/pan-2.webp',ax:208,ay:615,h:595,w:423,ih:614,ht:0},{src:'art/pan-3.webp',ax:250,ay:618,h:598,w:489,ih:617,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
+  pan:{card:{floor:215,tall:213},f:[{src:'art/pan-1.webp',ax:200,ay:607,h:587,w:408,ih:606,ht:0},{src:'art/pan-2.webp',ax:208,ay:615,h:595,w:423,ih:614,ht:0},{src:'art/pan-3.webp',ax:250,ay:618,h:598,w:489,ih:617,ht:0}],pose:'skill',melee:true,meleeSk:[true,false,false],dashPose:0,slash:'jade',
         c:[[{src:'art/pan-1c1.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c2.webp',ax:130,ay:284,h:275,w:416,ih:284,ht:0},{src:'art/pan-1c3.webp',ax:140,ay:371,h:359,w:346,ih:371,ht:0}],
            [{src:'art/pan-2c1.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c2.webp',ax:132,ay:289,h:280,w:428,ih:289,ht:0},{src:'art/pan-2c3.webp',ax:144,ay:391,h:379,w:311,ih:391,ht:0}],
            [{src:'art/pan-3c1.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c2.webp',ax:135,ay:297,h:288,w:442,ih:297,ht:0},{src:'art/pan-3c3.webp',ax:147,ay:401,h:389,w:349,ih:401,ht:0}]],
@@ -259,9 +347,9 @@ const RL_ART={
     const o=opt||{},h=RL_H[id],E=RL_EL[h.el],lv=lvOf(id,o),s=crStage(lv),F=A.f[s],u='ra'+id+s;
     // zoom to head-to-knees, but never wider than the card, and centre the whole picture
     // (body plus any floating effects) so nothing gets cut off at the sides
-    const kk=Math.min(186/F.ih,188/F.w),W=F.w*kk,H=F.ih*kk,x=100-W/2,y=208-H; // whole figure, same fit rule for every creature: feet on the card's floor, centred // one zoom per hero; every form's eyes sit on the same line
+    const CF=A.card||{},fl=CF.floor||208,kk=Math.min((CF.tall||186)/F.ih,188/F.w),W=F.w*kk,H=F.ih*kk,x=100-W/2,y=fl-H; // card:{floor,tall} for heroes whose weapon towers over them (Kestran's spear) // whole figure, same fit rule for every creature: feet on the card's floor, centred // one zoom per hero; every form's eyes sit on the same line
     const motes=o.motes===false?'':[[.1,.2,2.6,0],[.16,.7,2,1.2],[.86,.16,2.2,.6],[.08,.48,1.6,2],[.9,.66,1.8,1.6]].map(m=>`<circle class="rl-mote" cx="${m[0]*200}" cy="${m[1]*220}" r="${m[2]*1.3}" fill="${E.l}" style="animation-delay:-${m[3]}s"/>`).join('');
-    return`<svg class="rl-port cr-port rl-art" viewBox="0 0 200 220" role="img" aria-label="${esc(crName(id,lv))}"><defs><radialGradient id="${u}bg" cx=".55" cy=".42" r=".8"><stop offset="0" stop-color="${E.l}" stop-opacity=".6"/><stop offset=".45" stop-color="${E.c}" stop-opacity=".55"/><stop offset="1" stop-color="${E.d}"/></radialGradient></defs><rect class="crbg" width="200" height="220" fill="#0f0d14"/><rect class="crbg" width="200" height="220" fill="url(#${u}bg)"/><g class="crbg" opacity=".2" stroke="${E.l}" fill="none"><circle cx="104" cy="110" r="84" stroke-width="1.2"/></g>${motes}<image href="${F.src}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${W.toFixed(1)}" height="${H.toFixed(1)}" preserveAspectRatio="none"/></svg>`};
+    return`<svg class="rl-port cr-port rl-art" viewBox="0 0 200 220" role="img" aria-label="${esc(crName(id,lv))}"><defs><radialGradient id="${u}bg" cx=".5" cy=".45" r=".8"><stop offset="0" stop-color="${E.l}" stop-opacity=".6"/><stop offset=".45" stop-color="${E.c}" stop-opacity=".55"/><stop offset="1" stop-color="${E.d}"/></radialGradient></defs><rect class="crbg" width="200" height="220" fill="#0f0d14"/><rect class="crbg" width="200" height="220" fill="url(#${u}bg)"/>${motes}<image href="${F.src}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${W.toFixed(1)}" height="${H.toFixed(1)}" preserveAspectRatio="none"/></svg>`};
   // battle sprite: a canvas the motion loop below draws into
   rlHeroBody=function(id,lv){const A=RL_ART[id];if(!A)return oldBody(id,lv);
     const L=lv==null?crLv(id):lv,s=crStage(L);setTimeout(artLoop,0);
@@ -587,7 +675,7 @@ function paintSweep(h,pts,S){const p=S.paint,P=S.vp,sp=vSp(),img=artImg(p.burst|
   rlArtFire=async function(S,e,sk,ult){if(S.bySkill){const p=S.bySkill[e.s]||S.bySkill[0]||{},C=typeof RL_CUT!=='undefined'&&RL_CUT[S.hid]&&RL_CUT[S.hid][S.st]&&RL_CUT[S.hid][S.st][e.s];S=Object.assign({},S,{paint:p,bySkill:null},p.hand?{hand:p.hand}:{},C&&C.hand&&p.shot&&!p.up?{hand:C.hand}:{});
       if(p.aoe==='spearrain'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxSpearRain(pts,S,p.img)}
       if(p.aoe==='permafrost'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxPermafrost(pts,S,p.img)}
-      if(p.aoe==='meteor'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxMeteor(pts,S,p.img)}
+      if(p.aoe==='meteor'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);const h=rlArtHand(S);if(h)await vfxShootUp(h,S,p.img);return vfxMeteor(pts,p.shatter?Object.assign({},S,{shatter:1}):S,p.img)}
       if(p.aoe==='spearsweep'){const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);return vfxSpearSweep(pts,S)}
       if(sk.tg==='eA'&&(p.aoe==='erupt'||p.aoe==='sweep')){const h=rlArtHand(S);const pts=e.t.map(t=>rlbPt(t)).filter(Boolean);if(!pts.length)return;if(p.up&&h){await vfxShootUp(h,S,p.up);}return p.aoe==='erupt'?paintErupt(pts,S):paintSweep(h,pts,S)}}
     return prev(S,e,sk,ult)};
@@ -641,7 +729,10 @@ function vfxMeteor(pts,S,src){const img=artImg(src),P=S.vp,sp=vSp();
     VFX.items.push({step(dt,c){t+=dt;if(t<0)return;const k=Math.min(1,t/life),e=k*k,x=x0+(x1-x0)*e,y=y0+(y1-y0)*e;
       if(img){const H=L*img.naturalHeight/img.naturalWidth;c.save();c.globalCompositeOperation='lighter';c.translate(x,y);c.rotate(ang);c.drawImage(img,-L*.88,-H/2,L,H);c.restore()}
       if(Math.random()<.9)vfxP({x:x+vR(-6,6),y:y-vR(0,20),vx:vR(-30,30),vy:vR(-90,-30),life:vR(.2,.45),s:vR(2,5),c:rlRand(P)});
-      if(k>=1&&!hit){hit=true;this.done=true;vfxIgnite(q,P);res()}}})})))}
+      if(k>=1&&!hit){hit=true;this.done=true;(S.shatter?vfxShatter:vfxIgnite)(q,P);res()}}})})))}
+// glass hitting home: a bright flash and a spray of glittering shards, no flame
+function vfxShatter(q,P){const sp=vSp(),cy=q.y+q.h*.15;rlbShake(false);vfxP({x:q.x,y:cy,life:.3,s:8,grow:160,c:P[1],shape:'shock'});
+  for(let i=0;i<26;i++){const an=Math.random()*6.283,v=vR(140,360);vfxP({x:q.x,y:cy,vx:Math.cos(an)*v,vy:Math.sin(an)*v-90,ay:520,life:vR(.35,.7)/sp,s:vR(3,7),c:rlRand(P),shape:'dia',vr:vR(-8,8)})}}
 function vfxIgnite(q,P){const sp=vSp(),life=.7/sp,R=q.w*.62,foot=q.y+q.h*.42;let t=0;rlbShake(true);
   VFX.items.push({step(dt,c){t+=dt;const k=t/life;if(k>=1){this.done=true;return}const g=1-Math.pow(1-Math.min(1,k/.35),3),a=k<.45?1:1-(k-.45)/.55;
     c.save();c.globalCompositeOperation='lighter';
